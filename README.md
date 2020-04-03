@@ -21,7 +21,9 @@
 *./emsdk activate latest*
 
 + Activate PATH and other environment variables in the current terminal
+
 **For Windows only - use startWindows.bat**
+
 *source ./emsdk_env.sh*
 
 
@@ -44,6 +46,7 @@
 + install make using default settings
 
 + add make directory to Windows PATH environment variables
+
 **Linux installers should have make functionality enabled by default after installation**
 
 
@@ -55,11 +58,13 @@ Docker installation is recommended only on Linux systems, since installing Docke
 + Install using this command  (on Windows x64 & 32bit)
 
 *setEmscriptenEnvsWin32.bat*
+
 *make*
 
 + Install using this command  (on Linux)
 
 *setEmscriptenEnvsLinux.sh*
+
 *make*
 
 **May need to use emmake make in some cases**
