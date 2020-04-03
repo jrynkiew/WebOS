@@ -52,12 +52,12 @@
 Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
 
 # 4. Make the Application
-+ INSTALL USING COMAMND  (on Windows x64 & 32bit)
++ Install using this command  (on Windows x64 & 32bit)
 
 *setEmscriptenEnvsWin32.bat*
 *make*
 
-+ INSTALL USING COMAMND  (on Linux)
++ Install using this command  (on Linux)
 
 *setEmscriptenEnvsLinux.sh*
 *make*
@@ -68,10 +68,12 @@ Docker installation is recommended only on Linux systems, since installing Docke
 # 5. Install SDL2
 
 The version used in last successful compilation is SDL2-2.0.12
+
 The emscripten compiler will use SDL 2.0.0 libraries
 
 
 # 6. Install SDL2_Image
 
 The version used in last successful compilation is SDL2_image-2.0.5
+
 The emscripten compiler will use SDL Image 2.0.0 libraries
