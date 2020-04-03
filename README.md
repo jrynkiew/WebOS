@@ -51,13 +51,13 @@
 
 ### Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
 
-4. Make the Application
-# INSTALL USING COMAMND  (on Windows x64 & 32bit)
-setEmscriptenEnvsWin32.bat
-make
-# INSTALL USING COMAMND  (on Linux)
-setEmscriptenEnvsLinux.sh
-make
+# 4. Make the Application
++ INSTALL USING COMAMND  (on Windows x64 & 32bit)
+*setEmscriptenEnvsWin32.bat*
+*make*
++ INSTALL USING COMAMND  (on Linux)
+*setEmscriptenEnvsLinux.sh*
+*make*
 # May need to use emmake make in some cases
 
 
