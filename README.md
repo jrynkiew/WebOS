@@ -58,16 +58,16 @@
 + INSTALL USING COMAMND  (on Linux)
 *setEmscriptenEnvsLinux.sh*
 *make*
-# May need to use emmake make in some cases
+**May need to use emmake make in some cases**
 
 
-# 4. Install SDL2
+# 5. Install SDL2
 
-# The version used in last successful compilation is SDL2-2.0.12
-# The emscripten compiler will use SDL 2.0.0 libraries
+**The version used in last successful compilation is SDL2-2.0.12**
+**The emscripten compiler will use SDL 2.0.0 libraries**
 
 
-# 5. Install SDL2_Image
+# 6. Install SDL2_Image
 
-# The version used in last successful compilation is SDL2_image-2.0.5
-# The emscripten compiler will use SDL Image 2.0.0 libraries
+**The version used in last successful compilation is SDL2_image-2.0.5**
+**The emscripten compiler will use SDL Image 2.0.0 libraries**
