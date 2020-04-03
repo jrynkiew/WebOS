@@ -53,11 +53,15 @@
 
 # 4. Make the Application
 + INSTALL USING COMAMND  (on Windows x64 & 32bit)
+
 *setEmscriptenEnvsWin32.bat*
 *make*
+
 + INSTALL USING COMAMND  (on Linux)
+
 *setEmscriptenEnvsLinux.sh*
 *make*
+
 **May need to use emmake make in some cases**
 
 
