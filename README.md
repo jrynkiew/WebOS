@@ -22,8 +22,6 @@
 
 + Activate PATH and other environment variables in the current terminal
 
-**For Windows only - use startWindows.bat**
-
 *source ./emsdk_env.sh*
 
 
