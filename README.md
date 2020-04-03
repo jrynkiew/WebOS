@@ -57,13 +57,13 @@ Docker installation is recommended only on Linux systems, since installing Docke
 # 4. Make the Application
 + Install using this command  (on Windows x64 & 32bit)
 
-*setEmscriptenEnvsWin32.bat*
+*setEmscriptenEnvsWin32.bat* **make sure you edit this file to target your installation of the emscripten sdk**
 
 *make*
 
 + Install using this command  (on Linux)
 
-*setEmscriptenEnvsLinux.sh*
+*setEmscriptenEnvsLinux.sh* **make sure you edit this file to target your installation of the emscripten sdk**
 
 *make*
 
