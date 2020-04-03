@@ -27,27 +27,29 @@
 
 # 2. Install make
 
-###### Get the make installer
++ Get the make installer
 
-- For Windows 10
+##### For Windows 10
 
-http://gnuwin32.sourceforge.net/packages/make.htm
+*http://gnuwin32.sourceforge.net/packages/make.htm*
 
-- For Linux (Ubuntu)
+##### For Linux (Ubuntu)
 
-sudo apt-get install build-essential
-# For Linux (CentOS)
-yum groupinstall "Development Tools"
+*sudo apt-get install build-essential*
 
-# install make using default settings
+##### For Linux (CentOS)
 
-# add make directory to Windows PATH environment variables
-# Linux installers should have make functionality enabled by default after installation 
+*yum groupinstall "Development Tools"*
+
++ install make using default settings
+
++ add make directory to Windows PATH environment variables
+**Linux installers should have make functionality enabled by default after installation**
 
 
 # 3. Install Docker
 
-# Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
+### Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
 
 4. Make the Application
 # INSTALL USING COMAMND  (on Windows x64 & 32bit)
