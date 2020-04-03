@@ -67,6 +67,14 @@ Docker installation is recommended only on Linux systems, since installing Docke
 
 **May need to use emmake make in some cases**
 
+**hint: if you want to make a debug build, use this syntax**
+
+*make DEBUG=1* 
+
+**remember to clean up debug files with**
+
+*make clean DEBUG=1* or *make clean* to remove regular output files
+
 
 # 5. Install SDL2
 
