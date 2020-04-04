@@ -53,7 +53,12 @@ EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
 # for the std::functional hack
 CXXFLAGS = -std=c++11
 
+# include ImGui folders
 CPPFLAGS = -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/
+
+# include WebOS folders
+CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include
+
 CPPFLAGS += -g -Wall -Wformat -O3
 CPPFLAGS += $(EMS)
 LIBS = $(EMS)

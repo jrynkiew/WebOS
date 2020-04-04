@@ -16,11 +16,14 @@
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{6620518e-c1ed-4050-bdf7-16b5e77e63bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\ImGui">
-      <UniqueIdentifier>{d9da210e-4b5f-46e1-b51d-2eaa21f83ee6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GL3W">
       <UniqueIdentifier>{277c9a40-14e0-4cdc-a5b9-6266ca88e7a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{d9da210e-4b5f-46e1-b51d-2eaa21f83ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WebOS">
+      <UniqueIdentifier>{0ff8a906-5314-4456-be6d-eba145bd8bbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,23 +53,26 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\examples\imgui_impl_sdl.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="src\cpp\ImGui\imconfig.h">
-      <Filter>Resource Files\ImGui</Filter>
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\cpp\ImGui\imgui_internal.h">
-      <Filter>Resource Files\ImGui</Filter>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_opengl3.h">
-      <Filter>Resource Files\ImGui</Filter>
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_sdl.h">
-      <Filter>Resource Files\ImGui</Filter>
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\examples\imgui_impl_sdl.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpp\ImGui\imgui_internal.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpp\WebOS\include\window.h">
+      <Filter>Header Files\WebOS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

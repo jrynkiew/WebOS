@@ -114,7 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;C:\WebOS\src\cpp\WebOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -125,7 +125,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;C:\WebOS\src\cpp\WebOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(ProjectName)_Debug$(TargetExt)</OutputFile>
@@ -151,6 +151,7 @@
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_sdl.h" />
     <ClInclude Include="src\cpp\ImGui\imconfig.h" />
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h" />
+    <ClInclude Include="src\cpp\WebOS\include\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
