@@ -61,6 +61,12 @@ The version used in last successful compilation is SDL2_image-2.0.5
 
 The emscripten compiler will use SDL Image 2.0.0 libraries
 
+# 5. Install Dear ImGui
+
+Get the latest version from https://github.com/ocornut/imgui. Last version tested and confirmed working is 30/03/2020
+
+Install the main.cpp file from https://github.com/nicolasnoble/imgui
+
 # 5. Install Docker
 
 Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
