@@ -67,11 +67,11 @@ Get the latest version from https://github.com/ocornut/imgui. Last version teste
 
 Install the main.cpp file from https://github.com/nicolasnoble/imgui
 
-# 5. Install Docker
+# 6. Install Docker
 
 Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
 
-# 6. Make the Application
+# 7. Make the Application
 
 **make sure you edit setEmscriptenEnvsWin32.bat or setEmscriptenEnvsLinux.sh to target your installation of the emscripten sdk**
 
