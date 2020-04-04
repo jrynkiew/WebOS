@@ -146,6 +146,7 @@
     <ClCompile Include="src\cpp\ImGui\imgui_draw.cpp" />
     <ClCompile Include="src\cpp\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\cpp\main.cpp" />
+    <ClCompile Include="src\cpp\WebOS\WebOS_Init.cpp" />
     <ClCompile Include="src\cpp\WebOS\WebOS_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_sdl.h" />
     <ClInclude Include="src\cpp\ImGui\imconfig.h" />
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h" />
+    <ClInclude Include="src\cpp\WebOS\include\WebOS_Init.h" />
     <ClInclude Include="src\cpp\WebOS\include\WebOS_Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

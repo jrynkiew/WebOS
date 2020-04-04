@@ -57,6 +57,9 @@
     <ClCompile Include="src\cpp\WebOS\WebOS_Window.cpp">
       <Filter>Source Files\WebOS</Filter>
     </ClCompile>
+    <ClCompile Include="src\cpp\WebOS\WebOS_Init.cpp">
+      <Filter>Source Files\WebOS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cpp\ImGui\imconfig.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\cpp\WebOS\include\WebOS_Window.h">
+      <Filter>Header Files\WebOS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpp\WebOS\include\WebOS_Init.h">
       <Filter>Header Files\WebOS</Filter>
     </ClInclude>
   </ItemGroup>

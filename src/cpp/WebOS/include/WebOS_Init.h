@@ -28,18 +28,11 @@
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
-
-class WebOS_Window {
+class WebOS_Init {
 private:
-	const char* glsl_version;
-	SDL_Window* sdl_window;
-	SDL_GLContext gl_context;
-
+	void check_version();
 public:
-	WebOS_Window();
-	~WebOS_Window();
+	WebOS_Init();
+	void test();
 
-	const char* get_glsl_version();
-	SDL_Window* get_sdl_window();
-	SDL_GLContext* get_gl_context();
 };
