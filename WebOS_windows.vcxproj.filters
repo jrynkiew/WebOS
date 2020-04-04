@@ -54,10 +54,7 @@
     <ClCompile Include="src\cpp\ImGui\examples\libs\gl3w\GL\gl3w.c">
       <Filter>Source Files\GL3W</Filter>
     </ClCompile>
-    <ClCompile Include="src\cpp\WebOS\WebOS_Window.cpp">
-      <Filter>Source Files\WebOS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cpp\WebOS\WebOS_Init.cpp">
+    <ClCompile Include="src\cpp\WebOS\WebOS.cpp">
       <Filter>Source Files\WebOS</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,10 +77,7 @@
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\cpp\WebOS\include\WebOS_Window.h">
-      <Filter>Header Files\WebOS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\cpp\WebOS\include\WebOS_Init.h">
+    <ClInclude Include="src\cpp\WebOS\include\WebOS.h">
       <Filter>Header Files\WebOS</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,8 @@
 //Windows headers
 #include <stdio.h>
 
+#pragma comment(lib, "shell32.lib")
+
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
 // Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
 // You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
@@ -28,18 +30,18 @@
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
+#ifndef WEBOS_API
+#define WEBOS_API
+#endif
+#ifndef WEBOS_IMPL_API
+#define WEBOS_IMPL_API              WEBOS_API
+#endif
 
-class WebOS_Window {
-private:
-	const char* glsl_version;
-	SDL_Window* sdl_window;
-	SDL_GLContext gl_context;
+namespace WebOS {
+	namespace {
+		SDL_Window* window;
+		SDL_GLContext gl_context;
+	}
+	bool createSDL_Window();
 
-public:
-	WebOS_Window();
-	~WebOS_Window();
-
-	const char* get_glsl_version();
-	SDL_Window* get_sdl_window();
-	SDL_GLContext* get_gl_context();
-};
+}

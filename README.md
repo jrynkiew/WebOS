@@ -76,9 +76,13 @@ Get the latest version from
 
 > https://github.com/ocornut/imgui
 
-Last version tested and confirmed working is 30/03/2020
+Last version tested and confirmed working is 
+```
+#define IMGUI_VERSION               "1.76 WIP"
+#define IMGUI_VERSION_NUM           17502
+```
 
-Install the main.cpp file from 
+Additionally, the main.cpp file from this fork may be useful
 
 > https://github.com/nicolasnoble/imgui
 

@@ -3,23 +3,8 @@
 // (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
 // (GL3W is a helper library to access OpenGL functions since there is no standard header to access modern OpenGL functions easily. Alternatives are GLEW, Glad, etc.)
 
-//ImGui headers
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
-
 //WebOS headers
-#include "WebOS_Window.h"
-
-//Windows headers
-#include <stdio.h>
-
-//SDL headers
-#include <SDL.h>
-#include <SDL_image.h>
-
-
-#pragma comment(lib, "shell32.lib")
+#include "WebOS.h"
 
 #undef main
 
@@ -50,29 +35,6 @@
 static std::function<void()> loop;
 static void main_loop() { loop(); }
 #endif
-
-
-bool initializeGL() {
-    // Initialize OpenGL loader
-#if defined(__EMSCRIPTEN__)
-    bool err = false; // Emscripten loads everything during SDL_GL_CreateContext
-#elif defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
-    bool err = gl3wInit() != 0;
-#elif defined(IMGUI_IMPL_OPENGL_LOADER_GLEW)
-    bool err = glewInit() != GLEW_OK;
-#elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
-    bool err = gladLoadGL() == 0;
-#else
-    bool err = false; // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to require some form of initialization.
-#endif
-    if (err)
-    {
-        fprintf(stderr, "Failed to initialize OpenGL loader!\n");
-        //Quit
-        return false;
-    }
-    return true;
-}
 
 
 int main(int, char**)
@@ -137,9 +99,7 @@ int main(int, char**)
         link_version->patch);
 
     // Initialize OpenGL loader
-    initializeGL();
-
-/*#if defined(__EMSCRIPTEN__)
+#if defined(__EMSCRIPTEN__)
     bool err = false; // Emscripten loads everything during SDL_GL_CreateContext
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
     bool err = gl3wInit() != 0;
@@ -155,7 +115,6 @@ int main(int, char**)
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
         return 1;
     }
-*/
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -225,6 +184,7 @@ int main(int, char**)
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
+            //This should be WebOS_Window::ShowDemoWindow
             ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
