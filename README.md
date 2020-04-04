@@ -72,11 +72,13 @@ Docker installation is recommended only on Linux systems, since installing Docke
 Install using this command  (on Windows x64 & 32bit)
  
 > *setEmscriptenEnvsWin32.bat*
+
 >*make*
 
 Install using this command  (on Linux)
 
 > *setEmscriptenEnvsLinux.sh*
+
 >*make*
 
 ##### May need to use emmake make in some cases
