@@ -25,6 +25,9 @@
     <Filter Include="Header Files\WebOS">
       <UniqueIdentifier>{0ff8a906-5314-4456-be6d-eba145bd8bbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\WebOS">
+      <UniqueIdentifier>{a42895df-0624-49ee-b0ac-03e31e19f20f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpp\main.cpp">
@@ -51,6 +54,9 @@
     <ClCompile Include="src\cpp\ImGui\examples\libs\gl3w\GL\gl3w.c">
       <Filter>Source Files\GL3W</Filter>
     </ClCompile>
+    <ClCompile Include="src\cpp\WebOS\WebOS_Window.cpp">
+      <Filter>Source Files\WebOS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cpp\ImGui\imconfig.h">
@@ -71,7 +77,7 @@
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\cpp\WebOS\include\window.h">
+    <ClInclude Include="src\cpp\WebOS\include\WebOS_Window.h">
       <Filter>Header Files\WebOS</Filter>
     </ClInclude>
   </ItemGroup>

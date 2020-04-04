@@ -122,6 +122,9 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>IF “$(ConfigurationName)” == “Release” CALL "C:\WebOS\BuildEvent_Backup.bat"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -143,6 +146,7 @@
     <ClCompile Include="src\cpp\ImGui\imgui_draw.cpp" />
     <ClCompile Include="src\cpp\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\cpp\main.cpp" />
+    <ClCompile Include="src\cpp\WebOS\WebOS_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\examples\imgui_impl_sdl.h" />
@@ -151,7 +155,7 @@
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_sdl.h" />
     <ClInclude Include="src\cpp\ImGui\imconfig.h" />
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h" />
-    <ClInclude Include="src\cpp\WebOS\include\window.h" />
+    <ClInclude Include="src\cpp\WebOS\include\WebOS_Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -40,6 +40,7 @@ endif
 SOURCES = src/cpp/main.cpp
 SOURCES += src/cpp/ImGui/examples/imgui_impl_sdl.cpp src/cpp/ImGui/examples/imgui_impl_opengl3.cpp
 SOURCES += src/cpp/ImGui/imgui.cpp src/cpp/ImGui/imgui_demo.cpp src/cpp/ImGui/imgui_draw.cpp src/cpp/ImGui/imgui_widgets.cpp
+SOURCES += src/cpp/WebOS/WebOS_Window.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
 
@@ -74,6 +75,9 @@ LIBS = $(EMS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
 %.o:src/cpp/ImGui/examples/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+	
+%.o:src/cpp/WebOS/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
 %.o:src/cpp/ImGui/examples/libs/gl3w/GL/%.c
