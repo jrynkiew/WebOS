@@ -31,9 +31,9 @@ source ./emsdk_env.sh
 Get the make installer
 
 ##### For Windows 10
-```
-http://gnuwin32.sourceforge.net/packages/make.htm
-```
+
+> http://gnuwin32.sourceforge.net/packages/make.htm
+
 ##### For Linux (Ubuntu)
 ```
 sudo apt-get install build-essential
@@ -51,12 +51,20 @@ Add make directory to Windows PATH environment variables
 
 # 3. Install SDL2
 
+Get SDL2 from the below address
+
+> https://www.libsdl.org/download-2.0.php
+
 The version used in last successful compilation is SDL2-2.0.12
 
 The emscripten compiler will use SDL 2.0.0 libraries
 
 
 # 4. Install SDL2_Image
+
+Get SDL2 from the below address
+
+> https://www.libsdl.org/projects/SDL_image/
 
 The version used in last successful compilation is SDL2_image-2.0.5
 
@@ -65,15 +73,15 @@ The emscripten compiler will use SDL Image 2.0.0 libraries
 # 5. Install Dear ImGui
 
 Get the latest version from 
-```
-https://github.com/ocornut/imgui
-```
+
+> https://github.com/ocornut/imgui
+
 Last version tested and confirmed working is 30/03/2020
 
 Install the main.cpp file from 
-```
-https://github.com/nicolasnoble/imgui
-```
+
+> https://github.com/nicolasnoble/imgui
+
 
 # 6. Install Docker
 
@@ -87,7 +95,6 @@ Install using this command  (on Windows x64 & 32bit)
 ```
 setEmscriptenEnvsWin32.bat
  
-
 make
 ```
 Install using this command  (on Linux)
