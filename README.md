@@ -1,3 +1,4 @@
+![Image description](https://jrpc.pl/Images/WebOS_banner.png)
 # 1. Install emscripten
 
 Get the emsdk repo
