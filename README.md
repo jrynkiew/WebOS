@@ -1,46 +1,46 @@
 # 1. Install emscripten
 
 Get the emsdk repo
-
-> *git clone https://github.com/emscripten-core/emsdk.git*
-
+```
+git clone https://github.com/emscripten-core/emsdk.git
+```
 Enter that directory
-
-> *cd emsdk*
-
+```
+cd emsdk
+```
 Fetch the latest version of the emsdk (not needed the first time you clone)
-
-> *git pull*
-
+```
+git pull
+```
 Download and install the latest SDK tools.
-
-> *./emsdk install latest*
-
+```
+./emsdk install latest
+```
 Make the "latest" SDK "active" for the current user. (writes ~/.emscripten file)
-
-> *./emsdk activate latest*
-
+```
+./emsdk activate latest
+```
 Activate PATH and other environment variables in the current terminal
-
-> *source ./emsdk_env.sh*
-
+```
+source ./emsdk_env.sh
+```
 
 # 2. Install make
 
 Get the make installer
 
 ##### For Windows 10
-
-> *http://gnuwin32.sourceforge.net/packages/make.htm*
-
+```
+http://gnuwin32.sourceforge.net/packages/make.htm
+```
 ##### For Linux (Ubuntu)
-
-> *sudo apt-get install build-essential*
-
+```
+sudo apt-get install build-essential
+```
 ##### For Linux (CentOS)
-
-> *yum groupinstall "Development Tools"*
-
+```
+yum groupinstall "Development Tools"
+```
 Install make using default settings
 
 Add make directory to Windows PATH environment variables
@@ -63,9 +63,16 @@ The emscripten compiler will use SDL Image 2.0.0 libraries
 
 # 5. Install Dear ImGui
 
-Get the latest version from https://github.com/ocornut/imgui. Last version tested and confirmed working is 30/03/2020
+Get the latest version from 
+```
+https://github.com/ocornut/imgui
+```
+Last version tested and confirmed working is 30/03/2020
 
-Install the main.cpp file from https://github.com/nicolasnoble/imgui
+Install the main.cpp file from 
+```
+https://github.com/nicolasnoble/imgui
+```
 
 # 6. Install Docker
 
@@ -76,27 +83,32 @@ Docker installation is recommended only on Linux systems, since installing Docke
 **make sure you edit setEmscriptenEnvsWin32.bat or setEmscriptenEnvsLinux.sh to target your installation of the emscripten sdk**
 
 Install using this command  (on Windows x64 & 32bit)
+```
+setEmscriptenEnvsWin32.bat
  
-> *setEmscriptenEnvsWin32.bat*
 
->*make*
-
+make
+```
 Install using this command  (on Linux)
+```
+setEmscriptenEnvsLinux.sh
 
-> *setEmscriptenEnvsLinux.sh*
-
->*make*
+make
+```
 
 ##### May need to use emmake make in some cases
 
 If you want to make a debug build, use this syntax**
-
->*make DEBUG=1* 
+```
+make DEBUG=1
+```
 
 remember to clean up regular output files
-
->*make clean* 
+```
+make clean
+```
 
 and to clean up debug files
-
->*make clean DEBUG=1* 
+```
+make clean DEBUG=1
+```
