@@ -45,14 +45,7 @@
 // simply have an actual main loop function to give to emscripten instead.
 #include <functional>
 static std::function<void()> loop;
-static void main_loop() { 
-    loop();
-    //If right mouse button clicked, execute function "Click()"
-    //clickEvent();
-
-
-
- }
+static void main_loop() { loop(); }
 #endif
 
 void loadTextureFromFile(const char* file, GLuint* textureID) {
@@ -224,10 +217,7 @@ int main(int, char**)
 #endif
     {
 
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(window);
-        ImGui::NewFrame();
+    
 
 
         // Poll and handle events (inputs, window resize, etc.)
@@ -240,15 +230,25 @@ int main(int, char**)
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
             if (event.type == SDL_QUIT)
+                //done = true means that the program is "done" and needs to close
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
-                //printf("Right mouse button clicked main loop");
+            {
                 interface->setShowContextMenu(true);
+            }
+                
+            
         }
 
-        if (interface->getShowContextMenu() == true)
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame(window);
+        ImGui::NewFrame();
+
+
+       if (interface->getShowContextMenu() == true)
         {
             interface->showRightClickContextMenu();
         }
