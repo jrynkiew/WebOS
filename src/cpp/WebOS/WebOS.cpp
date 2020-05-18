@@ -4,6 +4,7 @@ WebOS::WebOS() {
 	//WebOS_style style;
 	this->imGuiStylePtr = &ImGui::GetStyle();
     loadTextureFromFile("images/icon.png", &icon);
+    loadTextureFromFile("images/wallpaper.png", &wallpaper);
 }
 
 void WebOS::loadTextureFromFile(const char* file, GLuint* textureID) {
@@ -12,9 +13,15 @@ void WebOS::loadTextureFromFile(const char* file, GLuint* textureID) {
     // You should probably use CSurface::OnLoad ... ;)
     //-- and make sure the Surface pointer is good!
     SDL_Surface* original = IMG_Load(file);
-    printf("Error: %s\n", IMG_GetError());
+    if(!original)
+    {
+        printf("Error in loadTextureFromFile: %s\n", IMG_GetError());
+    }
     SDL_Surface* converted = SDL_CreateRGBSurface(0, original->w, original->h, 24, 0x0000FF, 0x00FF00, 0xFF0000, 0x000000);
-
+    if(!converted)
+    {
+        printf("Error in loadTextureFromFile: %s\n", IMG_GetError());
+    }
     SDL_BlitSurface(original, NULL, converted, NULL);
 
     glGenTextures(1, textureID);
@@ -124,21 +131,27 @@ void WebOS::showIcon()
     ImGui::PopStyleVar();
 }
 
-void WebOS::showRightClickContextMenu()
+void WebOS::showBackgroundWallpaper()
 {
-    printf("Right mouse button clicked main loop");
-    int x;
-    int y;
-    ImVec2 contextMenuSize = ImVec2(170, 370);
-    SDL_GetMouseState(&x, &y);
-    ImGui::SetNextWindowPos(ImVec2(x, y));
-    ImGui::SetNextWindowSize(contextMenuSize);
+    //Show Background window
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 2);
-    ImGui::Begin("rightClickContextMenu", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoNav);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+    ImGui::Begin("myWallpaper", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoNav);
+    ImGui::Image((void*)(intptr_t)wallpaper, ImGui::GetIO().DisplaySize);
     ImGui::End();
     ImGui::PopStyleVar();
     ImGui::PopStyleVar();
+}
+
+void WebOS::showRightClickContextMenu()
+{
+    if (ImGui::BeginPopup("ContextMenu"))
+    {
+        ImGui::Button("Test");
+        ImGui::EndPopup();
+    }
 }
 
 void WebOS::ShowHookMenu()

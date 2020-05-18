@@ -48,39 +48,13 @@ static std::function<void()> loop;
 static void main_loop() { loop(); }
 #endif
 
-void loadTextureFromFile(const char* file, GLuint* textureID) {
-    //GLuint textureID = 0;
-
-    // You should probably use CSurface::OnLoad ... ;)
-    //-- and make sure the Surface pointer is good!
-    SDL_Surface* original = IMG_Load(file);
-    printf("Error: %s\n", IMG_GetError());
-    SDL_Surface* converted = SDL_CreateRGBSurface(0, original->w, original->h, 24, 0x0000FF, 0x00FF00, 0xFF0000, 0x000000);
-
-    SDL_BlitSurface(original, NULL, converted, NULL);
-
-    glGenTextures(1, textureID);
-    glBindTexture(GL_TEXTURE_2D, *textureID);
-
-    int Mode = GL_RGB;
-
-    if (original->format->BytesPerPixel == 4) {
-        Mode = GL_RGBA;
-    }
-
-    glTexImage2D(GL_TEXTURE_2D, 0, Mode, original->w, original->h, 0, Mode, GL_UNSIGNED_BYTE, original->pixels);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-}
-
 
 int main(int, char**)
 {
     // Setup SDL
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
     {
-        printf("Error: %s\n", SDL_GetError());
+        printf("Error in SDL_Init: %s\n", SDL_GetError());
         return -1;
     }
 
@@ -191,8 +165,8 @@ int main(int, char**)
 
 
     /*Load Background image into texture*/
-    GLuint my_image_texture = 0;
-    loadTextureFromFile("images/wallpaper.png", &my_image_texture);
+    //GLuint my_image_texture = 0;
+   //loadTextureFromFile("images/wallpaper.png", &my_image_texture);
 
     
 
@@ -238,8 +212,11 @@ int main(int, char**)
             {
                 interface->setShowContextMenu(true);
             }
-                
-            
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+            {
+                interface->setShowContextMenu(false);
+            }
+ 
         }
 
         // Start the Dear ImGui frame
@@ -250,8 +227,15 @@ int main(int, char**)
 
        if (interface->getShowContextMenu() == true)
         {
-            interface->showRightClickContextMenu();
+           ImGui::OpenPopup("FilePopup");
+
+           if (ImGui::BeginPopup("FilePopup"))
+           {
+               ImGui::Button("Test");
+               ImGui::EndPopup();
+           }
         }
+
         
 
         //Show Menu bar at the top
@@ -259,7 +243,7 @@ int main(int, char**)
         //interface->ShowStartHook(&show_main_hook);
         //ImGui::End();
         
-        //Show Background window
+        /*//Show Background window
         ImGui::SetNextWindowPos(ImVec2(0, 0));
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -268,8 +252,9 @@ int main(int, char**)
         ImGui::Image((void*)(intptr_t)my_image_texture, ImGui::GetIO().DisplaySize);
         ImGui::End();
         ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();*/
 
+        interface->showBackgroundWallpaper();
         interface->showIcon();
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).

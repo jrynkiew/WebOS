@@ -34,7 +34,8 @@ EXE = $(OUTPUTFOLDER)Debug.html
 
 JAVASCRIPT = $(addsuffix .js, $(basename $(notdir $(EXE))))
 WASM = $(addsuffix .wasm, $(basename $(notdir $(EXE))))
-DEBUGFILES = $(addprefix $(OUTPUTFOLDER), $(JAVASCRIPT) $(WASM))
+DEBUGDATA = $(addsuffix .data, $(basename $(notdir $(EXE))))
+DEBUGFILES = $(addprefix $(OUTPUTFOLDER), $(JAVASCRIPT) $(WASM) $(DEBUGDATA))
 
 endif
 

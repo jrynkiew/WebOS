@@ -21,6 +21,8 @@
 
 #include <stdio.h>
 
+
+
 class WebOS {
 private:
 	struct WebOS_style {
@@ -46,10 +48,11 @@ private:
 	ImGuiStyle* imGuiStylePtr; 
 	WebOS_style style;
 	GLuint icon = 0;
+	GLuint wallpaper = 0;
 	void loadTextureFromFile(const char* file, GLuint* textureID);
 	bool showContextMenu = false;
 	//Still not implemented - the actual menu appeas because of imgui_demo.cpp  static bool show_app_main_menu_bar = true;
-	static void ShowHookMenu();
+	
 	static void ShowMenuFile();
 public:
 	bool getShowContextMenu(){ return showContextMenu; }
@@ -57,7 +60,9 @@ public:
 	void ShowStartHook(bool* p_open);
  	void setStyle();
 	ImVec4* getBackgroundColor();
+	static void ShowHookMenu();
 	void showIcon();
+	void showBackgroundWallpaper();
 	void showRightClickContextMenu();
 
 	WebOS();
