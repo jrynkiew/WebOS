@@ -28,6 +28,9 @@
     <Filter Include="Source Files\WebOS">
       <UniqueIdentifier>{a42895df-0624-49ee-b0ac-03e31e19f20f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\WebOS\Elements">
+      <UniqueIdentifier>{c538ec38-8f41-4eb1-aeea-61e918f3773c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpp\main.cpp">
@@ -57,12 +60,12 @@
     <ClCompile Include="src\cpp\WebOS\WebOS.cpp">
       <Filter>Source Files\WebOS</Filter>
     </ClCompile>
+    <ClCompile Include="src\cpp\WebOS\Elements\rightClickContextMenu.cpp">
+      <Filter>Source Files\WebOS\Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cpp\ImGui\imconfig.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_opengl3.h">
@@ -71,13 +74,16 @@
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_sdl.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\examples\imgui_impl_sdl.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\cpp\WebOS\include\WebOS.h">
+      <Filter>Header Files\WebOS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpp\ImGui\imgui.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpp\WebOS\include\rightClickContextMenu.h">
       <Filter>Header Files\WebOS</Filter>
     </ClInclude>
   </ItemGroup>

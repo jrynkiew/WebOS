@@ -1,22 +1,11 @@
 #pragma once
 //ImGui headers
 #include "imgui.h"
+#include <SDL.h>
+#include <SDL_image.h>
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 
-//SDL headers
-#include <SDL.h>
-#include <SDL_image.h>
-
-//Windows headers
-#include <stdio.h>
-
-#pragma comment(lib, "shell32.lib")
-
-// About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
-// Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
-// You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
-// When compiling with emscripten however, no specific loader is necessary, since the webgl wrapper will do it for you.
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
 #include <SDL_opengles2.h>
@@ -30,6 +19,51 @@
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
+#include <stdio.h>
+
+class WebOS {
+private:
+	struct WebOS_style {
+		ImVec4 backgroundColor;
+		ImVec2 WindowPadding;
+		ImVec2 FramePadding;
+		ImVec2 ItemSpacing;
+		ImVec2 ItemInnerSpacing;
+		ImVec2 TouchExtraPadding;
+		float FrameRounding;
+		float ScrollbarSize;
+		float GrabMinSize;
+		float WindowBorderSize;
+		float ChildBorderSize;
+		float PopupBorderSize;
+		float FrameBorderSize;
+		float TabBorderSize;
+		float WindowRounding;
+		float ChildRounding;
+		float GrabRounding;
+	};
+
+	ImGuiStyle* imGuiStylePtr; 
+	WebOS_style style;
+	GLuint icon = 0;
+	void loadTextureFromFile(const char* file, GLuint* textureID);
+	bool showContextMenu = false;
+	//Still not implemented - the actual menu appeas because of imgui_demo.cpp  static bool show_app_main_menu_bar = true;
+	static void ShowHookMenu();
+	static void ShowMenuFile();
+public:
+	bool getShowContextMenu(){ return showContextMenu; }
+	void setShowContextMenu(bool target) { showContextMenu = target; }
+	void ShowStartHook(bool* p_open);
+ 	void setStyle();
+	ImVec4* getBackgroundColor();
+	void showIcon();
+	void showRightClickContextMenu();
+
+	WebOS();
+	~WebOS();
+};
+
 #ifndef WEBOS_API
 #define WEBOS_API
 #endif
@@ -37,11 +71,3 @@
 #define WEBOS_IMPL_API              WEBOS_API
 #endif
 
-namespace WebOS {
-	namespace {
-		SDL_Window* window;
-		SDL_GLContext gl_context;
-	}
-	bool createSDL_Window();
-
-}

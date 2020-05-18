@@ -2,3 +2,5 @@
 
 cd C:\Users\jrz2\Desktop\COMPILER\emscripten\emsdk
 emsdk_env.bat
+
+cd C:\WebOS

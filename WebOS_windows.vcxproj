@@ -115,9 +115,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;C:\WebOS\src\cpp\WebOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>C:\Users\jrz2\Desktop\BINARIES\SDL2-2.0.12\Release;C:\Users\jrz2\Desktop\BINARIES\SDL2_image-2.0.5\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
@@ -129,6 +132,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;C:\WebOS\src\cpp\WebOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(ProjectName)_Debug$(TargetExt)</OutputFile>
@@ -146,15 +150,16 @@
     <ClCompile Include="src\cpp\ImGui\imgui_draw.cpp" />
     <ClCompile Include="src\cpp\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\cpp\main.cpp" />
+    <ClCompile Include="src\cpp\WebOS\Elements\rightClickContextMenu.cpp" />
     <ClCompile Include="src\cpp\WebOS\WebOS.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui\examples\imgui_impl_sdl.h" />
-    <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_opengl3.h" />
     <ClInclude Include="src\cpp\ImGui\examples\imgui_impl_sdl.h" />
     <ClInclude Include="src\cpp\ImGui\imconfig.h" />
+    <ClInclude Include="src\cpp\ImGui\imgui.h" />
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h" />
+    <ClInclude Include="src\cpp\WebOS\include\rightClickContextMenu.h" />
     <ClInclude Include="src\cpp\WebOS\include\WebOS.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

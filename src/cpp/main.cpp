@@ -1,12 +1,22 @@
-// dear imgui: standalone example application for SDL2 + OpenGL
-// If you are new to dear imgui, see examples/README.txt and documentation at the top of imgui.cpp.
-// (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
-// (GL3W is a helper library to access OpenGL functions since there is no standard header to access modern OpenGL functions easily. Alternatives are GLEW, Glad, etc.)
+//ImGui headers
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
 
-//WebOS headers
+//SDL headers
+#include <SDL.h>
+#include <SDL_image.h>
+
+//STB Headers
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
+
+//Windows headers
+#include <stdio.h>
+
+#pragma comment(lib, "shell32.lib")
+
 #include "WebOS.h"
-
-#undef main
 
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
 // Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
@@ -25,6 +35,8 @@
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
+#undef main
+
 #if defined(__EMSCRIPTEN__)
 // Emscripten wants to run the mainloop because of the way the browser is single threaded.
 // For this, it requires a void() function. In order to avoid breaking the flow of the
@@ -33,8 +45,41 @@
 // simply have an actual main loop function to give to emscripten instead.
 #include <functional>
 static std::function<void()> loop;
-static void main_loop() { loop(); }
+static void main_loop() { 
+    loop();
+    //If right mouse button clicked, execute function "Click()"
+    //clickEvent();
+
+
+
+ }
 #endif
+
+void loadTextureFromFile(const char* file, GLuint* textureID) {
+    //GLuint textureID = 0;
+
+    // You should probably use CSurface::OnLoad ... ;)
+    //-- and make sure the Surface pointer is good!
+    SDL_Surface* original = IMG_Load(file);
+    printf("Error: %s\n", IMG_GetError());
+    SDL_Surface* converted = SDL_CreateRGBSurface(0, original->w, original->h, 24, 0x0000FF, 0x00FF00, 0xFF0000, 0x000000);
+
+    SDL_BlitSurface(original, NULL, converted, NULL);
+
+    glGenTextures(1, textureID);
+    glBindTexture(GL_TEXTURE_2D, *textureID);
+
+    int Mode = GL_RGB;
+
+    if (original->format->BytesPerPixel == 4) {
+        Mode = GL_RGBA;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, Mode, original->w, original->h, 0, Mode, GL_UNSIGNED_BYTE, original->pixels);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 
 
 int main(int, char**)
@@ -46,7 +91,7 @@ int main(int, char**)
         return -1;
     }
 
-    
+    //WebOS::WebOS_Init WebOS;
 
     // Decide GL+GLSL versions
 #if defined(__EMSCRIPTEN__)
@@ -98,6 +143,7 @@ int main(int, char**)
         link_version->minor,
         link_version->patch);
 
+
     // Initialize OpenGL loader
 #if defined(__EMSCRIPTEN__)
     bool err = false; // Emscripten loads everything during SDL_GL_CreateContext
@@ -124,10 +170,14 @@ int main(int, char**)
 
     // Setup Dear ImGui style
     //ImGui::StyleColorsDark();
-    ImGui::StyleColorsClassic();
+    ImGui::StyleColorsLight();
+
+    WebOS* interface = new WebOS();
+    interface->setStyle();
 
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Load Fonts
@@ -145,9 +195,20 @@ int main(int, char**)
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
+
+
+    /*Load Background image into texture*/
+    GLuint my_image_texture = 0;
+    loadTextureFromFile("images/wallpaper.png", &my_image_texture);
+
+    
+
     bool show_demo_window = true;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    bool show_main_hook = true;
+
+    //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.10f, 1.00f); //Background color
+    ImVec4 clear_color = *interface->getBackgroundColor(); //Background color
 
     // Main loop
     bool done = false;
@@ -162,6 +223,13 @@ int main(int, char**)
     while (!done)
 #endif
     {
+
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame(window);
+        ImGui::NewFrame();
+
+
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
@@ -175,12 +243,34 @@ int main(int, char**)
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
+                //printf("Right mouse button clicked main loop");
+                interface->setShowContextMenu(true);
         }
 
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(window);
-        ImGui::NewFrame();
+        if (interface->getShowContextMenu() == true)
+        {
+            interface->showRightClickContextMenu();
+        }
+        
+
+        //Show Menu bar at the top
+        //ImGui::Begin("Menu test");
+        //interface->ShowStartHook(&show_main_hook);
+        //ImGui::End();
+        
+        //Show Background window
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+        ImGui::Begin("foobar", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoNav);
+        ImGui::Image((void*)(intptr_t)my_image_texture, ImGui::GetIO().DisplaySize);
+        ImGui::End();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+
+        interface->showIcon();
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
@@ -224,6 +314,8 @@ int main(int, char**)
         ImGui::Render();
         SDL_GL_MakeCurrent(window, gl_context);
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+        //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

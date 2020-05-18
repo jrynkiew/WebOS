@@ -45,7 +45,7 @@
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
-
+#include <stdio.h>
 // SDL
 #include <SDL.h>
 #include <SDL_syswm.h>
@@ -98,7 +98,11 @@ bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event)
     case SDL_MOUSEBUTTONDOWN:
         {
             if (event->button.button == SDL_BUTTON_LEFT) g_MousePressed[0] = true;
-            if (event->button.button == SDL_BUTTON_RIGHT) g_MousePressed[1] = true;
+            if (event->button.button == SDL_BUTTON_RIGHT)
+            {
+                g_MousePressed[1] = true;
+                printf("Right mouse button clicked sub loop - will emscripten read this? \n");
+            }
             if (event->button.button == SDL_BUTTON_MIDDLE) g_MousePressed[2] = true;
             return true;
         }

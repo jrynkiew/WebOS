@@ -52,7 +52,7 @@ EMS = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_WEBGL2=1 -s WASM=1 -s FULL_ES3=1
 EMS += -s ALLOW_MEMORY_GROWTH=1
 EMS += -s DISABLE_EXCEPTION_CATCHING=1 -s EXIT_RUNTIME=1
 EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
-EMS += --preload-file images/wallpaper.png --preload-file images/icon.png --use-preload-plugins
+EMS += --preload-file images/wallpaper.png --use-preload-plugins
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif
@@ -106,70 +106,88 @@ clean:
 	rm -f $(EXE) $(OUTPUTOBJS) $(HTMLOUTPUT) $(DEBUGFILES) $(RELEASEFILES)
 	
 	
+
+#
+# Compiler flags
+#
+CC = emcc
+CXX = em++
+CFLAGS = 
+
+#
+# Project files
+#
+SRCS = src/cpp/main.cpp
+# ImGui sources
+SRCS += src/cpp/ImGui/examples/imgui_impl_sdl.cpp
+SRCS += src/cpp/ImGui/examples/imgui_impl_opengl3.cpp
+SRCS += src/cpp/ImGui/imgui.cpp
+SRCS += src/cpp/ImGui/imgui_demo.cpp
+SRCS += src/cpp/ImGui/imgui_draw.cpp
+SRCS += src/cpp/ImGui/imgui_widgets.cpp
+# WebOS sources
+SRCS += src/cpp/WebOS/WebOS.cpp
+
+#
+# Object files
+#
+OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
+EXE  = WebOS
+
+#
+# Debug build settings
+#
+DBGDIR = out/WebAssembly/debug
+DBGEXE = $(DBGDIR)/$(EXE).html
+DBGOBJS = $(addprefix $(DBGDIR)/, $(OBJS))
+DBGCFLAGS = -g -O0 -DDEBUG
+
+#
+# Release build settings
+#
+HTMLSRCS += src/html/index.html src/html/style.css
+RELDIR = out/WebAssembly/release
+RELEXE = $(RELDIR)/$(EXE)
+RELOBJS = $(addprefix $(RELDIR)/, $(OBJS))
+RELCFLAGS = -O3 -DNDEBUG
+
+.PHONY: all clean debug prep release remake
+
+# Default build
+all: prep release
+
+#
+# Debug rules
+#
+debug: $(DBGEXE)
+
+$(DBGEXE): $(DBGOBJS)
+    $(CC) $(CFLAGS) $(DBGCFLAGS) -o $(DBGEXE) $^
+
+$(DBGDIR)/%.o: %.c
+    $(CC) -c $(CFLAGS) $(DBGCFLAGS) -o $@ $<
+
+#
+# Release rules
+#
+release: $(RELEXE)
+
+$(RELEXE): $(RELOBJS)
+    $(CC) $(CFLAGS) $(RELCFLAGS) -o $(RELEXE) $^
+
+$(RELDIR)/%.o: %.c
+    $(CC) -c $(CFLAGS) $(RELCFLAGS) -o $@ $<
 	
-# #
-# # Compiler flags
-# #
-# CC     = gcc
-# CFLAGS = -Wall -Werror -Wextra
+windows:
+#to implement windows building
 
-# #
-# # Project files
-# #
-# SRCS = file1.c file2.c file3.c file4.c
-# OBJS = $(SRCS:.c=.o)
-# EXE  = exefile
+#
+# Other rules
+#
+prep:
+    @mkdir -p $(DBGDIR) $(RELDIR)
 
-# #
-# # Debug build settings
-# #
-# DBGDIR = debug
-# DBGEXE = $(DBGDIR)/$(EXE)
-# DBGOBJS = $(addprefix $(DBGDIR)/, $(OBJS))
-# DBGCFLAGS = -g -O0 -DDEBUG
+remake: clean all
 
-# #
-# # Release build settings
-# #
-# RELDIR = release
-# RELEXE = $(RELDIR)/$(EXE)
-# RELOBJS = $(addprefix $(RELDIR)/, $(OBJS))
-# RELCFLAGS = -O3 -DNDEBUG
-
-# .PHONY: all clean debug prep release remake
-
-# # Default build
-# all: prep release
-
-# #
-# # Debug rules
-# #
-# debug: $(DBGEXE)
-
-# $(DBGEXE): $(DBGOBJS)
-    # $(CC) $(CFLAGS) $(DBGCFLAGS) -o $(DBGEXE) $^
-
-# $(DBGDIR)/%.o: %.c
-    # $(CC) -c $(CFLAGS) $(DBGCFLAGS) -o $@ $<
-
-# #
-# # Release rules
-# #
-# release: $(RELEXE)
-
-# $(RELEXE): $(RELOBJS)
-    # $(CC) $(CFLAGS) $(RELCFLAGS) -o $(RELEXE) $^
-
-# $(RELDIR)/%.o: %.c
-    # $(CC) -c $(CFLAGS) $(RELCFLAGS) -o $@ $<
-
-# #
-# # Other rules
-# #
-# prep:
-    # @mkdir -p $(DBGDIR) $(RELDIR)
-
-# remake: clean all
-
-# clean:
-    # rm -f $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
+clean:
+    rm -f $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)

@@ -124,3 +124,9 @@ and to clean up debug files
 ```
 make clean DEBUG=1
 ```
+
+
+# 8. Required Libs
+libpng16-16.dll 211 or 206 kB
+zlib1.dll 92kB
+glew32.dll
