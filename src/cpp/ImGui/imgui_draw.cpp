@@ -2503,7 +2503,7 @@ const ImWchar*  ImFontAtlas::GetGlyphRangesJapanese()
     return &full_ranges[0];
 }
 
-const ImWchar*  ImFontAtlas::GetGlyphRangesCyrillic()
+const ImWchar* ImFontAtlas::GetGlyphRangesPolish()
 {
     static const ImWchar ranges[] =
     {
@@ -2511,6 +2511,17 @@ const ImWchar*  ImFontAtlas::GetGlyphRangesCyrillic()
         0x0400, 0x052F, // Cyrillic + Cyrillic Supplement
         0x2DE0, 0x2DFF, // Cyrillic Extended-A
         0xA640, 0xA69F, // Cyrillic Extended-B
+        0,
+    };
+    return &ranges[0];
+}
+
+const ImWchar*  ImFontAtlas::GetGlyphRangesCyrillic()
+{
+    static const ImWchar ranges[] =
+    {
+        0x0020, 0x00FF, // Basic Latin + Latin Supplement
+        0x00A0, 0x2019,
         0,
     };
     return &ranges[0];

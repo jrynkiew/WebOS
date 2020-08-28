@@ -53,7 +53,7 @@ EMS = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_WEBGL2=1 -s WASM=1 -s FULL_ES3=1
 EMS += -s ALLOW_MEMORY_GROWTH=1
 EMS += -s DISABLE_EXCEPTION_CATCHING=1 -s EXIT_RUNTIME=1
 EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
-EMS += --preload-file images/wallpaper.png --preload-file images/icon.png --use-preload-plugins
+EMS += --preload-file images/wallpaper.png --preload-file images/icon.png --preload-file fonts/DroidSans.ttf --use-preload-plugins
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif

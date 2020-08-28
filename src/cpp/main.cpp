@@ -159,8 +159,13 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+    //ImFontConfig config;
+   // config.MergeMode = true;
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\arialuni.ttf", 18.0f, &config, io.Fonts->GetGlyphRangesDefault());
+    //io.Fonts->Build();
     //IM_ASSERT(font != NULL);
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\arial.ttf",12.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\arial.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
 
 
 
@@ -208,14 +213,14 @@ int main(int, char**)
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
-            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
+            /*if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
             {
                 interface->setShowContextMenu(true);
             }
             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
             {
                 interface->setShowContextMenu(false);
-            }
+            }*/
  
         }
 
@@ -225,7 +230,7 @@ int main(int, char**)
         ImGui::NewFrame();
 
 
-       if (interface->getShowContextMenu() == true)
+       /*if (interface->getShowContextMenu() == true)
         {
            ImGui::OpenPopup("FilePopup");
 
@@ -234,7 +239,7 @@ int main(int, char**)
                ImGui::Button("Test");
                ImGui::EndPopup();
            }
-        }
+        }*/
 
         
 

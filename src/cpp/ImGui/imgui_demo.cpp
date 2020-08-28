@@ -1,4 +1,4 @@
-// dear imgui, v1.76 WIP
+﻿// dear imgui, v1.76 WIP
 // (demo code)
 
 // Help:
@@ -274,7 +274,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
 
     // Main body of the Demo window starts here.
-    if (!ImGui::Begin("Dear ImGui Demo", p_open, window_flags))
+    if (!ImGui::Begin("Jeremi Rynkiewicz - About Me", p_open, window_flags))
     {
         // Early out if the window is collapsed, as an optimization.
         ImGui::End();
@@ -319,19 +319,20 @@ void ImGui::ShowDemoWindow(bool* p_open)
         ImGui::EndMenuBar();
     }
 
-    ImGui::Text("dear imgui says hello. (%s)", IMGUI_VERSION);
+    ImGui::Text("Please feel free to browse this page and learn more about me");
+    //ImGui::Text("dear imgui says hello. (%s)", IMGUI_VERSION);
     ImGui::Spacing();
 
-    if (ImGui::CollapsingHeader("Help"))
+    if (ImGui::CollapsingHeader("Introduction"))
     {
-        ImGui::Text("ABOUT THIS DEMO:");
-        ImGui::BulletText("Sections below are demonstrating many aspects of the library.");
+        ImGui::Text("WHO AM I?");
+        ImGui::BulletText(u8"My name is Jeremi Zdzisław Rynkiewicz, I was born in the year 1988 in Australia to a Polish family of immigrants.");
         ImGui::BulletText("The \"Examples\" menu above leads to more demo contents.");
         ImGui::BulletText("The \"Tools\" menu above gives access to: About Box, Style Editor,\n"
                           "and Metrics (general purpose Dear ImGui debugging tool).");
         ImGui::Separator();
 
-        ImGui::Text("PROGRAMMER GUIDE:");
+        ImGui::Text("WHY DID I CREATE THIS WEBSITE?");
         ImGui::BulletText("See the ShowDemoWindow() code in imgui_demo.cpp. <- you are here!");
         ImGui::BulletText("See comments in imgui.cpp.");
         ImGui::BulletText("See example applications in the examples/ folder.");

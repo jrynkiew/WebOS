@@ -42,12 +42,17 @@ void WebOS::loadTextureFromFile(const char* file, GLuint* textureID) {
 void WebOS::setStyle() {
 
 	//Set all ImGui styles
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/DroidSans.ttf", 17.0f, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+    io.Fonts->Build();
+    //font->AddRemapChar(0xF9, 0142);
+    ImGui::StyleColorsClassic();
 	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(20, 20);
 	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(20, 20);
 	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing					= ImVec2(20, 20);
 	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing		= ImVec2(20, 20);
 	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding		= ImVec2(10, 10);
-	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)8;
+	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)3;
 	this->style.ScrollbarSize = this->imGuiStylePtr->ScrollbarSize				= (float)20;
 	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize					= (float)20;
 	this->style.WindowBorderSize = this->imGuiStylePtr->WindowBorderSize		= (float)1;
