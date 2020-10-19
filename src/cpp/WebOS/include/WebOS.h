@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
+#include "Menu.h"
 
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
@@ -21,7 +22,12 @@
 
 #include <stdio.h>
 
+static bool show_demo_window = false;
+static bool show_main_menu = true;
+static bool show_another_window = false;
+static bool show_main_hook = true;
 
+//void showMenu();				//Show menu on side of screen
 
 class WebOS {
 private:
@@ -51,22 +57,24 @@ private:
 	GLuint wallpaper = 0;
 	void loadTextureFromFile(const char* file, GLuint* textureID);
 	bool showContextMenu = false;
+	WebOS_Menu Main_Menu;
 	//Still not implemented - the actual menu appeas because of imgui_demo.cpp  static bool show_app_main_menu_bar = true;
 	
-	static void ShowMenuFile();
+	//static void ShowMenuFile();
 public:
+	WebOS_Menu& getMainMenu() { return Main_Menu; }
 	bool getShowContextMenu(){ return showContextMenu; }
 	void setShowContextMenu(bool target) { showContextMenu = target; }
-	void ShowStartHook(bool* p_open);
+	//void ShowStartHook(bool* p_open);
  	void setStyle();
 	ImVec4* getBackgroundColor();
-	static void ShowHookMenu();
+	//static void ShowHookMenu();
 	void showIcon();
 	void showBackgroundWallpaper();
 	void showRightClickContextMenu();
 
 	WebOS();
-	~WebOS();
+	//~WebOS();
 };
 
 #ifndef WEBOS_API

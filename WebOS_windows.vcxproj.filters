@@ -63,6 +63,9 @@
     <ClCompile Include="src\cpp\WebOS\Elements\rightClickContextMenu.cpp">
       <Filter>Source Files\WebOS\Elements</Filter>
     </ClCompile>
+    <ClCompile Include="src\cpp\WebOS\Elements\Menu.cpp">
+      <Filter>Source Files\WebOS\Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cpp\ImGui\imconfig.h">
@@ -84,6 +87,9 @@
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\cpp\WebOS\include\rightClickContextMenu.h">
+      <Filter>Header Files\WebOS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpp\WebOS\include\Elements\Menu.h">
       <Filter>Header Files\WebOS</Filter>
     </ClInclude>
   </ItemGroup>

@@ -42,7 +42,7 @@ endif
 SOURCES = src/cpp/main.cpp
 SOURCES += src/cpp/ImGui/examples/imgui_impl_sdl.cpp src/cpp/ImGui/examples/imgui_impl_opengl3.cpp
 SOURCES += src/cpp/ImGui/imgui.cpp src/cpp/ImGui/imgui_demo.cpp src/cpp/ImGui/imgui_draw.cpp src/cpp/ImGui/imgui_widgets.cpp
-SOURCES += src/cpp/WebOS/WebOS.cpp
+SOURCES += src/cpp/WebOS/Elements/Menu.cpp src/cpp/WebOS/WebOS.cpp 
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
@@ -65,7 +65,7 @@ CXXFLAGS = -std=c++11
 CPPFLAGS = -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/
 
 # include WebOS folders
-CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include
+CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include -Isrc/cpp/WebOS/include/Elements
 
 CPPFLAGS += -g -Wall -Wformat -O3
 CPPFLAGS += $(EMS)
@@ -82,6 +82,9 @@ LIBS = $(EMS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
 %.o:src/cpp/ImGui/examples/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+	
+%.o:src/cpp/WebOS/Elements/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 	
 %.o:src/cpp/WebOS/%.cpp

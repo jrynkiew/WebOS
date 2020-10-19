@@ -114,7 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;C:\WebOS\src\cpp\WebOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\WebOS\src\cpp\WebOS\include\Elements;C:\Users\jrz2\Desktop\SOURCE\SDL2-2.0.12\include;C:\Users\jrz2\Desktop\SOURCE\SDL2_image-2.0.5;C:\WebOS\src\cpp\ImGui;C:\WebOS\src\cpp\ImGui\examples;C:\WebOS\src\cpp\ImGui\examples\libs\gl3w;C:\WebOS\src\cpp\WebOS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>Default</LanguageStandard>
@@ -150,6 +150,7 @@
     <ClCompile Include="src\cpp\ImGui\imgui_draw.cpp" />
     <ClCompile Include="src\cpp\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\cpp\main.cpp" />
+    <ClCompile Include="src\cpp\WebOS\Elements\Menu.cpp" />
     <ClCompile Include="src\cpp\WebOS\Elements\rightClickContextMenu.cpp" />
     <ClCompile Include="src\cpp\WebOS\WebOS.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="src\cpp\ImGui\imconfig.h" />
     <ClInclude Include="src\cpp\ImGui\imgui.h" />
     <ClInclude Include="src\cpp\ImGui\imgui_internal.h" />
+    <ClInclude Include="src\cpp\WebOS\include\Elements\Menu.h" />
     <ClInclude Include="src\cpp\WebOS\include\rightClickContextMenu.h" />
     <ClInclude Include="src\cpp\WebOS\include\WebOS.h" />
   </ItemGroup>

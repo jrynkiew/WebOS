@@ -8,10 +8,6 @@ WebOS::WebOS() {
 }
 
 void WebOS::loadTextureFromFile(const char* file, GLuint* textureID) {
-    //GLuint textureID = 0;
-
-    // You should probably use CSurface::OnLoad ... ;)
-    //-- and make sure the Surface pointer is good!
     SDL_Surface* original = IMG_Load(file);
     if(!original)
     {
@@ -67,7 +63,7 @@ void WebOS::setStyle() {
 	//Set background color
 	//this->style.backgroundColor = ImVec4(0.56f, 0.73f, 0.84f, 1.00f);
 	//this->style.backgroundColor = ImVec4(0.00f, 0.4f, 0.53f, 1.00f);
-	this->style.backgroundColor = ImVec4(1.00f, 1.0f, 1.00f, 1.00f);
+	//this->style.backgroundColor = ImVec4(1.00f, 1.0f, 1.00f, 1.00f);
 }
 
 ImVec4* WebOS::getBackgroundColor() {
@@ -159,6 +155,7 @@ void WebOS::showRightClickContextMenu()
     }
 }
 
+/*
 void WebOS::ShowHookMenu()
 {
     if (ImGui::BeginMainMenuBar())
@@ -256,4 +253,4 @@ void WebOS::ShowMenuFile()
     }
     if (ImGui::MenuItem("Checked", NULL, true)) {}
     if (ImGui::MenuItem("Quit", "Alt+F4")) {}
-}
+}*/
