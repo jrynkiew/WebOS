@@ -4,6 +4,8 @@ Test the resulting project here: https://www.jrpc.pl/
 
 # 1. Install emscripten
 
+Install packaged emscripten if it is available on your distribution. On Solus it is confirmed working
+
 Get the emsdk repo
 ```
 git clone https://github.com/emscripten-core/emsdk.git
@@ -75,9 +77,11 @@ The emscripten compiler will use SDL Image 2.0.0 libraries
 
 # 5. Install Dear ImGui
 
-Get the latest version from 
+Get the latest version from: 
 
 > https://github.com/ocornut/imgui
+
+This step is only necessary on Windows
 
 Last version tested and confirmed working is 
 ```
@@ -110,6 +114,7 @@ setEmscriptenEnvsLinux.sh
 
 make
 ```
+This might be only necessary if you build emscripten yourself
 
 ##### May need to use emmake make in some cases
 
