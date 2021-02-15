@@ -133,6 +133,16 @@ and to clean up debug files
 make clean DEBUG=1
 ```
 
+##### The default "make" command will build the emscripten binaries, html and js files.
+
+If you want to make a linux build, use this syntax**
+```
+make LINUX=1
+```
+
+
+
+
 
 # 8. Required Libs
 libpng16-16.dll 211 or 206 kB
