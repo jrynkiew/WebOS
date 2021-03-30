@@ -47,7 +47,7 @@ void WebOS::setStyle() {
 	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(6, 6);
 	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing				= ImVec2(20, 20);
 	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing			= ImVec2(14, 20);
-	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding			= ImVec2(10, 10);
+	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding			= ImVec2(5, 5);
 	this->style.IndentSpacing = this->imGuiStylePtr->IndentSpacing				= (float)21;
 	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)3;
 	this->style.ScrollbarSize = this->imGuiStylePtr->ScrollbarSize				= (float)20;
