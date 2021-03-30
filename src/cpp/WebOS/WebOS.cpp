@@ -42,8 +42,7 @@ void WebOS::setStyle() {
     ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/DroidSans.ttf", 17.0f, nullptr, io.Fonts->GetGlyphRangesCyrillic());
     io.Fonts->Build();
     //font->AddRemapChar(0xF9, 0142);
-<<<<<<< HEAD
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsIoTeX();
 	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(4, 7);
 	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(6, 6);
 	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing				= ImVec2(20, 20);
@@ -53,17 +52,6 @@ void WebOS::setStyle() {
 	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)3;
 	this->style.ScrollbarSize = this->imGuiStylePtr->ScrollbarSize				= (float)20;
 	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize				= (float)10;
-=======
-    ImGui::StyleColorsLight();
-	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(20, 20);
-	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(20, 20);
-	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing				= ImVec2(20, 20);
-	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing			= ImVec2(20, 20);
-	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding			= ImVec2(10, 10);
-	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)3;
-	this->style.ScrollbarSize = this->imGuiStylePtr->ScrollbarSize				= (float)20;
-	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize				= (float)20;
->>>>>>> 4753c51873e2cf8dd9429e910513809a504d3eb1
 	this->style.WindowBorderSize = this->imGuiStylePtr->WindowBorderSize			= (float)1;
 	this->style.ChildBorderSize =  this->imGuiStylePtr->ChildBorderSize			= (float)1;
 	this->style.PopupBorderSize = this->imGuiStylePtr->PopupBorderSize			= (float)1;
