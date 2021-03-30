@@ -38,6 +38,7 @@ private:
 		ImVec2 ItemSpacing;
 		ImVec2 ItemInnerSpacing;
 		ImVec2 TouchExtraPadding;
+		float IndentSpacing;
 		float FrameRounding;
 		float ScrollbarSize;
 		float GrabMinSize;

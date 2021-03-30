@@ -4,7 +4,7 @@
 
 class WebOS_Menu {
 private:
-	ImVec2 menuSize = ImVec2(300, 600);
+	ImVec2 menuSize = ImVec2(150, 75);
 	bool MenuToggle = false;
 public:
 	ImVec2& getMenuSize();

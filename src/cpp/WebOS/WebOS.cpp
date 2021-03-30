@@ -3,7 +3,7 @@
 WebOS::WebOS() {
 	//WebOS_style style;
 	this->imGuiStylePtr = &ImGui::GetStyle();
-    loadTextureFromFile("images/icon.png", &icon);
+    loadTextureFromFile("images/io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu.png", &icon);
     loadTextureFromFile("images/wallpaper.png", &wallpaper);
 }
 
@@ -42,22 +42,23 @@ void WebOS::setStyle() {
     ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/DroidSans.ttf", 17.0f, nullptr, io.Fonts->GetGlyphRangesCyrillic());
     io.Fonts->Build();
     //font->AddRemapChar(0xF9, 0142);
-    ImGui::StyleColorsClassic();
-	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(20, 20);
-	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(20, 20);
-	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing					= ImVec2(20, 20);
-	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing		= ImVec2(20, 20);
-	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding		= ImVec2(10, 10);
+    ImGui::StyleColorsDark();
+	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(4, 7);
+	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(6, 6);
+	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing				= ImVec2(20, 20);
+	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing			= ImVec2(14, 20);
+	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding			= ImVec2(10, 10);
+	this->style.IndentSpacing = this->imGuiStylePtr->IndentSpacing				= (float)21;
 	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)3;
 	this->style.ScrollbarSize = this->imGuiStylePtr->ScrollbarSize				= (float)20;
-	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize					= (float)20;
-	this->style.WindowBorderSize = this->imGuiStylePtr->WindowBorderSize		= (float)1;
+	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize				= (float)10;
+	this->style.WindowBorderSize = this->imGuiStylePtr->WindowBorderSize			= (float)1;
 	this->style.ChildBorderSize =  this->imGuiStylePtr->ChildBorderSize			= (float)1;
 	this->style.PopupBorderSize = this->imGuiStylePtr->PopupBorderSize			= (float)1;
 	this->style.FrameBorderSize = this->imGuiStylePtr->FrameBorderSize			= (float)1;
 	this->style.TabBorderSize = this->imGuiStylePtr->TabBorderSize				= (float)1;
-	this->style.WindowRounding= this->imGuiStylePtr->WindowRounding				= (float)0;
-	this->style.ChildRounding = this->imGuiStylePtr->ChildRounding				= (float)0;
+	this->style.WindowRounding= this->imGuiStylePtr->WindowRounding				= (float)6;
+	this->style.ChildRounding = this->imGuiStylePtr->ChildRounding				= (float)6;
 	this->style.GrabRounding = this->imGuiStylePtr->GrabRounding				= (float)7;
 
 	//Set background color

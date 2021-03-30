@@ -1,7 +1,7 @@
 //ImGui headers
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
+#include "/home/jeremi-solus/Coding/WebOS/src/cpp/ImGui/imgui.h"
+#include "/home/jeremi-solus/Coding/WebOS/src/cpp/ImGui/examples/imgui_impl_sdl.h"
+#include "/home/jeremi-solus/Coding/WebOS/src/cpp/ImGui/examples/imgui_impl_opengl3.h"
 
 //SDL headers
 #include <SDL.h>
@@ -199,7 +199,7 @@ int main(int, char**)
         //interface->ShowStartHook(&show_main_hook);
         //ImGui::End();
 
-        interface->showBackgroundWallpaper();
+        //interface->showBackgroundWallpaper();
         interface->showIcon();
 
         interface->getMainMenu().showMainMenu();

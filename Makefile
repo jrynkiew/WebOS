@@ -10,7 +10,75 @@
 #  - example_sdl_opengl3.wasm
 #
 # All three are needed to run the demo.
+ifeq ($(LINUX), 1)
+CC = gcc
+CXX = g++
 
+OUTPUTFOLDER = out/Linux/
+
+#To fix, EXE should always be the same, the debug or not debug should only change behaviour, not specify different variables
+EXE = $(OUTPUTFOLDER)WebOS
+
+SOURCES = src/cpp/main.cpp
+SOURCES += src/cpp/ImGui/examples/imgui_impl_sdl.cpp src/cpp/ImGui/examples/imgui_impl_opengl3.cpp
+SOURCES += src/cpp/ImGui/imgui.cpp src/cpp/ImGui/imgui_demo.cpp src/cpp/ImGui/imgui_draw.cpp src/cpp/ImGui/imgui_widgets.cpp
+SOURCES += src/cpp/WebOS/Elements/Menu.cpp src/cpp/WebOS/Elements/rightClickContextMenu.cpp src/cpp/WebOS/WebOS.cpp 
+SOURCES += /home/jeremi-solus/Coding/libraries/gl3w/src/gl3w.c
+
+OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
+OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
+
+UNAME_S := $(shell uname -s)
+
+# for the std::functional hack
+CXXFLAGS = -std=c++11
+LIBDIR = -L/home/jeremi-solus/Coding/libraries/SDL2/out/lib
+LIBDIR += -L/home/jeremi-solus/Coding/libraries/SDL2_image-2.0.5/out/lib
+LIBDIR += -L/home/jeremi-solus/Coding/libraries/Xorg/lib
+LIBDIR += -L/home/jeremi-solus/Coding/libraries/glfw/out/lib64
+
+# include ImGui folders
+CPPFLAGS += -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/ -I/home/jeremi-solus/Coding/libraries/gl3w/include 
+
+# include WebOS folders
+CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include -Isrc/cpp/WebOS/include/Elements
+
+CPPFLAGS += -g -Wall -Wformat -O3 
+
+LIBS = -lSDL2 -lX11 -lSDL2_image -ldl -lm -lGL -lGLU -lpthread -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -pthread
+
+##---------------------------------------------------------------------
+## BUILD RULES
+##---------------------------------------------------------------------
+%.o:/home/jeremi-solus/Coding/libraries/gl3w/src/%.c
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+
+%.o:src/cpp/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+
+%.o:src/cpp/ImGui/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+
+%.o:src/cpp/ImGui/examples/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+	
+%.o:src/cpp/WebOS/Elements/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+	
+%.o:src/cpp/WebOS/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
+
+all: $(EXE)
+	@echo Release build complete for $(EXE)
+
+$(EXE): $(OBJS)
+	@echo $(OUTPUTOBJS)
+	$(CXX) -o $@ $(OUTPUTOBJS) $(LIBDIR) $(LIBS) $(LDFLAGS)
+
+clean:
+	rm -f $(EXE) $(OUTPUTOBJS) 
+	
+else	
 CC = emcc
 CXX = em++
 
@@ -53,7 +121,7 @@ EMS = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_WEBGL2=1 -s WASM=1 -s FULL_ES3=1
 EMS += -s ALLOW_MEMORY_GROWTH=1
 EMS += -s DISABLE_EXCEPTION_CATCHING=1 -s EXIT_RUNTIME=1
 EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
-EMS += --preload-file images/wallpaper.png --preload-file images/icon.png --preload-file fonts/DroidSans.ttf --use-preload-plugins
+EMS += --preload-file images/wallpaper.png --preload-file images/io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu.png --preload-file fonts/DroidSans.ttf --use-preload-plugins
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif
@@ -109,7 +177,7 @@ $(EXE): $(OBJS)
 clean:
 	rm -f $(EXE) $(OUTPUTOBJS) $(HTMLOUTPUT) $(DEBUGFILES) $(RELEASEFILES)
 	
-	
+endif
 	
 # #
 # # Compiler flags
