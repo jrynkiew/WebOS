@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "49ec5c0a-ebe7-427c-bc1d-bf9ecd85c6df"
+  "package_uuid": "6c7c6431-1814-482d-b37b-5d4bb69a2397"
  });
 })();
 
@@ -1586,7 +1586,7 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {
- 75802: function($0) {
+ 75866: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1594,7 +1594,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 112028: function($0, $1, $2) {
+ 112092: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1665,7 +1665,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 113507: function($0, $1, $2, $3, $4) {
+ 113571: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1702,36 +1702,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 114496: function($0) {
+ 114560: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 114589: function() {
+ 114653: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 115814: function() {
+ 115878: function() {
   return screen.width;
  },
- 115841: function() {
+ 115905: function() {
   return screen.height;
  },
- 115869: function() {
+ 115933: function() {
   return window.innerWidth;
  },
- 115901: function() {
+ 115965: function() {
   return window.innerHeight;
  },
- 115979: function($0) {
+ 116043: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 116113: function() {
+ 116177: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1739,7 +1739,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 116279: function() {
+ 116343: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1747,7 +1747,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 116505: function($0) {
+ 116569: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1769,11 +1769,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 117058: function() {
+ 117122: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 117128: function($0, $1, $2, $3) {
+ 117192: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1814,7 +1814,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 118780: function($0, $1, $2, $3) {
+ 118844: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1826,7 +1826,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 119190: function($0, $1) {
+ 119254: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1845,7 +1845,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 119795: function($0, $1) {
+ 119859: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1858,7 +1858,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 120275: function($0) {
+ 120339: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -5660,6 +5660,10 @@ function ___sys_open(path, flags, varargs) {
  }
 }
 
+function __emscripten_fetch_free(id) {
+ delete Fetch.xhrs[id - 1];
+}
+
 function _abort() {
  abort();
 }
@@ -9376,6 +9380,12 @@ function _emscripten_has_asyncify() {
  return 0;
 }
 
+function _emscripten_is_main_browser_thread() {
+ return !ENVIRONMENT_IS_WORKER;
+}
+
+Module["_emscripten_is_main_browser_thread"] = _emscripten_is_main_browser_thread;
+
 function _emscripten_memcpy_big(dest, src, num) {
  HEAPU8.copyWithin(dest, src, src + num);
 }
@@ -9965,6 +9975,349 @@ function _emscripten_set_wheel_callback_on_thread(target, userData, useCapture, 
 
 function _emscripten_sleep() {
  throw "Please compile your program with async support in order to use asynchronous operations like emscripten_sleep";
+}
+
+var Fetch = {
+ xhrs: [],
+ setu64: function(addr, val) {
+  SAFE_HEAP_STORE((addr >> 2) * 4, val, 4);
+  SAFE_HEAP_STORE((addr + 4 >> 2) * 4, val / 4294967296 | 0, 4);
+ },
+ openDatabase: function(dbname, dbversion, onsuccess, onerror) {
+  try {
+   var openRequest = indexedDB.open(dbname, dbversion);
+  } catch (e) {
+   return onerror(e);
+  }
+  openRequest.onupgradeneeded = function(event) {
+   var db = event.target.result;
+   if (db.objectStoreNames.contains("FILES")) {
+    db.deleteObjectStore("FILES");
+   }
+   db.createObjectStore("FILES");
+  };
+  openRequest.onsuccess = function(event) {
+   onsuccess(event.target.result);
+  };
+  openRequest.onerror = function(error) {
+   onerror(error);
+  };
+ },
+ staticInit: function() {
+  var isMainThread = true;
+  var onsuccess = function(db) {
+   Fetch.dbInstance = db;
+   if (isMainThread) {
+    removeRunDependency("library_fetch_init");
+   }
+  };
+  var onerror = function() {
+   Fetch.dbInstance = false;
+   if (isMainThread) {
+    removeRunDependency("library_fetch_init");
+   }
+  };
+  Fetch.openDatabase("emscripten_filesystem", 1, onsuccess, onerror);
+  if (typeof ENVIRONMENT_IS_FETCH_WORKER === "undefined" || !ENVIRONMENT_IS_FETCH_WORKER) addRunDependency("library_fetch_init");
+ }
+};
+
+function __emscripten_fetch_xhr(fetch, onsuccess, onerror, onprogress, onreadystatechange) {
+ var url = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ if (!url) {
+  onerror(fetch, 0, "no url specified!");
+  return;
+ }
+ var url_ = UTF8ToString(url);
+ var fetch_attr = fetch + 112;
+ var requestMethod = UTF8ToString(fetch_attr);
+ if (!requestMethod) requestMethod = "GET";
+ var userData = SAFE_HEAP_LOAD((fetch + 4 >> 2) * 4, 4, 1);
+ var fetchAttributes = SAFE_HEAP_LOAD((fetch_attr + 52 >> 2) * 4, 4, 1);
+ var timeoutMsecs = SAFE_HEAP_LOAD((fetch_attr + 56 >> 2) * 4, 4, 1);
+ var withCredentials = !!SAFE_HEAP_LOAD((fetch_attr + 60 >> 2) * 4, 4, 1);
+ var destinationPath = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ var userName = SAFE_HEAP_LOAD((fetch_attr + 68 >> 2) * 4, 4, 1);
+ var password = SAFE_HEAP_LOAD((fetch_attr + 72 >> 2) * 4, 4, 1);
+ var requestHeaders = SAFE_HEAP_LOAD((fetch_attr + 76 >> 2) * 4, 4, 1);
+ var overriddenMimeType = SAFE_HEAP_LOAD((fetch_attr + 80 >> 2) * 4, 4, 1);
+ var dataPtr = SAFE_HEAP_LOAD((fetch_attr + 84 >> 2) * 4, 4, 1);
+ var dataLength = SAFE_HEAP_LOAD((fetch_attr + 88 >> 2) * 4, 4, 1);
+ var fetchAttrLoadToMemory = !!(fetchAttributes & 1);
+ var fetchAttrStreamData = !!(fetchAttributes & 2);
+ var fetchAttrPersistFile = !!(fetchAttributes & 4);
+ var fetchAttrAppend = !!(fetchAttributes & 8);
+ var fetchAttrReplace = !!(fetchAttributes & 16);
+ var fetchAttrSynchronous = !!(fetchAttributes & 64);
+ var fetchAttrWaitable = !!(fetchAttributes & 128);
+ var userNameStr = userName ? UTF8ToString(userName) : undefined;
+ var passwordStr = password ? UTF8ToString(password) : undefined;
+ var overriddenMimeTypeStr = overriddenMimeType ? UTF8ToString(overriddenMimeType) : undefined;
+ var xhr = new XMLHttpRequest();
+ xhr.withCredentials = withCredentials;
+ xhr.open(requestMethod, url_, !fetchAttrSynchronous, userNameStr, passwordStr);
+ if (!fetchAttrSynchronous) xhr.timeout = timeoutMsecs;
+ xhr.url_ = url_;
+ assert(!fetchAttrStreamData, "streaming uses moz-chunked-arraybuffer which is no longer supported; TODO: rewrite using fetch()");
+ xhr.responseType = "arraybuffer";
+ if (overriddenMimeType) {
+  xhr.overrideMimeType(overriddenMimeTypeStr);
+ }
+ if (requestHeaders) {
+  for (;;) {
+   var key = SAFE_HEAP_LOAD((requestHeaders >> 2) * 4, 4, 1);
+   if (!key) break;
+   var value = SAFE_HEAP_LOAD((requestHeaders + 4 >> 2) * 4, 4, 1);
+   if (!value) break;
+   requestHeaders += 8;
+   var keyStr = UTF8ToString(key);
+   var valueStr = UTF8ToString(value);
+   xhr.setRequestHeader(keyStr, valueStr);
+  }
+ }
+ Fetch.xhrs.push(xhr);
+ var id = Fetch.xhrs.length;
+ SAFE_HEAP_STORE((fetch + 0 >> 2) * 4, id, 4);
+ var data = dataPtr && dataLength ? HEAPU8.slice(dataPtr, dataPtr + dataLength) : null;
+ function saveResponse(condition) {
+  var ptr = 0;
+  var ptrLen = 0;
+  if (condition) {
+   ptrLen = xhr.response ? xhr.response.byteLength : 0;
+   ptr = _malloc(ptrLen);
+   HEAPU8.set(new Uint8Array(xhr.response), ptr);
+  }
+  SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, ptr, 4);
+  Fetch.setu64(fetch + 16, ptrLen);
+ }
+ xhr.onload = function(e) {
+  saveResponse(fetchAttrLoadToMemory && !fetchAttrStreamData);
+  var len = xhr.response ? xhr.response.byteLength : 0;
+  Fetch.setu64(fetch + 24, 0);
+  if (len) {
+   Fetch.setu64(fetch + 32, len);
+  }
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, xhr.status, 2);
+  if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
+  if (xhr.status >= 200 && xhr.status < 300) {
+   if (onsuccess) onsuccess(fetch, xhr, e);
+  } else {
+   if (onerror) onerror(fetch, xhr, e);
+  }
+ };
+ xhr.onerror = function(e) {
+  saveResponse(fetchAttrLoadToMemory);
+  var status = xhr.status;
+  Fetch.setu64(fetch + 24, 0);
+  Fetch.setu64(fetch + 32, xhr.response ? xhr.response.byteLength : 0);
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, status, 2);
+  if (onerror) onerror(fetch, xhr, e);
+ };
+ xhr.ontimeout = function(e) {
+  if (onerror) onerror(fetch, xhr, e);
+ };
+ xhr.onprogress = function(e) {
+  var ptrLen = fetchAttrLoadToMemory && fetchAttrStreamData && xhr.response ? xhr.response.byteLength : 0;
+  var ptr = 0;
+  if (fetchAttrLoadToMemory && fetchAttrStreamData) {
+   assert(onprogress, "When doing a streaming fetch, you should have an onprogress handler registered to receive the chunks!");
+   ptr = _malloc(ptrLen);
+   HEAPU8.set(new Uint8Array(xhr.response), ptr);
+  }
+  SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, ptr, 4);
+  Fetch.setu64(fetch + 16, ptrLen);
+  Fetch.setu64(fetch + 24, e.loaded - ptrLen);
+  Fetch.setu64(fetch + 32, e.total);
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  if (xhr.readyState >= 3 && xhr.status === 0 && e.loaded > 0) xhr.status = 200;
+  SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, xhr.status, 2);
+  if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
+  if (onprogress) onprogress(fetch, xhr, e);
+  if (ptr) {
+   _free(ptr);
+  }
+ };
+ xhr.onreadystatechange = function(e) {
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  if (xhr.readyState >= 2) {
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, xhr.status, 2);
+  }
+  if (onreadystatechange) onreadystatechange(fetch, xhr, e);
+ };
+ try {
+  xhr.send(data);
+ } catch (e) {
+  if (onerror) onerror(fetch, xhr, e);
+ }
+}
+
+function __emscripten_fetch_cache_data(db, fetch, data, onsuccess, onerror) {
+ if (!db) {
+  onerror(fetch, 0, "IndexedDB not available!");
+  return;
+ }
+ var fetch_attr = fetch + 112;
+ var destinationPath = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ if (!destinationPath) destinationPath = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ var destinationPathStr = UTF8ToString(destinationPath);
+ try {
+  var transaction = db.transaction([ "FILES" ], "readwrite");
+  var packages = transaction.objectStore("FILES");
+  var putRequest = packages.put(data, destinationPathStr);
+  putRequest.onsuccess = function(event) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 200, 2);
+   stringToUTF8("OK", fetch + 44, 64);
+   onsuccess(fetch, 0, destinationPathStr);
+  };
+  putRequest.onerror = function(error) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 413, 2);
+   stringToUTF8("Payload Too Large", fetch + 44, 64);
+   onerror(fetch, 0, error);
+  };
+ } catch (e) {
+  onerror(fetch, 0, e);
+ }
+}
+
+function __emscripten_fetch_load_cached_data(db, fetch, onsuccess, onerror) {
+ if (!db) {
+  onerror(fetch, 0, "IndexedDB not available!");
+  return;
+ }
+ var fetch_attr = fetch + 112;
+ var path = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ if (!path) path = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ var pathStr = UTF8ToString(path);
+ try {
+  var transaction = db.transaction([ "FILES" ], "readonly");
+  var packages = transaction.objectStore("FILES");
+  var getRequest = packages.get(pathStr);
+  getRequest.onsuccess = function(event) {
+   if (event.target.result) {
+    var value = event.target.result;
+    var len = value.byteLength || value.length;
+    var ptr = _malloc(len);
+    HEAPU8.set(new Uint8Array(value), ptr);
+    SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, ptr, 4);
+    Fetch.setu64(fetch + 16, len);
+    Fetch.setu64(fetch + 24, 0);
+    Fetch.setu64(fetch + 32, len);
+    SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+    SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 200, 2);
+    stringToUTF8("OK", fetch + 44, 64);
+    onsuccess(fetch, 0, value);
+   } else {
+    SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+    SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 404, 2);
+    stringToUTF8("Not Found", fetch + 44, 64);
+    onerror(fetch, 0, "no data");
+   }
+  };
+  getRequest.onerror = function(error) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 404, 2);
+   stringToUTF8("Not Found", fetch + 44, 64);
+   onerror(fetch, 0, error);
+  };
+ } catch (e) {
+  onerror(fetch, 0, e);
+ }
+}
+
+function __emscripten_fetch_delete_cached_data(db, fetch, onsuccess, onerror) {
+ if (!db) {
+  onerror(fetch, 0, "IndexedDB not available!");
+  return;
+ }
+ var fetch_attr = fetch + 112;
+ var path = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ if (!path) path = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ var pathStr = UTF8ToString(path);
+ try {
+  var transaction = db.transaction([ "FILES" ], "readwrite");
+  var packages = transaction.objectStore("FILES");
+  var request = packages.delete(pathStr);
+  request.onsuccess = function(event) {
+   var value = event.target.result;
+   SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, 0, 4);
+   Fetch.setu64(fetch + 16, 0);
+   Fetch.setu64(fetch + 24, 0);
+   Fetch.setu64(fetch + 32, 0);
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 200, 2);
+   stringToUTF8("OK", fetch + 44, 64);
+   onsuccess(fetch, 0, value);
+  };
+  request.onerror = function(error) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 404, 2);
+   stringToUTF8("Not Found", fetch + 44, 64);
+   onerror(fetch, 0, error);
+  };
+ } catch (e) {
+  onerror(fetch, 0, e);
+ }
+}
+
+function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readystatechangecb) {
+ if (typeof noExitRuntime !== "undefined") noExitRuntime = true;
+ var fetch_attr = fetch + 112;
+ var requestMethod = UTF8ToString(fetch_attr);
+ var onsuccess = SAFE_HEAP_LOAD((fetch_attr + 36 >> 2) * 4, 4, 1);
+ var onerror = SAFE_HEAP_LOAD((fetch_attr + 40 >> 2) * 4, 4, 1);
+ var onprogress = SAFE_HEAP_LOAD((fetch_attr + 44 >> 2) * 4, 4, 1);
+ var onreadystatechange = SAFE_HEAP_LOAD((fetch_attr + 48 >> 2) * 4, 4, 1);
+ var fetchAttributes = SAFE_HEAP_LOAD((fetch_attr + 52 >> 2) * 4, 4, 1);
+ var fetchAttrLoadToMemory = !!(fetchAttributes & 1);
+ var fetchAttrStreamData = !!(fetchAttributes & 2);
+ var fetchAttrPersistFile = !!(fetchAttributes & 4);
+ var fetchAttrNoDownload = !!(fetchAttributes & 32);
+ var fetchAttrAppend = !!(fetchAttributes & 8);
+ var fetchAttrReplace = !!(fetchAttributes & 16);
+ var reportSuccess = function(fetch, xhr, e) {
+  if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+ };
+ var reportProgress = function(fetch, xhr, e) {
+  if (onprogress) wasmTable.get(onprogress)(fetch); else if (progresscb) progresscb(fetch);
+ };
+ var reportError = function(fetch, xhr, e) {
+  if (onerror) wasmTable.get(onerror)(fetch); else if (errorcb) errorcb(fetch);
+ };
+ var reportReadyStateChange = function(fetch, xhr, e) {
+  if (onreadystatechange) wasmTable.get(onreadystatechange)(fetch); else if (readystatechangecb) readystatechangecb(fetch);
+ };
+ var performUncachedXhr = function(fetch, xhr, e) {
+  __emscripten_fetch_xhr(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
+ };
+ var cacheResultAndReportSuccess = function(fetch, xhr, e) {
+  var storeSuccess = function(fetch, xhr, e) {
+   if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+  };
+  var storeError = function(fetch, xhr, e) {
+   if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+  };
+  __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
+ };
+ var performCachedXhr = function(fetch, xhr, e) {
+  __emscripten_fetch_xhr(fetch, cacheResultAndReportSuccess, reportError, reportProgress, reportReadyStateChange);
+ };
+ if (requestMethod === "EM_IDB_STORE") {
+  var ptr = SAFE_HEAP_LOAD((fetch_attr + 84 >> 2) * 4, 4, 1);
+  __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, HEAPU8.slice(ptr, ptr + SAFE_HEAP_LOAD((fetch_attr + 88 >> 2) * 4, 4, 1)), reportSuccess, reportError);
+ } else if (requestMethod === "EM_IDB_DELETE") {
+  __emscripten_fetch_delete_cached_data(Fetch.dbInstance, fetch, reportSuccess, reportError);
+ } else if (!fetchAttrReplace) {
+  __emscripten_fetch_load_cached_data(Fetch.dbInstance, fetch, reportSuccess, fetchAttrNoDownload ? reportError : fetchAttrPersistFile ? performCachedXhr : performUncachedXhr);
+ } else if (!fetchAttrNoDownload) {
+  __emscripten_fetch_xhr(fetch, fetchAttrPersistFile ? cacheResultAndReportSuccess : reportSuccess, reportError, reportProgress, reportReadyStateChange);
+ } else {
+  return 0;
+ }
+ return fetch;
 }
 
 function _emscripten_thread_sleep(msecs) {
@@ -10603,6 +10956,8 @@ for (var i = 0; i < 288; ++i) {
  __miniTempWebGLIntBuffers[i] = __miniTempWebGLIntBuffersStorage.subarray(0, i + 1);
 }
 
+Fetch.staticInit();
+
 var ASSERTIONS = true;
 
 function intArrayFromString(stringy, dontAddNull, length) {
@@ -10636,6 +10991,7 @@ var asmLibraryArg = {
  "__sys_fcntl64": ___sys_fcntl64,
  "__sys_ioctl": ___sys_ioctl,
  "__sys_open": ___sys_open,
+ "_emscripten_fetch_free": __emscripten_fetch_free,
  "abort": _abort,
  "alignfault": alignfault,
  "clock_gettime": _clock_gettime,
@@ -10943,6 +11299,7 @@ var asmLibraryArg = {
  "emscripten_glViewport": _emscripten_glViewport,
  "emscripten_glWaitSync": _emscripten_glWaitSync,
  "emscripten_has_asyncify": _emscripten_has_asyncify,
+ "emscripten_is_main_browser_thread": _emscripten_is_main_browser_thread,
  "emscripten_memcpy_big": _emscripten_memcpy_big,
  "emscripten_request_fullscreen_strategy": _emscripten_request_fullscreen_strategy,
  "emscripten_request_pointerlock": _emscripten_request_pointerlock,
@@ -10974,6 +11331,7 @@ var asmLibraryArg = {
  "emscripten_set_visibilitychange_callback_on_thread": _emscripten_set_visibilitychange_callback_on_thread,
  "emscripten_set_wheel_callback_on_thread": _emscripten_set_wheel_callback_on_thread,
  "emscripten_sleep": _emscripten_sleep,
+ "emscripten_start_fetch": _emscripten_start_fetch,
  "emscripten_thread_sleep": _emscripten_thread_sleep,
  "environ_get": _environ_get,
  "environ_sizes_get": _environ_sizes_get,
@@ -11828,6 +12186,26 @@ if (!Object.getOwnPropertyDescriptor(Module, "IDBStore")) Module["IDBStore"] = f
 
 if (!Object.getOwnPropertyDescriptor(Module, "runAndAbortIfError")) Module["runAndAbortIfError"] = function() {
  abort("'runAndAbortIfError' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "Fetch")) Module["Fetch"] = function() {
+ abort("'Fetch' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_delete_cached_data")) Module["__emscripten_fetch_delete_cached_data"] = function() {
+ abort("'__emscripten_fetch_delete_cached_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_load_cached_data")) Module["__emscripten_fetch_load_cached_data"] = function() {
+ abort("'__emscripten_fetch_load_cached_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_cache_data")) Module["__emscripten_fetch_cache_data"] = function() {
+ abort("'__emscripten_fetch_cache_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_xhr")) Module["__emscripten_fetch_xhr"] = function() {
+ abort("'__emscripten_fetch_xhr' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetIndexed")) Module["emscriptenWebGLGetIndexed"] = function() {

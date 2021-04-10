@@ -3,12 +3,16 @@
 #include "imgui.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <string>
+#include <iostream>
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "Menu.h"
+#include "/usr/include/curl/curl.h"
 
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
+#include <emscripten/fetch.h>
 #include <SDL_opengles2.h>
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
 #include <GL/gl3w.h>    // Initialize with gl3wInit()
@@ -23,6 +27,7 @@
 #include <stdio.h>
 
 static bool show_demo_window = false;
+static bool show_test_window = false;
 static bool show_main_menu = true;
 static bool show_another_window = false;
 static bool show_main_hook = true;
@@ -60,7 +65,8 @@ private:
 	bool showContextMenu = false;
 	WebOS_Menu Main_Menu;
 	//Still not implemented - the actual menu appeas because of imgui_demo.cpp  static bool show_app_main_menu_bar = true;
-	
+
+
 	//static void ShowMenuFile();
 public:
 	WebOS_Menu& getMainMenu() { return Main_Menu; }
@@ -73,6 +79,7 @@ public:
 	void showIcon();
 	void showBackgroundWallpaper();
 	void showRightClickContextMenu();
+	void ShowExampleAppConsole(bool* p_open);
 
 	WebOS();
 	//~WebOS();

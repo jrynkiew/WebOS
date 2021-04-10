@@ -8,6 +8,10 @@ private:
 	bool MenuToggle = false;
 public:
 	ImVec2& getMenuSize();
+
 	void setShowMainMenu();
+	void setShowMainMenuBar();
+
 	void showMainMenu();
+	void showMainMenuBar();
 };

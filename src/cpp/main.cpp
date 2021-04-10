@@ -141,6 +141,7 @@ int main(int, char**)
 
     WebOS* interface = new WebOS();
     interface->setStyle();
+    
 
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
@@ -203,7 +204,8 @@ int main(int, char**)
         interface->showIcon();
 
         interface->getMainMenu().showMainMenu();
-
+        interface->getMainMenu().showMainMenuBar();
+        
         // Rendering
         ImGui::Render();
         SDL_GL_MakeCurrent(window, gl_context);

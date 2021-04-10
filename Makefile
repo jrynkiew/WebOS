@@ -36,6 +36,7 @@ LIBDIR = -L/home/jeremi-solus/Coding/libraries/SDL2/out/lib
 LIBDIR += -L/home/jeremi-solus/Coding/libraries/SDL2_image-2.0.5/out/lib
 LIBDIR += -L/home/jeremi-solus/Coding/libraries/Xorg/lib
 LIBDIR += -L/home/jeremi-solus/Coding/libraries/glfw/out/lib64
+LIBDIR += -L/usr/lib64
 
 # include ImGui folders
 CPPFLAGS += -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/ -I/home/jeremi-solus/Coding/libraries/gl3w/include 
@@ -43,9 +44,12 @@ CPPFLAGS += -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/ -I/home/jeremi-solus/Codi
 # include WebOS folders
 CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include -Isrc/cpp/WebOS/include/Elements
 
-CPPFLAGS += -g -Wall -Wformat -O3 
+# include 3rd party libraires
+CPPFLAGS += -Iusr/include/curl
 
-LIBS = -lSDL2 -lX11 -lSDL2_image -ldl -lm -lGL -lGLU -lpthread -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -pthread
+CPPFLAGS += -g -Wall -Wformat -O3
+
+LIBS = -lSDL2 -lX11 -lSDL2_image -ldl -lm -lGL -lGLU -lpthread -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -pthread -lcurl
 
 ##---------------------------------------------------------------------
 ## BUILD RULES
@@ -122,6 +126,8 @@ EMS += -s ALLOW_MEMORY_GROWTH=1
 EMS += -s DISABLE_EXCEPTION_CATCHING=1 -s EXIT_RUNTIME=1
 EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
 EMS += --preload-file images/wallpaper.png --preload-file images/io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu.png --preload-file fonts/DroidSans.ttf --use-preload-plugins
+#enable fetching like curl from within emscripten
+EMS += -s FETCH=1
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif
