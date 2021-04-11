@@ -303,13 +303,13 @@ struct ExampleAppConsole
         static void onLoaded(emscripten_fetch_t *fetch) 
         {
             printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
-            ((std::string*)(fetch->userData))->append((char*)fetch->data, 5 * fetch->numBytes);
+            ((std::string*)(fetch->userData))->append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
             emscripten_fetch_close(fetch);
         }
         static void onError(emscripten_fetch_t *fetch)
         {
             printf("Connecting to ioPay %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
-            ((std::string*)(fetch->userData))->append((char*)fetch->data, 5 * fetch->numBytes);
+            ((std::string*)(fetch->userData))->append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
             emscripten_fetch_close(fetch);
         }
     #endif
