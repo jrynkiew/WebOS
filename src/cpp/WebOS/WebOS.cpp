@@ -304,12 +304,12 @@ struct ExampleAppConsole
         {
             printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
             ((std::string*)(fetch->userData))->append((char*)fetch->data, 5 * fetch->numBytes);
-            //fetch->(ExampleAppConsole*)userData.AddLog("Test");
             emscripten_fetch_close(fetch);
         }
         static void onError(emscripten_fetch_t *fetch)
         {
             printf("Connecting to ioPay %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+            ((std::string*)(fetch->userData))->append((char*)fetch->data, 5 * fetch->numBytes);
             emscripten_fetch_close(fetch);
         }
     #endif
@@ -347,7 +347,6 @@ struct ExampleAppConsole
                 attr.userData = &readBuffer;
                 emscripten_fetch(&attr, "http://localhost");
                 AddLog("Wallet Connection in progress....");
-                AddLog("[error] something went wrong. Please report this incident.");
                 AddLog(readBuffer.c_str());
 
             #else
