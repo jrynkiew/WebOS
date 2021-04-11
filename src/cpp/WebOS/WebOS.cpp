@@ -233,7 +233,7 @@ void WebOS::ShowMenuFile()
     if (ImGui::MenuItem("Quit", "Alt+F4")) {}
 }*/
 
-typedef struct ExampleAppConsole
+struct ExampleAppConsole
 {
     char                  InputBuf[256];
     ImVector<char*>       Items;
@@ -253,6 +253,8 @@ typedef struct ExampleAppConsole
         ((std::string*)userp)->append((char*)contents, size * nmemb);
         return size * nmemb;
     }
+
+   
 
     ExampleAppConsole()
     {
@@ -299,6 +301,19 @@ typedef struct ExampleAppConsole
         Items.push_back(Strdup(buf));
     }
 
+     #if defined(__EMSCRIPTEN__)
+        static void onLoaded(emscripten_fetch_t *fetch) 
+        {
+            printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+            emscripten_fetch_close(fetch);
+        }
+        static void onError(emscripten_fetch_t *fetch)
+        {
+            printf("Connecting to ioPay %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+            emscripten_fetch_close(fetch);
+        }
+    #endif
+
     const void    Draw(const char* title, bool* p_open)
     {
         ImGui::SetNextWindowSize(ImVec2(520,600), ImGuiCond_FirstUseEver);
@@ -323,24 +338,20 @@ typedef struct ExampleAppConsole
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
            #if defined(__EMSCRIPTEN__)
-      
                 emscripten_fetch_attr_t attr;
                 emscripten_fetch_attr_init(&attr);
                 strcpy(attr.requestMethod, "GET");
-                attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_SYNCHRONOUS;
-                emscripten_fetch_t *fetch = emscripten_fetch(&attr, "https://jrpc.pl/"); // Blocks here until the operation is complete.
-                if (fetch->status == 200) {
-                    AddLog("Working!");
-                    printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
-                    // The data is now available at fetch->data[0] through fetch->data[fetch->numBytes-1];
-                } else {
-                    AddLog("Connecting to ioPay %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
-                }
-                emscripten_fetch_close(fetch);       
+                attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+                attr.onsuccess = onLoaded;
+                attr.onerror = onError;
+                emscripten_fetch(&attr, "http://localhost");
+                AddLog("Wallet Connection in progress....");
+                AddLog("[error] something went wrong. Please report this incident.");
+
             #else
                 curl = curl_easy_init();
                 if(curl) {
-                    curl_easy_setopt(curl, CURLOPT_URL, "http://www.guimp.com/");
+                    curl_easy_setopt(curl, CURLOPT_URL, "https://jrpc.pl/");
                     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
                     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
                     res = curl_easy_perform(curl);
@@ -351,7 +362,7 @@ typedef struct ExampleAppConsole
                 }   
             #endif
         } ImGui::SameLine();
-        if (ImGui::SmallButton("Commit Transaction")) { AddLog("[error] something went wrong"); } ImGui::SameLine();
+        if (ImGui::SmallButton("Commit Transaction")) { AddLog("[error] Wallet not connected"); } ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy");
         //static float t = 0.0f; if (ImGui::GetTime() - t > 0.02f) { t = ImGui::GetTime(); AddLog("Spam %f", t); }

@@ -128,6 +128,8 @@ EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
 EMS += --preload-file images/wallpaper.png --preload-file images/io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu.png --preload-file fonts/DroidSans.ttf --use-preload-plugins
 #enable fetching like curl from within emscripten
 EMS += -s FETCH=1
+#enable asyncify
+EMS += -s ASYNCIFY
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif
