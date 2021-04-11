@@ -254,8 +254,6 @@ struct ExampleAppConsole
         return size * nmemb;
     }
 
-   
-
     ExampleAppConsole()
     {
         ClearLog();
@@ -305,6 +303,8 @@ struct ExampleAppConsole
         static void onLoaded(emscripten_fetch_t *fetch) 
         {
             printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+            ((std::string*)(fetch->userData))->append((char*)fetch->data, 5 * fetch->numBytes);
+            //fetch->(ExampleAppConsole*)userData.AddLog("Test");
             emscripten_fetch_close(fetch);
         }
         static void onError(emscripten_fetch_t *fetch)
@@ -344,9 +344,11 @@ struct ExampleAppConsole
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
+                attr.userData = &readBuffer;
                 emscripten_fetch(&attr, "http://localhost");
                 AddLog("Wallet Connection in progress....");
                 AddLog("[error] something went wrong. Please report this incident.");
+                AddLog(readBuffer.c_str());
 
             #else
                 curl = curl_easy_init();
