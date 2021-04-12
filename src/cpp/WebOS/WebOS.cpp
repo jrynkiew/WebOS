@@ -69,6 +69,36 @@ void WebOS::setStyle() {
 ImVec4* WebOS::getBackgroundColor() {
 	return &this->style.backgroundColor;
 }
+void WebOS::showWelcomePopup(bool* p_open)
+{
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2-200, ImGui::GetIO().DisplaySize.y/2-100), ImGuiCond_FirstUseEver);
+    if(!ImGui::Begin("Welcome to IoTeX console", p_open))
+    {
+        ImGui::End();
+    }else
+    {
+        //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+        ImGui::Text("Please use the right mouse click to open Menu");
+        ImGui::Text("Click the JRPC token icon to open command console");
+        ImGui::Separator();
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+                    1000.0f / ImGui::GetIO().Framerate,
+                    ImGui::GetIO().Framerate);
+
+        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "This website is still under development!!");        
+        ImGui::End();
+    }
+}
+    
+
+    // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar. So e.g. IsItemHovered() will return true when hovering the title bar.
+    // Here we create a context menu only available from the title bar.
+    
+    /*
+    ImVec2 welcomePopupLocation = ImVec2(520,600);
+    ImGui::SetNextWindowSize(welcomePopupLocation, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x-welcomePopupLocation.x, ImGui::GetIO().DisplaySize.y-welcomePopupLocation.y), ImGuiCond_FirstUseEver);
+    */
 
 void WebOS::showIcon()
 {
@@ -81,7 +111,7 @@ void WebOS::showIcon()
         ImGui::End();*/
     }
     ImVec2 iconSize = ImVec2(32.0f/32, 32.0f/32);
-    ImGui::SetNextWindowSize(ImVec2(46, 46));
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/69, ImGui::GetIO().DisplaySize.y/2));
     ImGui::Begin("JRPC_Icon", NULL, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
         if (ImGui::ImageButton((void*)(intptr_t)icon, ImVec2(32,32), ImVec2(0,0), iconSize, 3, ImVec4(0.0f,0.0f,0.0f,0.0f)))
         {
@@ -108,6 +138,10 @@ void WebOS::showIcon()
     ImGui::PopStyleVar();
     ImGui::PopStyleVar();
     */
+    if(show_welcome_popup)
+    {
+        showWelcomePopup(&show_welcome_popup);
+    }
 }
 
 void WebOS::showBackgroundWallpaper()
@@ -133,106 +167,6 @@ void WebOS::showRightClickContextMenu()
     }
 }
 
-/*
-void WebOS::ShowHookMenu()
-{
-    if (ImGui::BeginMainMenuBar())
-    {
-        if (ImGui::BeginMenu("File"))
-        {
-            WebOS::ShowMenuFile();
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Edit"))
-        {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-            ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-            ImGui::EndMenu();
-        }
-        ImGui::EndMainMenuBar();
-    }
-}
-
-void WebOS::ShowMenuFile()
-{
-    ImGui::MenuItem("(dummy menu)", NULL, false, false);
-    if (ImGui::MenuItem("New")) {}
-    if (ImGui::MenuItem("Open", "Ctrl+O")) {}
-    if (ImGui::BeginMenu("Open Recent"))
-    {
-        ImGui::MenuItem("fish_hat.c");
-        ImGui::MenuItem("fish_hat.inl");
-        ImGui::MenuItem("fish_hat.h");
-        if (ImGui::BeginMenu("More.."))
-        {
-            ImGui::MenuItem("Hello");
-            ImGui::MenuItem("Sailor");
-            if (ImGui::BeginMenu("Recurse.."))
-            {
-                ShowMenuFile();
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenu();
-    }
-    if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-    if (ImGui::MenuItem("Save As..")) {}
-
-    ImGui::Separator();
-    if (ImGui::BeginMenu("Options"))
-    {
-        static bool enabled = true;
-        ImGui::MenuItem("Enabled", "", &enabled);
-        ImGui::BeginChild("child", ImVec2(0, 60), true);
-        for (int i = 0; i < 10; i++)
-            ImGui::Text("Scrolling Text %d", i);
-        ImGui::EndChild();
-        static float f = 0.5f;
-        static int n = 0;
-        ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
-        ImGui::InputFloat("Input", &f, 0.1f);
-        ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
-        ImGui::EndMenu();
-    }
-
-    if (ImGui::BeginMenu("Colors"))
-    {
-        float sz = ImGui::GetTextLineHeight();
-        for (int i = 0; i < ImGuiCol_COUNT; i++)
-        {
-            const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
-            ImVec2 p = ImGui::GetCursorScreenPos();
-            ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui::GetColorU32((ImGuiCol)i));
-            ImGui::Dummy(ImVec2(sz, sz));
-            ImGui::SameLine();
-            ImGui::MenuItem(name);
-        }
-        ImGui::EndMenu();
-    }
-
-    // Here we demonstrate appending again to the "Options" menu (which we already created above)
-    // Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
-    // In a real code-base using it would make senses to use this feature from very different code locations.
-    if (ImGui::BeginMenu("Options")) // <-- Append!
-    {
-        static bool b = true;
-        ImGui::Checkbox("SomeOption", &b);
-        ImGui::EndMenu();
-    }
-
-    if (ImGui::BeginMenu("Disabled", false)) // Disabled
-    {
-        IM_ASSERT(0);
-    }
-    if (ImGui::MenuItem("Checked", NULL, true)) {}
-    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
-}*/
-
 struct ExampleAppConsole
 {
     char                  InputBuf[256];
@@ -244,13 +178,15 @@ struct ExampleAppConsole
     ImGuiTextFilter       Filter;
     bool                  AutoScroll;
     bool                  ScrollToBottom;
-    CURL *curl;
-  	CURLcode res;
-  	std::string readBuffer;
+    CURL                  *curl;
+  	CURLcode              res;
+  	std::string           readBuffer;
+    bool                  printed;
 
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
     {
         ((std::string*)userp)->append((char*)contents, size * nmemb);
+        
         return size * nmemb;
     }
 
@@ -265,7 +201,7 @@ struct ExampleAppConsole
         Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("Welcome to Dear ImGui!");
+        AddLog("[error] This feature is still under development");
     }
     ~ExampleAppConsole()
     {
@@ -316,7 +252,7 @@ struct ExampleAppConsole
 
     const void    Draw(const char* title, bool* p_open)
     {
-        ImGui::SetNextWindowSize(ImVec2(520,600), ImGuiCond_FirstUseEver);
+        
         if (!ImGui::Begin(title, p_open))
         {
             ImGui::End();
@@ -325,12 +261,12 @@ struct ExampleAppConsole
 
         // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar. So e.g. IsItemHovered() will return true when hovering the title bar.
         // Here we create a context menu only available from the title bar.
-        if (ImGui::BeginPopupContextItem())
+        /*if (ImGui::BeginPopupContextItem())
         {
-            if (ImGui::MenuItem("Close Console"))
+            if (ImGui::MenuItem("Close"))
                 *p_open = false;
             ImGui::EndPopup();
-        }
+        }*/
 
         ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
 
@@ -338,6 +274,8 @@ struct ExampleAppConsole
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
            #if defined(__EMSCRIPTEN__)
+                readBuffer.clear();
+                printed = false;
                 emscripten_fetch_attr_t attr;
                 emscripten_fetch_attr_init(&attr);
                 strcpy(attr.requestMethod, "GET");
@@ -345,9 +283,13 @@ struct ExampleAppConsole
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
                 attr.userData = &readBuffer;
-                emscripten_fetch(&attr, "http://localhost");
-                AddLog("Wallet Connection in progress....");
-                AddLog(readBuffer.c_str());
+
+                emscripten_fetch(&attr, "https://jrpc.pl/");
+                //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+                AddLog("[warning] Connecting to https://jrpc.pl/ using HTTP GET request");
+                AddLog("[warning] This is still experimental."); 
+                 
+                //AddLog("[error] Connection Failed");
 
             #else
                 curl = curl_easy_init();
@@ -357,13 +299,24 @@ struct ExampleAppConsole
                     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
                     res = curl_easy_perform(curl);
                     curl_easy_cleanup(curl);
-
                     //std::cout << readBuffer << std::endl;
                     AddLog(readBuffer.c_str());
                 }   
             #endif
+        } 
+        if(!printed)
+        {
+            if(readBuffer.length()!=0)
+            {
+                AddLog(readBuffer.c_str());
+                printf("Size of buffer after fetch %p\n", readBuffer.length());
+                printed = true;
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Commit Transaction")) { 
+            AddLog("[error] Wallet not connected"); 
         } ImGui::SameLine();
-        if (ImGui::SmallButton("Commit Transaction")) { AddLog("[error] Wallet not connected"); } ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy");
         //static float t = 0.0f; if (ImGui::GetTime() - t > 0.02f) { t = ImGui::GetTime(); AddLog("Spam %f", t); }
@@ -415,6 +368,7 @@ struct ExampleAppConsole
             // Normally you would store more information in your item (e.g. make Items[] an array of structure, store color/type etc.)
             bool pop_color = false;
             if (strstr(item, "[error]"))            { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
+            if (strstr(item, "[warning]"))          { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.74f, 0.0f, 1.0f)); pop_color = true; }
             else if (strncmp(item, "# ", 2) == 0)   { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.6f, 1.0f)); pop_color = true; }
             ImGui::TextUnformatted(item);
             if (pop_color)
@@ -602,5 +556,7 @@ struct ExampleAppConsole
 void WebOS::ShowExampleAppConsole(bool* p_open)
 {
     static ExampleAppConsole console;
+    ImGui::SetNextWindowPos(ImVec2(534, 73), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(520,600), ImGuiCond_FirstUseEver);
     console.Draw("IoTeX Console", p_open);
 }

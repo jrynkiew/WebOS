@@ -28,6 +28,7 @@
 
 static bool show_demo_window = false;
 static bool show_test_window = false;
+static bool show_welcome_popup = true;
 static bool show_main_menu = true;
 static bool show_another_window = false;
 static bool show_main_hook = true;
@@ -80,6 +81,7 @@ public:
 	void showBackgroundWallpaper();
 	void showRightClickContextMenu();
 	void ShowExampleAppConsole(bool* p_open);
+	void showWelcomePopup(bool* p_open);
 
 	WebOS();
 	//~WebOS();

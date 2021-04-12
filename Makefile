@@ -129,7 +129,8 @@ EMS += --preload-file images/wallpaper.png --preload-file images/io1m43dzu4q5klm
 #enable fetching like curl from within emscripten
 EMS += -s FETCH=1
 #enable asyncify
-EMS += -s ASYNCIFY
+#EMS += -s ASYNCIFY=1
+
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif
