@@ -201,7 +201,7 @@ struct ExampleAppConsole
         Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("[error] This feature is still under development");
+        AddLog("[warning] This feature is still under development");
     }
     ~ExampleAppConsole()
     {
@@ -244,14 +244,44 @@ struct ExampleAppConsole
         }
         static void onError(emscripten_fetch_t *fetch)
         {
-            std::string error = std::string("[error] Connection Failed: ") + fetch->url + ". HTTP failure status code: " + std::to_string(fetch->status) + std::string("\n");
-            printf("Connecting to ioPay %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+            std::string error = std::string("[error] Connection Failed!\n") + std::string("GET ") + fetch->url + " - HTTP failure status code: " + std::to_string(fetch->status) + std::string("\n");
+            printf("Connection %s failed, HTTP failure status code: %d.\nSee browser debug console log for more details", fetch->url, fetch->status);
             ((std::string*)(fetch->userData))->append(error);
             ((std::string*)(fetch->userData))->append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
-            ((std::string*)(fetch->userData))->append("[error] Connection failed. See browser debug console log for more details");
             emscripten_fetch_close(fetch);
         }
     #endif
+
+    void test(std::string& buffer)
+    {
+    #if defined(__EMSCRIPTEN__)
+        readBuffer.clear();
+        printed = false;
+        emscripten_fetch_attr_t attr;
+        emscripten_fetch_attr_init(&attr);
+        strcpy(attr.requestMethod, "GET");
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        attr.onsuccess = onLoaded;
+        attr.onerror = onError;
+        attr.userData = &readBuffer;
+
+        emscripten_fetch(&attr, "https://jrpc.pl/");
+        //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+        AddLog("Connecting to https://jrpc.pl/ using HTTP GET request");
+    #else
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, "https://jrpc.pl/");
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            //std::cout << readBuffer << std::endl;
+            AddLog(buffer.c_str());
+        }  
+    #endif
+
+    }
 
     const void    Draw(const char* title, bool* p_open)
     {
@@ -276,7 +306,8 @@ struct ExampleAppConsole
         // TODO: display items starting from the bottom
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-           #if defined(__EMSCRIPTEN__)
+            test(readBuffer);
+           /*#if defined(__EMSCRIPTEN__)
                 readBuffer.clear();
                 printed = false;
                 emscripten_fetch_attr_t attr;
@@ -293,6 +324,7 @@ struct ExampleAppConsole
                 //AddLog("[warning] This is still experimental."); 
                  
                 //AddLog("[error] Connection Failed");
+                
 
             #else
                 curl = curl_easy_init();
@@ -305,7 +337,7 @@ struct ExampleAppConsole
                     //std::cout << readBuffer << std::endl;
                     AddLog(readBuffer.c_str());
                 }   
-            #endif
+            #endif*/
         } 
         if(!printed)
         {
