@@ -123,7 +123,7 @@ void WebOS::showIcon()
                 show_test_window = true;
             }
             
-            printf("icon clicked");
+            printf("JRPC icon clicked \n");
         }
     ImGui::End();
     //Show Background window
@@ -244,8 +244,11 @@ struct ExampleAppConsole
         }
         static void onError(emscripten_fetch_t *fetch)
         {
+            std::string error = std::string("[error] Connection Failed: ") + fetch->url + ". HTTP failure status code: " + std::to_string(fetch->status) + std::string("\n");
             printf("Connecting to ioPay %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+            ((std::string*)(fetch->userData))->append(error);
             ((std::string*)(fetch->userData))->append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
+            ((std::string*)(fetch->userData))->append("[error] Connection failed. See browser debug console log for more details");
             emscripten_fetch_close(fetch);
         }
     #endif
@@ -286,8 +289,8 @@ struct ExampleAppConsole
 
                 emscripten_fetch(&attr, "https://jrpc.pl/");
                 //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-                AddLog("[warning] Connecting to https://jrpc.pl/ using HTTP GET request");
-                AddLog("[warning] This is still experimental."); 
+                AddLog("Connecting to https://jrpc.pl/ using HTTP GET request");
+                //AddLog("[warning] This is still experimental."); 
                  
                 //AddLog("[error] Connection Failed");
 
