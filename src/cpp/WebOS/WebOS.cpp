@@ -264,31 +264,33 @@ struct ExampleAppConsole
                 AddLog("[info] Correct usage: FETCH [url]");
                 return;
             }
-        #if defined(__EMSCRIPTEN__)
-            printed = false;
-            emscripten_fetch_attr_t attr;
-            emscripten_fetch_attr_init(&attr);
-            strcpy(attr.requestMethod, "GET");
-            attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-            attr.onsuccess = onLoaded;
-            attr.onerror = onError;
-            attr.userData = &readBuffer;
+            if ((strncmp(URL, "http://", 7) == 0) || (strncmp(URL, "https://", 8) == 0)) {   
+            #if defined(__EMSCRIPTEN__)
+                printed = false;
+                emscripten_fetch_attr_t attr;
+                emscripten_fetch_attr_init(&attr);
+                strcpy(attr.requestMethod, "GET");
+                attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+                attr.onsuccess = onLoaded;
+                attr.onerror = onError;
+                attr.userData = &readBuffer;
 
-            emscripten_fetch(&attr, URL);
-            //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-            AddLog("Connecting to %s using HTTP GET request", URL);
-        #else
-            curl = curl_easy_init();
-            if(curl) {
-                curl_easy_setopt(curl, CURLOPT_URL, URL);
-                curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-                curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
-                res = curl_easy_perform(curl);
-                curl_easy_cleanup(curl);
-                //std::cout << readBuffer << std::endl;
-                AddLog(buffer.c_str());
-            }  
-        #endif
+                emscripten_fetch(&attr, URL);
+                //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+                AddLog("Connecting to %s using HTTP GET request", URL);
+            #else
+                curl = curl_easy_init();
+                if(curl) {
+                    curl_easy_setopt(curl, CURLOPT_URL, URL);
+                    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+                    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+                    res = curl_easy_perform(curl);
+                    curl_easy_cleanup(curl);
+                    //std::cout << readBuffer << std::endl;
+                    AddLog(buffer.c_str());
+                }  
+            #endif
+            }
         }
         else { AddLog("[info] Correct usage: FETCH [url]"); }
     }
@@ -472,8 +474,8 @@ struct ExampleAppConsole
         }
         else if (Stricmp(token, "FETCH") == 0)
         {
-            token = strtok(NULL," ");
-            fetch(token, readBuffer);          
+            token = strtok(NULL," ");          
+            fetch(token, readBuffer); 
         }
         else
         {

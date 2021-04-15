@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "ef9e3288-9ba3-4205-a27c-5412243fa869"
+  "package_uuid": "6ccc11ff-a521-4736-8f75-ad30d0215df3"
  });
 })();
 
@@ -1586,7 +1586,7 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {
- 76346: function($0) {
+ 76362: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1594,7 +1594,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 112572: function($0, $1, $2) {
+ 112588: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1665,7 +1665,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 114051: function($0, $1, $2, $3, $4) {
+ 114067: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1702,36 +1702,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 115040: function($0) {
+ 115056: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 115133: function() {
+ 115149: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 116358: function() {
+ 116374: function() {
   return screen.width;
  },
- 116385: function() {
+ 116401: function() {
   return screen.height;
  },
- 116413: function() {
+ 116429: function() {
   return window.innerWidth;
  },
- 116445: function() {
+ 116461: function() {
   return window.innerHeight;
  },
- 116523: function($0) {
+ 116539: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 116657: function() {
+ 116673: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1739,7 +1739,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 116823: function() {
+ 116839: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1747,7 +1747,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 117049: function($0) {
+ 117065: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1769,11 +1769,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 117602: function() {
+ 117618: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 117672: function($0, $1, $2, $3) {
+ 117688: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1814,7 +1814,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 119324: function($0, $1, $2, $3) {
+ 119340: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1826,7 +1826,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 119734: function($0, $1) {
+ 119750: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1845,7 +1845,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 120339: function($0, $1) {
+ 120355: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1858,7 +1858,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 120819: function($0) {
+ 120835: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
