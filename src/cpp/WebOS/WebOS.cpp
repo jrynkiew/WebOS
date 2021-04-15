@@ -291,6 +291,7 @@ struct ExampleAppConsole
                 }  
             #endif
             }
+            else { AddLog("[info] Correct usage: FETCH [url]"); }
         }
         else { AddLog("[info] Correct usage: FETCH [url]"); }
     }
@@ -318,7 +319,7 @@ struct ExampleAppConsole
         // TODO: display items starting from the bottom
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-            fetch("http://localhost/", readBuffer);
+            fetch("https://iotex.io/", readBuffer);
         } 
         #if defined(__EMSCRIPTEN__)
         if(!printed)
