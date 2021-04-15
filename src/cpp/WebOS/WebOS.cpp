@@ -199,6 +199,7 @@ struct ExampleAppConsole
         Commands.push_back("HISTORY");
         Commands.push_back("CLEAR");
         Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
+        Commands.push_back("FETCH [url]");
         AutoScroll = true;
         ScrollToBottom = false;
         AddLog("[warning] This feature is still under development");
@@ -215,7 +216,8 @@ struct ExampleAppConsole
     static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
     static char* Strdup(const char *str)                             { size_t len = strlen(str) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)str, len); }
     static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0; }
-    
+    bool         isNumber(const std::string& str)                            { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
+  
     void    ClearLog()
     {
         for (int i = 0; i < Items.Size; i++)
@@ -252,35 +254,43 @@ struct ExampleAppConsole
         }
     #endif
 
-    void test(std::string& buffer)
+
+    void fetch(const char* URL, std::string& buffer)
     {
-    #if defined(__EMSCRIPTEN__)
         readBuffer.clear();
-        printed = false;
-        emscripten_fetch_attr_t attr;
-        emscripten_fetch_attr_init(&attr);
-        strcpy(attr.requestMethod, "GET");
-        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-        attr.onsuccess = onLoaded;
-        attr.onerror = onError;
-        attr.userData = &readBuffer;
+        if ((URL != NULL) && (URL[0] != '\0')) {     
+            if (isNumber(URL))
+            {
+                AddLog("[info] Correct usage: FETCH [url]");
+                return;
+            }
+        #if defined(__EMSCRIPTEN__)
+            printed = false;
+            emscripten_fetch_attr_t attr;
+            emscripten_fetch_attr_init(&attr);
+            strcpy(attr.requestMethod, "GET");
+            attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+            attr.onsuccess = onLoaded;
+            attr.onerror = onError;
+            attr.userData = &readBuffer;
 
-        emscripten_fetch(&attr, "https://jrpc.pl/");
-        //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-        AddLog("Connecting to https://jrpc.pl/ using HTTP GET request");
-    #else
-        curl = curl_easy_init();
-        if(curl) {
-            curl_easy_setopt(curl, CURLOPT_URL, "https://jrpc.pl/");
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
-            res = curl_easy_perform(curl);
-            curl_easy_cleanup(curl);
-            //std::cout << readBuffer << std::endl;
-            AddLog(buffer.c_str());
-        }  
-    #endif
-
+            emscripten_fetch(&attr, URL);
+            //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+            AddLog("Connecting to %s using HTTP GET request", URL);
+        #else
+            curl = curl_easy_init();
+            if(curl) {
+                curl_easy_setopt(curl, CURLOPT_URL, URL);
+                curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+                curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+                res = curl_easy_perform(curl);
+                curl_easy_cleanup(curl);
+                //std::cout << readBuffer << std::endl;
+                AddLog(buffer.c_str());
+            }  
+        #endif
+        }
+        else { AddLog("[info] Correct usage: FETCH [url]"); }
     }
 
     const void    Draw(const char* title, bool* p_open)
@@ -294,51 +304,21 @@ struct ExampleAppConsole
 
         // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar. So e.g. IsItemHovered() will return true when hovering the title bar.
         // Here we create a context menu only available from the title bar.
-        /*if (ImGui::BeginPopupContextItem())
+        if (ImGui::BeginPopupContextItem())
         {
             if (ImGui::MenuItem("Close"))
                 *p_open = false;
             ImGui::EndPopup();
-        }*/
+        }
 
         ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
 
         // TODO: display items starting from the bottom
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-            test(readBuffer);
-           /*#if defined(__EMSCRIPTEN__)
-                readBuffer.clear();
-                printed = false;
-                emscripten_fetch_attr_t attr;
-                emscripten_fetch_attr_init(&attr);
-                strcpy(attr.requestMethod, "GET");
-                attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-                attr.onsuccess = onLoaded;
-                attr.onerror = onError;
-                attr.userData = &readBuffer;
-
-                emscripten_fetch(&attr, "https://jrpc.pl/");
-                //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-                AddLog("Connecting to https://jrpc.pl/ using HTTP GET request");
-                //AddLog("[warning] This is still experimental."); 
-                 
-                //AddLog("[error] Connection Failed");
-                
-
-            #else
-                curl = curl_easy_init();
-                if(curl) {
-                    curl_easy_setopt(curl, CURLOPT_URL, "https://jrpc.pl/");
-                    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-                    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-                    res = curl_easy_perform(curl);
-                    curl_easy_cleanup(curl);
-                    //std::cout << readBuffer << std::endl;
-                    AddLog(readBuffer.c_str());
-                }   
-            #endif*/
+            fetch("http://localhost/", readBuffer);
         } 
+        #if defined(__EMSCRIPTEN__)
         if(!printed)
         {
             if(readBuffer.length()!=0)
@@ -348,6 +328,7 @@ struct ExampleAppConsole
                 printed = true;
             }
         }
+        #endif
         ImGui::SameLine();
         if (ImGui::SmallButton("Commit Transaction")) { 
             AddLog("[error] Wallet not connected"); 
@@ -402,9 +383,14 @@ struct ExampleAppConsole
 
             // Normally you would store more information in your item (e.g. make Items[] an array of structure, store color/type etc.)
             bool pop_color = false;
-            if (strstr(item, "[error]"))            { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
-            if (strstr(item, "[warning]"))          { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.74f, 0.0f, 1.0f)); pop_color = true; }
-            else if (strncmp(item, "# ", 2) == 0)   { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.6f, 1.0f)); pop_color = true; }
+            if (strncmp(item, "# ", 2) == 0)   { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.6f, 1.0f)); pop_color = true; }
+            else if (strncmp(item, "[error]", 7) == 0)            { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
+            else if (strncmp(item, "[warning]", 9) == 0)          { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.74f, 0.0f, 1.0f)); pop_color = true; }
+            else if (strncmp(item, "[info]", 6) == 0)          { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.28f, 0.81f, 0.85f, 1.0f)); pop_color = true; }
+            
+            //else if (strstr(item, "[error]"))            { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
+            //else if (strstr(item, "[warning]"))          { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.74f, 0.0f, 1.0f)); pop_color = true; }
+            
             ImGui::TextUnformatted(item);
             if (pop_color)
                 ImGui::PopStyleColor();
@@ -413,8 +399,10 @@ struct ExampleAppConsole
             ImGui::LogFinish();
 
         if (ScrollToBottom || (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
+        {
             ImGui::SetScrollHereY(1.0f);
-        ScrollToBottom = false;
+            ScrollToBottom = false;
+        }
 
         ImGui::PopStyleVar();
         ImGui::EndChild();
@@ -443,6 +431,11 @@ struct ExampleAppConsole
     void    ExecCommand(const char* command_line)
     {
         AddLog("# %s\n", command_line);
+        char * token = strtok((char *)command_line, " ");
+        
+        
+        // loop through the string to extract all other tokens
+        
 
         // Insert into history. First find match and delete it so it can be pushed to the back. This isn't trying to be smart or optimal.
         HistoryPos = -1;
@@ -460,6 +453,11 @@ struct ExampleAppConsole
         {
             ClearLog();
         }
+        else if (Stricmp(command_line, "TEST") == 0)
+        {
+            AddLog("Fetch:");
+            fetch("http://localhost/", readBuffer);
+        }
         else if (Stricmp(command_line, "HELP") == 0)
         {
             AddLog("Commands:");
@@ -472,9 +470,14 @@ struct ExampleAppConsole
             for (int i = first > 0 ? first : 0; i < History.Size; i++)
                 AddLog("%3d: %s\n", i, History[i]);
         }
+        else if (Stricmp(token, "FETCH") == 0)
+        {
+            token = strtok(NULL," ");
+            fetch(token, readBuffer);          
+        }
         else
         {
-            AddLog("Unknown command: '%s'\n", command_line);
+            AddLog("[error] Unknown command: '%s'\n", command_line);
         }
 
         // On commad input, we scroll to bottom even if AutoScroll==false
