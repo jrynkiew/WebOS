@@ -482,16 +482,16 @@ struct ExampleAppConsole
         else if (Stricmp(command_line, "SECRET") == 0)
         {
             token = strtok(NULL," ");
-            generateSecretKey(atoi(token));
+            generateSecretKey(atoll(token));
             AddLog("Secret Key: %s", std::to_string(secret).c_str());
         }
         else if (Stricmp(command_line, "ENCRYPT") == 0)
         {
             token = strtok(NULL," ");
-            public_prime_base = atoi(token);
+            public_prime_base = atoll(token);
             AddLog(std::to_string(public_prime_base).c_str());
             token = strtok(NULL," ");
-            public_prime_modulus = atoi(token);
+            public_prime_modulus = atoll(token);
             AddLog(std::to_string(public_prime_modulus).c_str());
             sharedEncryptionKey = encrypt(public_prime_base, public_prime_modulus);
             AddLog("Your encryption Key is: %s", std::to_string(sharedEncryptionKey).c_str());
@@ -499,7 +499,7 @@ struct ExampleAppConsole
         else if (Stricmp(command_line, "DECRYPT") == 0)
         {
             token = strtok(NULL," ");
-            sharedDecryptionKey = decrypt(atoi(token));
+            sharedDecryptionKey = decrypt(atoll(token));
             AddLog("The secret decryption key is: %s", std::to_string(secretKey).c_str());
         }
         else if (Stricmp(command_line, "HISTORY") == 0)
