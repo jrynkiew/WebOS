@@ -182,6 +182,12 @@ struct ExampleAppConsole
   	CURLcode              res;
   	std::string           readBuffer;
     bool                  printed;
+    int64_t               secret;
+    int64_t               sharedEncryptionKey;
+    int64_t               sharedDecryptionKey;
+    int64_t               secretKey;
+    int64_t               public_prime_base;
+    int64_t               public_prime_modulus;
 
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
     {
@@ -200,6 +206,8 @@ struct ExampleAppConsole
         Commands.push_back("CLEAR");
         Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
         Commands.push_back("FETCH [url]");
+        Commands.push_back("GENERATE_SECRET_KEY");
+        Commands.push_back("DERIVE_ENCRYPTION_KEY");
         AutoScroll = true;
         ScrollToBottom = false;
         AddLog("[warning] This feature is still under development");
@@ -216,8 +224,12 @@ struct ExampleAppConsole
     static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
     static char* Strdup(const char *str)                             { size_t len = strlen(str) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)str, len); }
     static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0; }
-    bool         isNumber(const std::string& str)                            { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
-  
+    bool         isNumber(const std::string& str)                    { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
+    //modulo privte key encryption test
+    int64_t      generateSecretKey(int64_t secretInput)                   { return secret = secretInput; }
+    int64_t      encrypt(int64_t public_prime_base, int64_t public_prime_modulus)        { sharedEncryptionKey = (int64_t)std::pow(public_prime_base, secret) % public_prime_modulus; return sharedEncryptionKey;}
+    int64_t      decrypt(int64_t sharedDecryptionKey)                { secretKey = (int64_t)std::pow(sharedDecryptionKey, secret) % public_prime_modulus; return secretKey;}
+
     void    ClearLog()
     {
         for (int i = 0; i < Items.Size; i++)
@@ -433,7 +445,7 @@ struct ExampleAppConsole
 
     void    ExecCommand(const char* command_line)
     {
-        AddLog("# %s\n", command_line);
+        AddLog("# > %s\n", command_line);
         char * token = strtok((char *)command_line, " ");
         
         
@@ -466,6 +478,29 @@ struct ExampleAppConsole
             AddLog("Commands:");
             for (int i = 0; i < Commands.Size; i++)
                 AddLog("- %s", Commands[i]);
+        }
+        else if (Stricmp(command_line, "SECRET") == 0)
+        {
+            token = strtok(NULL," ");
+            generateSecretKey(atoi(token));
+            AddLog("Secret Key: %s", std::to_string(secret).c_str());
+        }
+        else if (Stricmp(command_line, "ENCRYPT") == 0)
+        {
+            token = strtok(NULL," ");
+            public_prime_base = atoi(token);
+            AddLog(std::to_string(public_prime_base).c_str());
+            token = strtok(NULL," ");
+            public_prime_modulus = atoi(token);
+            AddLog(std::to_string(public_prime_modulus).c_str());
+            sharedEncryptionKey = encrypt(public_prime_base, public_prime_modulus);
+            AddLog("Your encryption Key is: %s", std::to_string(sharedEncryptionKey).c_str());
+        }
+        else if (Stricmp(command_line, "DECRYPT") == 0)
+        {
+            token = strtok(NULL," ");
+            sharedDecryptionKey = decrypt(atoi(token));
+            AddLog("The secret decryption key is: %s", std::to_string(secretKey).c_str());
         }
         else if (Stricmp(command_line, "HISTORY") == 0)
         {

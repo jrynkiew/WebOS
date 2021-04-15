@@ -9,6 +9,7 @@
 #include "imgui_impl_opengl3.h"
 #include "Menu.h"
 #include "/usr/include/curl/curl.h"
+#include <cmath>
 
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
