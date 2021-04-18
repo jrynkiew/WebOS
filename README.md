@@ -105,11 +105,10 @@ Build backend (if necessary)
 ```
 cd WebOS/backend
 ./build.sh
-
 ```
 
 The backend is now available on port 49160. 
-To connect the frontend, make sure you enter "http://localhost:49160" in the fetch scripts if you want to connect to the backend
+To connect from the frontend to the backend, make sure you enter "http://localhost:49160" in the fetch scripts in WebOS.cpp and recompile
 
 ```
 make
