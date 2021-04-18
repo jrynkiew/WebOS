@@ -105,11 +105,10 @@ Build backend (if necessary)
 ```
 cd WebOS/backend
 ./build.sh
-
 ```
 
 The backend is now available on port 49160. 
-To connect the frontend, make sure you enter "http://localhost:49160" in the fetch scripts if you want to connect to the backend
+To connect from the frontend to the backend, make sure you enter "http://localhost:49160" in the fetch scripts in WebOS.cpp and recompile
 
 ```
 make
@@ -120,21 +119,24 @@ The app is now launched together with the backend and available on port 80.
 
 If you are connecting to backend, you might get "Blocked loading mixed active content" error. This is because you might be hosting this website on https, but connecting to http backend (backend still doesnt support https). If so, change "security.mixed_content.block_active_content" to false in Firefox about:config options
 
+# 8. Windows & Linux WebAssembly builds
+
 **make sure you edit setEmscriptenEnvsWin32.bat or setEmscriptenEnvsLinux.sh to target your installation of the emscripten sdk**
 
 Install using this command  (on Windows x64 & 32bit)
+
 ```
-setEmscriptenEnvsWin32.bat
+setEmscriptenEnvsWin32.bat (optional)
  
 make
 ```
 Install using this command  (on Linux)
 ```
-setEmscriptenEnvsLinux.sh
+setEmscriptenEnvsLinux.sh (optional)
 
 make
 ```
-This might be only necessary if you build emscripten yourself
+The optional parts might be only necessary if you build emscripten yourself from source. Installing emscripten via "apt get install" or other means will set the required paths automatically for you 
 
 ##### May need to use emmake make in some cases
 
@@ -152,6 +154,7 @@ and to clean up debug files
 ```
 make clean DEBUG=1
 ```
+# 9. Build bnaries
 
 ##### The default "make" command will build the emscripten binaries, html and js files.
 
@@ -160,11 +163,10 @@ If you want to make a linux build, use this syntax**
 make LINUX=1
 ```
 
+Windows builds can be done by modifying the visua studio project files and compiling using the Visual Studio compiler. this is deprecated. Use Linux instead, as Windows building hasn't been tested for a while.
 
 
-
-
-# 8. Required Libs
+# 9. Required Libs
 libpng16-16.dll 211 or 206 kB
 zlib1.dll 92kB
 glew32.dll
