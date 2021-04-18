@@ -98,7 +98,7 @@ Additionally, the main.cpp file from this fork may be useful
 
 Docker installation is recommended only on Linux systems, since installing Docker for Windows will render VirtualBox useless, since it requires the Hyper-V hypervisor to be enabled, which is a type 1 hypervisor, in contrast to Oracle VirtualBox, which is a type 2 hypervisor.
 
-# 7. Make the Application
+# 7. Build and Dockerize the Application
 
 Build backend (if necessary)
 

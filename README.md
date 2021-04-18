@@ -111,7 +111,6 @@ The backend is now available on port 49160.
 To connect from the frontend to the backend, make sure you enter "http://localhost:49160" in the fetch scripts in WebOS.cpp and recompile
 
 ```
-make
 ./LaunchDocker.sh
 ```
 
