@@ -105,7 +105,6 @@ Build backend (if necessary)
 ```
 cd WebOS/backend
 ./build.sh
-
 ```
 
 The backend is now available on port 49160. 
