@@ -131,6 +131,9 @@ EMS += -s FETCH=1
 #enable asyncify
 #EMS += -s ASYNCIFY=1
 
+#enable BOOST library for 4096 ints
+EMS += -s USE_BOOST_HEADERS=1
+
 ifeq ($(DEBUG), 1)
 EMS += --profiling  
 endif

@@ -100,10 +100,25 @@ Docker installation is recommended only on Linux systems, since installing Docke
 
 # 7. Make the Application
 
+Build backend (if necessary)
+
+```
+cd WebOS/backend
+./build.sh
+
+```
+
+The backend is now available on port 49160. 
+To connect the frontend, make sure you enter "http://localhost:49160" in the fetch scripts if you want to connect to the backend
+
 ```
 make
 ./LaunchDocker.sh
 ```
+
+The app is now launched together with the backend and available on port 80.
+
+If you are connecting to backend, you might get "Blocked loading mixed active content" error. This is because you might be hosting this website on https, but connecting to http backend (backend still doesnt support https). If so, change "security.mixed_content.block_active_content" to false in Firefox about:config options
 
 **make sure you edit setEmscriptenEnvsWin32.bat or setEmscriptenEnvsLinux.sh to target your installation of the emscripten sdk**
 

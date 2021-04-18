@@ -1,0 +1,2 @@
+docker build -t webos-backend .
+ddocker stop webos-backend && docker rm webos-backend && docker run -it -d --restart always -p 49160:8080 --name webos-backend webos-backend
