@@ -166,7 +166,7 @@ make LINUX=1
 Windows builds can be done by modifying the visua studio project files and compiling using the Visual Studio compiler. this is deprecated. Use Linux instead, as Windows building hasn't been tested for a while.
 
 
-# 9. Required Libs
+# 10. Required Libs
 libpng16-16.dll 211 or 206 kB
 zlib1.dll 92kB
 glew32.dll
