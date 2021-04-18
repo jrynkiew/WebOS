@@ -331,7 +331,7 @@ struct ExampleAppConsole
         // TODO: display items starting from the bottom
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-            fetch("http://89.70.221.154/", readBuffer);
+            fetch("https://89.70.221.154/", readBuffer);
         } 
         #if defined(__EMSCRIPTEN__)
         if(!printed)

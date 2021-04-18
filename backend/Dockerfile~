@@ -17,5 +17,5 @@ COPY . .
 
 RUN ./ioctl config set endpoint 172.18.0.2:14014 --insecure
 
-EXPOSE 443 
+EXPOSE 8080
 CMD [ "node", "server.js" ]
