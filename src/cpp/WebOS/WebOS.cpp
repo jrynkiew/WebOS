@@ -206,8 +206,10 @@ struct ExampleAppConsole
         Commands.push_back("CLEAR");
         Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
         Commands.push_back("FETCH [url]");
-        Commands.push_back("GENERATE_SECRET_KEY");
-        Commands.push_back("DERIVE_ENCRYPTION_KEY");
+        Commands.push_back("IOCTL");
+        Commands.push_back("SECRET - do not use");
+        Commands.push_back("ENCRYPT - do not use");
+        Commands.push_back("DECRYPT - do not use");
         AutoScroll = true;
         ScrollToBottom = false;
         AddLog("[warning] This feature is still under development");
@@ -289,7 +291,7 @@ struct ExampleAppConsole
 
                 emscripten_fetch(&attr, URL);
                 //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-                AddLog("Connecting to %s using HTTP GET request", URL);
+                AddLog("Connecting to %s using HTTPS GET request", URL);
             #else
                 curl = curl_easy_init();
                 if(curl) {
@@ -331,6 +333,7 @@ struct ExampleAppConsole
         // TODO: display items starting from the bottom
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
+            AddLog("Running command: ./ioctl bc info");
             fetch("https://89.70.221.154/", readBuffer);
         } 
         #if defined(__EMSCRIPTEN__)
@@ -484,6 +487,31 @@ struct ExampleAppConsole
             token = strtok(NULL," ");
             generateSecretKey(atoll(token));
             AddLog("Secret Key: %s", std::to_string(secret).c_str());
+        }
+        else if (Stricmp(command_line, "IOCTL") == 0)
+        {
+            if(token = strtok(NULL," ")) {
+                if(Stricmp(token, "BC") == 0)
+                {
+                    if(token = strtok(NULL," ")) {
+                        if(Stricmp(token, "INFO") == 0)
+                        {
+                            fetch("https://89.70.221.154/", readBuffer);
+                        } else {
+                            AddLog("[error] Correct usage: ioctl bc info");
+                            AddLog("[info] More features will be made available soon");
+                        }
+                    }
+                }
+                else {
+                    AddLog("[error] Correct usage: ioctl bc info");
+                    AddLog("[info] More features will be made available soon");
+                }
+            }
+            else {
+                AddLog("[error] Correct usage: ioctl bc info");
+                AddLog("[info] More features will be made available soon");
+            }
         }
         else if (Stricmp(command_line, "ENCRYPT") == 0)
         {
