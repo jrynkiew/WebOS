@@ -268,6 +268,52 @@ struct ExampleAppConsole
         }
     #endif
 
+    void post(const char* URL, std::string& buffer, const char* command_line)
+    {
+        readBuffer.clear();
+        if ((URL != NULL) && (URL[0] != '\0')) {     
+            if (isNumber(URL))
+            {
+                AddLog("[info] Correct usage: POST [url]");
+                return;
+            }
+            if ((strncmp(URL, "http://", 7) == 0) || (strncmp(URL, "https://", 8) == 0)) {   
+            #if defined(__EMSCRIPTEN__)
+                printed = false;
+                emscripten_fetch_attr_t attr;
+                emscripten_fetch_attr_init(&attr);
+                strcpy(attr.requestMethod, "POST");
+                const char * headers[] = {"Content-Type", "application/json", 0};
+                const char * command = "{\"ioctl\": \"command\"}";           
+
+                attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+                attr.onsuccess = onLoaded;
+                attr.onerror = onError;
+                attr.userData = &readBuffer;
+                attr.requestHeaders = headers;
+                attr.requestData = command;
+                attr.requestDataSize = strlen(attr.requestData);
+
+                emscripten_fetch(&attr, URL);
+                //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+                AddLog("Connecting to %s using HTTPS POST request", URL);
+            #else
+                curl = curl_easy_init();
+                if(curl) {
+                    curl_easy_setopt(curl, CURLOPT_URL, URL);
+                    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+                    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+                    res = curl_easy_perform(curl);
+                    curl_easy_cleanup(curl);
+                    //std::cout << readBuffer << std::endl;
+                    AddLog(buffer.c_str());
+                }  
+            #endif
+            }
+            else { AddLog("[info] Correct usage: POST [url]"); }
+        }
+        else { AddLog("[info] Correct usage: POST [url]"); }
+    }
 
     void fetch(const char* URL, std::string& buffer)
     {
@@ -490,7 +536,10 @@ struct ExampleAppConsole
         }
         else if (Stricmp(command_line, "IOCTL") == 0)
         {
-            if(token = strtok(NULL," ")) {
+
+            post("http://localhost:8080/", readBuffer, command_line);
+
+            /*if(token = strtok(NULL," ")) {
                 if(Stricmp(token, "BC") == 0)
                 {
                     if(token = strtok(NULL," ")) {
@@ -511,7 +560,7 @@ struct ExampleAppConsole
             else {
                 AddLog("[error] Correct usage: ioctl bc info");
                 AddLog("[info] More features will be made available soon");
-            }
+            }*/
         }
         else if (Stricmp(command_line, "ENCRYPT") == 0)
         {

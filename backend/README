@@ -1,8 +1,24 @@
-#To compile docker image for backend container, and run it use the following commands:
+#To make IoTeX-Core Dockerized:
 
+1. Create docker network
+docker network create --subnet=172.18.0.0/16 webos-net
+
+2. Build IoTeX-Core docker container, run it and join it to the network
+sudo make docker //this will take docker build from Makefile and tag ast iotex-core:latest
+docker run -d --restart always -p 14014:14014 --net webos-net --ip 172.18.0.2 --name iotex-core root/iotex-core:latest
+
+#To make WebOS backend Dockerized
+
+1. From WebOS/Backend folder
 docker build -t webos-backend .
-ddocker stop webos-backend && docker rm webos-backend && docker run -it -d --restart always -p 49160:8080 --name webos-backend webos-backend
+docker stop webos-backend && docker rm webos-backend && docker run -it -d --net webos-net --ip 172.18.0.3 --restart always -p 443:443 --name webos-backend webos-backend
 
 #This server comes with port mapping to 443:443 for the container, since it is running a local dev version of a secure server. It has a self signed ssl certificate installed. In order to access it via JRPC.pl, or any other, like localhost version of WebOS, you need to accept the certificate first, by going to the server on which you host this backend server. Failure to do so will give false positive CORS errors. They are not cors errors, it as a certificate issue.
 
 #I used my internet router as a port forwarder, and my external IP address connections to 443 are being redirected to the nodejs container app hosting the backend.
+
+3. Build WebOS frontend
+./LaunchDocker.sh
+
+#this should build WebOS for Emscripten, run it in docker container
+

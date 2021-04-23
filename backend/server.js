@@ -13,9 +13,17 @@ const HOST = '0.0.0.0';
 // App
 const app = express();
 app.use(cors());
+app.use(express.json())
+
+app.post('/', (req, res) => {
+  console.log(req.body);
+  res.send({requestBody: req.body});
+  //console.log({requestBody: req.body});
+  //res.json({requestBody: req.body});
+});
 
 app.get('/', (req, res) => {
-  //res.send('Hello World');
+  console.log(req);
   exec("./ioctl bc info", (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
@@ -30,7 +38,6 @@ app.get('/', (req, res) => {
     res.send(stdout);
     console.log(`stdout: ${stdout}`);
   });
-
 });
 
 
@@ -39,5 +46,5 @@ https.createServer({
   cert: fs.readFileSync('server.cert')
 }, app).listen(PORT, HOST);
 
-//app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+/*app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);*/
