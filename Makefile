@@ -126,6 +126,8 @@ EMS += -s ALLOW_MEMORY_GROWTH=1
 EMS += -s DISABLE_EXCEPTION_CATCHING=1 -s EXIT_RUNTIME=1
 EMS += -s ASSERTIONS=1 -s SAFE_HEAP=1
 EMS += --preload-file images/wallpaper.png --preload-file images/io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu.png --preload-file fonts/DroidSans.ttf --use-preload-plugins
+EMS += -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
+
 #enable fetching like curl from within emscripten
 EMS += -s FETCH=1
 #enable asyncify

@@ -48,6 +48,17 @@ static std::function<void()> loop;
 static void main_loop() { loop(); }
 #endif
 
+ #if defined(__EMSCRIPTEN__)
+    extern "C" {
+    EMSCRIPTEN_KEEPALIVE int Sum(int a, int b) {
+        int sum = a + b;
+        return EM_ASM_INT({
+        console.log($0);
+        return $0;
+        }, sum);
+    }
+    }
+#endif
 
 int main(int, char**)
 {
