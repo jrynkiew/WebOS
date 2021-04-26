@@ -73,6 +73,18 @@ int main(int, char**)
 
     // Decide GL+GLSL versions
 #if defined(__EMSCRIPTEN__)
+    char *str = (char*)EM_ASM_INT({
+        var jsString = 'Hello with some exotic Unicode characters: Tässä on yksi lumiukko: ☃, ole hyvä.';
+        var lengthBytes = lengthBytesUTF8(jsString)+1;
+        // 'jsString.length' would return the length of the string as UTF-16
+        // units, but Emscripten C strings operate as UTF-8.
+        var stringOnWasmHeap = _malloc(lengthBytes);
+        stringToUTF8(jsString, stringOnWasmHeap, lengthBytes);
+        return stringOnWasmHeap;
+    });
+    printf("UTF8 string says: %s\n", str);
+    free(str); // Each call to _malloc() must be paired with free(), or heap memory will leak!     
+    
     // GLES 3.0
     // For the browser using emscripten, we are going to use WebGL2 with GLES3. See the Makefile.emscripten for requirement details.
     // It is very likely the generated file won't work in many browsers. Firefox is the only sure bet, but I have successfully

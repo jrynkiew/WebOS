@@ -58,6 +58,9 @@ Index of this file:
 #include <string.h>                 // memset, memmove, memcpy, strlen, strchr, strcpy, strcmp
 #include <SDL.h>
 
+#if defined(__EMSCRIPTEN__)
+#include <emscripten.h>
+#endif
 // Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals. Work in progress versions typically starts at XYY99 then bounce up to XYY00, XYY01 etc. when release tagging happens)
 #define IMGUI_VERSION               "1.76 WIP"

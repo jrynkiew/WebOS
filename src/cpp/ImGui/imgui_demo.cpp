@@ -363,16 +363,6 @@ void ImGui::ShowDemoWindow(bool* p_open)
         ImGui::Text("WHAT IS EMSCRIPTEN?");
         ImGui::BulletText("Emscripten is a cross-compilation platform, capable of compiling native code into WebAssembly.");
         ImGui::BulletText("https://emscripten.org");
-        #if defined(__EMSCRIPTEN__)
-        if (ImGui::IsItemHovered()) {
-                ImGui::SetTooltip("Copy functionality not yet working. Please google search term \"emscripten\"");
-                if (ImGui::IsItemClicked()) {
-                    ImGui::LogToClipboard(); 
-                    ImGui::LogText("https://emscripten.org");
-                    ImGui::LogFinish();
-                }
-            }
-        #else
         if (ImGui::IsItemHovered()) {
                 ImGui::SetTooltip("Click to copy");
                 if (ImGui::IsItemClicked()) {
@@ -381,7 +371,6 @@ void ImGui::ShowDemoWindow(bool* p_open)
                     ImGui::LogFinish();
                 }
             }
-        #endif
     }
     if (ImGui::CollapsingHeader("More Information"))
     {
@@ -390,16 +379,6 @@ void ImGui::ShowDemoWindow(bool* p_open)
         ImGui::BulletText("More information about buying tokens can be found here:");
         ImGui::SameLine(); 
             ImGui::Text("https://t.me/JRPC_Official");
-            #if defined(__EMSCRIPTEN__)
-            if (ImGui::IsItemHovered()) {
-                ImGui::SetTooltip("Copy functionality not currently working. Please write address manually in your browser.");
-                if (ImGui::IsItemClicked()) {
-                    ImGui::LogToClipboard(); 
-                    ImGui::LogText("https://t.me/JRPC_Official");
-                    ImGui::LogFinish();
-                }
-            }
-            #else
             if (ImGui::IsItemHovered()) {
                 ImGui::SetTooltip("Click to copy");
                 if (ImGui::IsItemClicked()) {
@@ -408,13 +387,9 @@ void ImGui::ShowDemoWindow(bool* p_open)
                     ImGui::LogFinish();
                 }
             }
-            #endif
-        https://t.me/JRPC_Official");
         ImGui::BulletText("In order to trade on mimo, contact me directly for instructions, or add the following token address to");
         ImGui::SameLine(); 
             ImGui::Text("https://mimo.exchange");
-            #if defined(__EMSCRIPTEN__)
-            #else
             if (ImGui::IsItemHovered()) {
                 ImGui::SetTooltip("Click to copy");
                 if (ImGui::IsItemClicked()) {
@@ -423,13 +398,10 @@ void ImGui::ShowDemoWindow(bool* p_open)
                     ImGui::LogFinish();
                 }
             }
-            #endif
         ImGui::Indent();
             ImGui::BulletText("Address: "); 
                 ImGui::SameLine(); 
                 ImGui::Text("io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu");
-                #if defined(__EMSCRIPTEN__)
-                #else
                 if (ImGui::IsItemHovered()) {
                     ImGui::SetTooltip("Click to copy");
                     if (ImGui::IsItemClicked()) {
@@ -438,7 +410,6 @@ void ImGui::ShowDemoWindow(bool* p_open)
                         ImGui::LogFinish();
                     }
                 }
-                #endif
              ImGui::Bullet(); ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "Country restrictions may apply. Please consult your local law.");
         ImGui::Unindent();
     }

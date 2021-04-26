@@ -3231,6 +3231,17 @@ const char* ImGui::GetClipboardText()
 
 void ImGui::SetClipboardText(const char* text)
 {
+    #if defined(__EMSCRIPTEN__)
+    EM_ASM({
+        console.log(UTF8ToString($0));
+        var tempInput = document.createElement("input");
+        tempInput.value = UTF8ToString($0);
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+    }, text);
+    #endif
     ImGuiContext& g = *GImGui;
     if (g.IO.SetClipboardTextFn)
         g.IO.SetClipboardTextFn(g.IO.ClipboardUserData, text);
