@@ -71,6 +71,7 @@ ImVec4* WebOS::getBackgroundColor() {
 }
 void WebOS::showWelcomePopup(bool* p_open)
 {
+    ImGui::SetNextWindowSize(ImVec2(365, 210), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2-200, ImGui::GetIO().DisplaySize.y/2-100), ImGuiCond_FirstUseEver);
     if(!ImGui::Begin("Welcome to IoTeX console", p_open))
     {
@@ -78,14 +79,13 @@ void WebOS::showWelcomePopup(bool* p_open)
     }else
     {
         //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-        ImGui::Text("Please use the right mouse click to open Menu");
-        ImGui::Text("Click the JRPC token icon to open command console");
+        ImGui::TextWrapped("Please use the right mouse click to open Menu");
+        ImGui::TextWrapped("Click the JRPC token icon to open command console");
         ImGui::Separator();
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+        ImGui::TextWrapped("Application average %.3f ms/frame (%.1f FPS)",
                     1000.0f / ImGui::GetIO().Framerate,
                     ImGui::GetIO().Framerate);
-
-        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "This website is still under development!!");        
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); ImGui::TextWrapped("This website is still under development!!"); ImGui::PopStyleColor();
         ImGui::End();
     }
 }

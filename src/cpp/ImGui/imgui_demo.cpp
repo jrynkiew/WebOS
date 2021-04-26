@@ -324,7 +324,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     }
     ImGui::TextWrapped("Play the WebOS game, and earn rewards!");
     ImGui::Separator();
-    ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "ERROR: This website is still under construction, for demo purposes only!");
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); ImGui::TextWrapped("ERROR: This website is still under construction, for demo purposes only!"); ImGui::PopStyleColor();
     ImGui::Separator();
     ImGui::TextWrapped("This window contains demo modules which represent the functionality of the JRPC Web Console.");
     ImGui::TextWrapped("This website is built using Dear ImGui, SDL2, SDL2 Image, Emscripten, OpenGL and WASM");
@@ -335,73 +335,108 @@ void ImGui::ShowDemoWindow(bool* p_open)
 
     if (ImGui::CollapsingHeader("Introduction"))
     {
-        ImGui::Text("WHAT IS JRPC");
-        ImGui::BulletText("JRPC is a XRC20 token native to the IoTeX blockchain.");
+        ImGui::TextWrapped("WHAT IS JRPC");
+        ImGui::Bullet(); ImGui::TextWrapped("JRPC is a XRC20 token native to the IoTeX blockchain.");
         ImGui::Indent(); 
-            ImGui::BulletText("It has been added to iotex-token-metadata github repository and is available for trading through ioPay wallet");
+            ImGui::Bullet(); ImGui::TextWrapped("It has been added to iotex-token-metadata github repository and is available for trading through ioPay wallet");
         ImGui::Unindent();
-        ImGui::BulletText("JRPC can be earned while performing native tasks on the IoTeX blockchain via JRPC Hacking Console.");
+        ImGui::Bullet(); ImGui::TextWrapped("JRPC can be earned while performing native tasks on the IoTeX blockchain via JRPC Hacking Console.");
 
         ImGui::Separator();
 
-        ImGui::Text("WHAT IS WebOS");
-        ImGui::BulletText("WebOS is a platform built on top of C++"); 
-        ImGui::BulletText("It utilizes the emulated system libraries of  Linux, Windows and MacOS");
-        ImGui::BulletText("WebOS uses the following libraries and technologies:");
+        ImGui::TextWrapped("WHAT IS WebOS");
+        ImGui::Bullet(); ImGui::TextWrapped("WebOS is a platform built on top of C++"); 
+        ImGui::Bullet(); ImGui::TextWrapped("It utilizes the emulated system libraries of  Linux, Windows and MacOS");
+        ImGui::Bullet(); ImGui::TextWrapped("WebOS uses the following libraries and technologies:");
         ImGui::Indent(); 
-            ImGui::BulletText("Dear ImGui version %s", IMGUI_VERSION);
-            ImGui::BulletText("SDL2 version %d.%d.%d", compiled.major, compiled.minor, compiled.patch);
-            ImGui::BulletText("Emscripten SDK version 2.0.12");
-            ImGui::BulletText("WebAssembly (referred to as WASM)");
+            ImGui::Bullet(); ImGui::TextWrapped("Dear ImGui version %s", IMGUI_VERSION);
+            ImGui::Bullet(); ImGui::TextWrapped("SDL2 version %d.%d.%d", compiled.major, compiled.minor, compiled.patch);
+            ImGui::Bullet(); ImGui::TextWrapped("Emscripten SDK version 2.0.12");
+            ImGui::Bullet(); ImGui::TextWrapped("WebAssembly (referred to as WASM)");
         ImGui::Unindent(); 
         //ImGui::BulletText("WebAssembly (Wasm) is a type of binary language developed to be cross-platform compatible and web optimized.");
-        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.368f, 1.0f), "WebOS is supported by all modern browsers, with the exception of limited support on Safari.");
-        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.368f, 1.0f), "Native Linux and Windows binaries can be compiled from source");
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.368f, 1.0f)); ImGui::TextWrapped("WebOS is supported by all modern browsers, with the exception of limited support on Safari."); ImGui::PopStyleColor();
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.368f, 1.0f)); ImGui::TextWrapped("Native Linux and Windows binaries can be compiled from source"); ImGui::PopStyleColor();
+            
          
         ImGui::Separator();
 
-        ImGui::Text("WHAT IS EMSCRIPTEN?");
-        ImGui::BulletText("Emscripten is a cross-compilation platform, capable of compiling native code into WebAssembly.");
-        ImGui::BulletText("https://emscripten.org");
+        ImGui::TextWrapped("WHAT IS EMSCRIPTEN?");
+        ImGui::Bullet(); ImGui::TextWrapped("Emscripten is a cross-compilation platform, capable of compiling native code into WebAssembly.");
+        ImGui::Bullet(); ImGui::TextWrapped("https://emscripten.org");
         if (ImGui::IsItemHovered()) {
+                #if defined(__EMSCRIPTEN__)
+                ImGui::SetTooltip("Click to open");
+                #else
                 ImGui::SetTooltip("Click to copy");
+                #endif
                 if (ImGui::IsItemClicked()) {
+                    #if defined(__EMSCRIPTEN__)
+                    EM_ASM(
+                        window.open('https://emscripten.org', '_blank');
+                    );
+                    #else
+                    
                     ImGui::LogToClipboard(); 
                     ImGui::LogText("https://emscripten.org");
                     ImGui::LogFinish();
+                    #endif
                 }
             }
     }
     if (ImGui::CollapsingHeader("More Information"))
     {
-        ImGui::Text("HOW DO I GET JRPC TOKENS?");
-        ImGui::BulletText("JRPC Tokens available on demand via mimo");
-        ImGui::BulletText("More information about buying tokens can be found here:");
-        ImGui::SameLine(); 
-            ImGui::Text("https://t.me/JRPC_Official");
+        ImGui::TextWrapped("HOW DO I GET JRPC TOKENS?");
+        ImGui::Bullet(); ImGui::TextWrapped("JRPC Tokens are available on demand via mimo");
+        ImGui::Bullet(); ImGui::TextWrapped("More information about buying tokens can be found here:");
+           ImGui::Indent();
+           ImGui::Bullet(); ImGui::TextWrapped("https://t.me/JRPC_Official"); ImGui::Unindent();;
             if (ImGui::IsItemHovered()) {
+                #if defined(__EMSCRIPTEN__)
+                ImGui::SetTooltip("Click to open");
+                #else
                 ImGui::SetTooltip("Click to copy");
+                #endif
                 if (ImGui::IsItemClicked()) {
+                    #if defined(__EMSCRIPTEN__)
+                    EM_ASM(
+                        window.open('https://t.me/JRPC_Official', '_blank');
+                    );
+                    #else
+                    
                     ImGui::LogToClipboard(); 
                     ImGui::LogText("https://t.me/JRPC_Official");
                     ImGui::LogFinish();
+                    #endif
                 }
             }
-        ImGui::BulletText("In order to trade on mimo, contact me directly for instructions, or add the following token address to");
-        ImGui::SameLine(); 
-            ImGui::Text("https://mimo.exchange");
+        
+        ImGui::Bullet(); ImGui::TextWrapped("In order to trade on mimo, contact me directly for instructions, or add the following token address to mimo");
+            ImGui::Indent();
+            ImGui::Bullet(); ImGui::TextWrapped("Mimo exchange address URL");
+            ImGui::Indent(); ImGui::Bullet(); ImGui::TextWrapped("https://mimo.exchange"); ImGui::Unindent();
             if (ImGui::IsItemHovered()) {
+                #if defined(__EMSCRIPTEN__)
+                ImGui::SetTooltip("Click to open");
+                #else
                 ImGui::SetTooltip("Click to copy");
+                #endif
                 if (ImGui::IsItemClicked()) {
+                    #if defined(__EMSCRIPTEN__)
+                    EM_ASM(
+                        window.open('https://mimo.exchange', '_blank');
+                    );
+                    #else
+                    
                     ImGui::LogToClipboard(); 
                     ImGui::LogText("https://mimo.exchange");
                     ImGui::LogFinish();
+                    #endif
                 }
             }
-        ImGui::Indent();
-            ImGui::BulletText("Address: "); 
-                ImGui::SameLine(); 
-                ImGui::Text("io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu");
+
+            ImGui::Bullet(); ImGui::TextWrapped("Token Address: "); 
+                ImGui::Bullet(); ImGui::TextWrapped("io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu");
                 if (ImGui::IsItemHovered()) {
                     ImGui::SetTooltip("Click to copy");
                     if (ImGui::IsItemClicked()) {
@@ -410,16 +445,16 @@ void ImGui::ShowDemoWindow(bool* p_open)
                         ImGui::LogFinish();
                     }
                 }
-             ImGui::Bullet(); ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "Country restrictions may apply. Please consult your local law.");
+            ImGui::Bullet(); ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); ImGui::TextWrapped("Country restrictions may apply. Please consult your local law."); ImGui::PopStyleColor();
         ImGui::Unindent();
     }
     if (ImGui::CollapsingHeader("What's Next?"))
     {
         ImGui::Text("NEWS"); 
-        ImGui::BulletText("I am actively developing this website with more demo content and JRPC hacking tools");
-        ImGui::BulletText("More features incomming, such as:");
+        ImGui::Bullet(); ImGui::TextWrapped("I am actively developing this website with more demo content and JRPC hacking tools");
+        ImGui::Bullet(); ImGui::TextWrapped("More features incomming, such as:");
         ImGui::Indent(); 
-            ImGui::BulletText("Fully integated iotex-antenna-embedded C++ code cross compiled into native WebAssembly code by Emscripten");
+            ImGui::Bullet(); ImGui::TextWrapped("Fully integated iotex-antenna-embedded C++ code cross compiled into native WebAssembly code by Emscripten");
         ImGui::Unindent(); 
     }
     if (ImGui::CollapsingHeader("User Guide"))
