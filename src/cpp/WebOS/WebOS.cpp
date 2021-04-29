@@ -46,14 +46,14 @@ void WebOS::setStyle() {
     ImGui::StyleColorsIoTeX();
 	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(4, 7);
 	this->style.FramePadding = this->imGuiStylePtr->FramePadding				= ImVec2(6, 6);
-	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing				= ImVec2(20, 20);
-	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing			= ImVec2(14, 20);
-	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding			= ImVec2(5, 5);
+	this->style.ItemSpacing = this->imGuiStylePtr->ItemSpacing				    = ImVec2(20, 20);
+	this->style.ItemInnerSpacing = this->imGuiStylePtr->ItemInnerSpacing		= ImVec2(14, 20);
+	this->style.TouchExtraPadding = this->imGuiStylePtr->TouchExtraPadding		= ImVec2(5, 5);
 	this->style.IndentSpacing = this->imGuiStylePtr->IndentSpacing				= (float)21;
 	this->style.FrameRounding = this->imGuiStylePtr->FrameRounding				= (float)3;
 	this->style.ScrollbarSize = this->imGuiStylePtr->ScrollbarSize				= (float)20;
-	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize				= (float)10;
-	this->style.WindowBorderSize = this->imGuiStylePtr->WindowBorderSize			= (float)1;
+	this->style.GrabMinSize = this->imGuiStylePtr->GrabMinSize				    = (float)10;
+	this->style.WindowBorderSize = this->imGuiStylePtr->WindowBorderSize		= (float)1;
 	this->style.ChildBorderSize =  this->imGuiStylePtr->ChildBorderSize			= (float)1;
 	this->style.PopupBorderSize = this->imGuiStylePtr->PopupBorderSize			= (float)1;
 	this->style.FrameBorderSize = this->imGuiStylePtr->FrameBorderSize			= (float)1;
@@ -78,7 +78,18 @@ void WebOS::showWelcomePopup(bool* p_open)
         ImGui::End();
     }else
     {
+        /*void ImGui::RenderBullet(ImDrawList* draw_list, ImVec2 pos, ImU32 col)
+        {
+            draw_list->AddCircleFilled(pos, draw_list->_Data->FontSize * 0.20f, col, 8);
+        }*/
+        //ImGui::GetBackgroundDrawList()->PushTextureID(&wallpaper);
+        ImGui::Image((void*)(intptr_t)wallpaper, ImVec2(365, 210));
+        //ImGui::GetBackgroundDrawList()->AddRect(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255));
+        //ImGui::RenderTextClipped(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), "text", NULL, NULL, ImVec2(0.5f,0.0f));
         //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+        //ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 2),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y +5)), 2, IM_COL32(255,255,255,255), 8);
+        ImGui::GetWindowDrawList()->BulletText();
+        ImGui::GetWindowDrawList()->AddText(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 10),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255), "testing");
         ImGui::TextWrapped("Please use the right mouse click to open Menu");
         ImGui::TextWrapped("Click the JRPC token icon to open command console");
         ImGui::Separator();

@@ -333,6 +333,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
 
     ImGui::Spacing();
 
+    //draw image on background layer
     if (ImGui::CollapsingHeader("Introduction"))
     {
         ImGui::TextWrapped("WHAT IS JRPC");

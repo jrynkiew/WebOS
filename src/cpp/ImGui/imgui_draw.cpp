@@ -475,6 +475,29 @@ ImDrawList* ImDrawList::CloneOutput() const
 #define GetCurrentClipRect()    (_ClipRectStack.Size ? _ClipRectStack.Data[_ClipRectStack.Size-1]  : _Data->ClipRectFullscreen)
 #define GetCurrentTextureId()   (_TextureIdStack.Size ? _TextureIdStack.Data[_TextureIdStack.Size-1] : (ImTextureID)NULL)
 
+void ImDrawList::BulletText()
+{
+    ImGuiWindow* window = ImGui::GetCurrentWindow();
+    if (window->SkipItems)
+        return;
+
+    ImGuiContext& g = *GImGui;
+    const ImGuiStyle& style = g.Style;
+    const float line_height = ImMax(ImMin(window->DC.CurrLineSize.y, g.FontSize + g.Style.FramePadding.y*2), g.FontSize);
+    const ImRect bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(g.FontSize, line_height));
+    ImGui::ItemSize(bb);
+    if (!ImGui::ItemAdd(bb, 0))
+    {
+        ImGui::SameLine(0, style.FramePadding.x*2);
+        return;
+    }
+
+    // Render and stay on same line
+    ImU32 text_col = ImGui::GetColorU32(ImGuiCol_Text);
+    ImGui::RenderBullet(window->DrawList, ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 10),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), text_col);
+    ImGui::SameLine(0, style.FramePadding.x * 2.0f);
+}
+
 void ImDrawList::AddDrawCmd()
 {
     ImDrawCmd draw_cmd;
