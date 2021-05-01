@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "af804b87-6aef-475d-973b-2c94b64fa41f"
+  "package_uuid": "e0021c16-d71f-4c1b-8821-0985091b5d9a"
  });
 })();
 
@@ -1615,7 +1615,7 @@ var ASM_CONSTS = {
  20777: function() {
   window.open("https://mimo.exchange", "_blank");
  },
- 78666: function($0) {
+ 78810: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1623,7 +1623,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 114892: function($0, $1, $2) {
+ 115036: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1694,7 +1694,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 116371: function($0, $1, $2, $3, $4) {
+ 116515: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1731,36 +1731,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 117360: function($0) {
+ 117504: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 117453: function() {
+ 117597: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 118678: function() {
+ 118822: function() {
   return screen.width;
  },
- 118705: function() {
+ 118849: function() {
   return screen.height;
  },
- 118733: function() {
+ 118877: function() {
   return window.innerWidth;
  },
- 118765: function() {
+ 118909: function() {
   return window.innerHeight;
  },
- 118843: function($0) {
+ 118987: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 118977: function() {
+ 119121: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1768,7 +1768,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 119143: function() {
+ 119287: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1776,7 +1776,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 119369: function($0) {
+ 119513: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1798,11 +1798,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 119922: function() {
+ 120066: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 119992: function($0, $1, $2, $3) {
+ 120136: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1843,7 +1843,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 121644: function($0, $1, $2, $3) {
+ 121788: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1855,7 +1855,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 122054: function($0, $1) {
+ 122198: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1874,7 +1874,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 122659: function($0, $1) {
+ 122803: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1887,7 +1887,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 123139: function($0) {
+ 123283: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {

@@ -295,8 +295,9 @@ struct ExampleAppConsole
                 emscripten_fetch_attr_init(&attr);
                 strcpy(attr.requestMethod, "POST");
                 const char * headers[] = {"Content-Type", "application/json", 0};
-                const char * command = "{\"ioctl\": \"command\"}";           
-
+                const char * command = "{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}";
+                //const char * command = "{\"ioctl\": \"command\"}";           
+//curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
@@ -574,6 +575,12 @@ struct ExampleAppConsole
                 AddLog("[error] Correct usage: ioctl bc info");
                 AddLog("[info] More features will be made available soon");
             }*/
+        }
+        else if (Stricmp(command_line, "CURL") == 0)
+        {
+
+            post("https://babel-api.testnet.iotex.io/", readBuffer, command_line);
+
         }
         else if (Stricmp(command_line, "ENCRYPT") == 0)
         {
