@@ -4,7 +4,6 @@
 
 
 int main(int argc, char **argv) {
-    printf("test");
     int ret;
     iotex_st_config config = {0};
     iotex_st_account_meta account;

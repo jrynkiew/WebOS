@@ -300,7 +300,8 @@ struct ExampleAppConsole
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
-                attr.userData = &readBuffer;
+                //attr.userData = &readBuffer;
+                attr.userData = &buffer;
                 attr.requestHeaders = headers;
                 attr.requestData = command;
                 attr.requestDataSize = strlen(attr.requestData);
@@ -344,7 +345,8 @@ struct ExampleAppConsole
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
-                attr.userData = &readBuffer;
+                //attr.userData = &readBuffer;
+                attr.userData = &buffer;
 
                 emscripten_fetch(&attr, URL);
                 //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);

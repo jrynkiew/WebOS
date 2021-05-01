@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <string.h>
 #include <assert.h>
 
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
+#include <emscripten/fetch.h>
 #else
 #include <curl/curl.h>
 #endif
@@ -102,6 +102,22 @@ static void _free_response_data(iotex_st_response_data *res) {
     res->data = NULL;
 }
 
+#if defined(__EMSCRIPTEN__)
+void onLoaded(emscripten_fetch_t *fetch) 
+{
+    if (fetch->numBytes + 1 > IOTEX_EBM_MAX_RES_LEN) {
+        _free_response_data(&fetch->userData);
+        emscripten_fetch_close(fetch);
+    }
+    printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+    emscripten_fetch_close(fetch);
+}
+void onError(emscripten_fetch_t *fetch)
+{
+    printf("Connection %s failed, HTTP failure status code: %d.\nSee browser debug console log for more details", fetch->url, fetch->status);
+    emscripten_fetch_close(fetch);
+}
+#endif
 
 /*
  * @brief: curl receive data callback, copy received data to iotex_st_response_data
@@ -226,10 +242,34 @@ char *req_compose_url(char *url, size_t url_max_size, iotex_em_request req, ...)
  * 2. add zero copy version ? (don't forget release response)
  * 3. add two-way authentication support
  */
+req_basic_request_emscptn (const char *request, char *response, size_t response_max_size, uint32_t is_post) {
+    assert(request != NULL);
+    assert(response != NULL);
+
+    iotex_st_response_data res = {};
+    iotex_st_config config = get_config();
+    const char * headers[] = {"Content-Type", "application/json", 0};
+
+    #if defined(__EMSCRIPTEN__)  
+    emscripten_fetch_attr_t attr;
+    emscripten_fetch_attr_init(&attr);
+
+    strcpy(attr.requestMethod, "POST");
+
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.requestHeaders = headers;
+    attr.userData = &res;
+
+    emscripten_fetch(&attr, "https://babel-api.testnet.iotex.io/");    
+    #endif
+
+    return 0;
+}
+
 static int req_basic_request(const char *request, char *response, size_t response_max_size, uint32_t is_post) {
 
 #if defined(__EMSCRIPTEN__)
-
+    printf("This should not show up, since when using Emscripten, you should be calling req_basic_request_emscptn\n");
 #else
     assert(request != NULL);
     assert(response != NULL);
@@ -291,10 +331,19 @@ static int req_basic_request(const char *request, char *response, size_t respons
 
 int req_get_request(const char *request, char *response, size_t response_max_size) {
 
-    return req_basic_request(request, response, response_max_size, 0);
+    #if defined(__EMSCRIPTEN__)
+        return req_basic_request_emscptn(request, response, response_max_size, 0);
+    #else
+        return req_basic_request(request, response, response_max_size, 0);
+    #endif
 }
 
 int req_post_request(const char *request, char *response, size_t response_max_size) {
 
-    return req_basic_request(request, response, response_max_size, 1);
+    #if defined(__EMSCRIPTEN__)
+        printf("hello world! From emscripten curl req_post_request replacement!\n");
+        return -1;
+    #else
+        return req_basic_request(request, response, response_max_size, 1);
+    #endif
 }

@@ -89,6 +89,7 @@ Module.expectedDataFileDownloads++;
    function assert(check, msg) {
     if (!check) throw msg + new Error().stack;
    }
+   Module["FS_createPath"]("/", "certs", true, true);
    function DataRequest(start, end, audio) {
     this.start = start;
     this.end = end;
@@ -108,15 +109,8 @@ Module.expectedDataFileDownloads++;
     },
     finish: function(byteArray) {
      var that = this;
-     Module["FS_createPreloadedFile"](this.name, null, byteArray, true, true, function() {
-      Module["removeRunDependency"]("fp " + that.name);
-     }, function() {
-      if (that.audio) {
-       Module["removeRunDependency"]("fp " + that.name);
-      } else {
-       err("Preloading file " + that.name + " failed");
-      }
-     }, false, true);
+     Module["FS_createDataFile"](this.name, null, byteArray, true, true, true);
+     Module["removeRunDependency"]("fp " + that.name);
      this.requests[this.name] = null;
     }
    };
@@ -157,13 +151,13 @@ Module.expectedDataFileDownloads++;
  };
  loadPackage({
   "files": [ {
-   "filename": "/cacert.pem",
+   "filename": "/certs/cacert.pem",
    "start": 0,
    "end": 221363,
    "audio": 0
   } ],
   "remote_package_size": 221363,
-  "package_uuid": "f31fb972-8510-44de-ae22-8bb826f44465"
+  "package_uuid": "eaeb5d1b-d721-4762-972b-8f98c4b7a95e"
  });
 })();
 
@@ -1293,9 +1287,6 @@ function preMain() {
 
 function exitRuntime() {
  checkStackCookie();
- callRuntimeCallbacks(__ATEXIT__);
- FS.quit();
- TTY.shutdown();
  runtimeExited = true;
 }
 
@@ -1322,9 +1313,7 @@ function addOnPreMain(cb) {
  __ATMAIN__.unshift(cb);
 }
 
-function addOnExit(cb) {
- __ATEXIT__.unshift(cb);
-}
+function addOnExit(cb) {}
 
 function addOnPostRun(cb) {
  __ATPOSTRUN__.unshift(cb);
@@ -1574,740 +1563,6 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {};
-
-function _emscripten_set_main_loop_timing(mode, value) {
- Browser.mainLoop.timingMode = mode;
- Browser.mainLoop.timingValue = value;
- if (!Browser.mainLoop.func) {
-  console.error("emscripten_set_main_loop_timing: Cannot set timing mode for main loop since a main loop does not exist! Call emscripten_set_main_loop first to set one up.");
-  return 1;
- }
- if (mode == 0) {
-  Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_setTimeout() {
-   var timeUntilNextTick = Math.max(0, Browser.mainLoop.tickStartTime + value - _emscripten_get_now()) | 0;
-   setTimeout(Browser.mainLoop.runner, timeUntilNextTick);
-  };
-  Browser.mainLoop.method = "timeout";
- } else if (mode == 1) {
-  Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_rAF() {
-   Browser.requestAnimationFrame(Browser.mainLoop.runner);
-  };
-  Browser.mainLoop.method = "rAF";
- } else if (mode == 2) {
-  if (typeof setImmediate === "undefined") {
-   var setImmediates = [];
-   var emscriptenMainLoopMessageId = "setimmediate";
-   var Browser_setImmediate_messageHandler = function(event) {
-    if (event.data === emscriptenMainLoopMessageId || event.data.target === emscriptenMainLoopMessageId) {
-     event.stopPropagation();
-     setImmediates.shift()();
-    }
-   };
-   addEventListener("message", Browser_setImmediate_messageHandler, true);
-   setImmediate = function Browser_emulated_setImmediate(func) {
-    setImmediates.push(func);
-    if (ENVIRONMENT_IS_WORKER) {
-     if (Module["setImmediates"] === undefined) Module["setImmediates"] = [];
-     Module["setImmediates"].push(func);
-     postMessage({
-      target: emscriptenMainLoopMessageId
-     });
-    } else postMessage(emscriptenMainLoopMessageId, "*");
-   };
-  }
-  Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_setImmediate() {
-   setImmediate(Browser.mainLoop.runner);
-  };
-  Browser.mainLoop.method = "immediate";
- }
- return 0;
-}
-
-var _emscripten_get_now;
-
-if (ENVIRONMENT_IS_NODE) {
- _emscripten_get_now = function() {
-  var t = process["hrtime"]();
-  return t[0] * 1e3 + t[1] / 1e6;
- };
-} else if (typeof dateNow !== "undefined") {
- _emscripten_get_now = dateNow;
-} else _emscripten_get_now = function() {
- return performance.now();
-};
-
-function setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSetTiming) {
- noExitRuntime = true;
- assert(!Browser.mainLoop.func, "emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.");
- Browser.mainLoop.func = browserIterationFunc;
- Browser.mainLoop.arg = arg;
- var thisMainLoopId = Browser.mainLoop.currentlyRunningMainloop;
- Browser.mainLoop.runner = function Browser_mainLoop_runner() {
-  if (ABORT) return;
-  if (Browser.mainLoop.queue.length > 0) {
-   var start = Date.now();
-   var blocker = Browser.mainLoop.queue.shift();
-   blocker.func(blocker.arg);
-   if (Browser.mainLoop.remainingBlockers) {
-    var remaining = Browser.mainLoop.remainingBlockers;
-    var next = remaining % 1 == 0 ? remaining - 1 : Math.floor(remaining);
-    if (blocker.counted) {
-     Browser.mainLoop.remainingBlockers = next;
-    } else {
-     next = next + .5;
-     Browser.mainLoop.remainingBlockers = (8 * remaining + next) / 9;
-    }
-   }
-   console.log('main loop blocker "' + blocker.name + '" took ' + (Date.now() - start) + " ms");
-   Browser.mainLoop.updateStatus();
-   if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
-   setTimeout(Browser.mainLoop.runner, 0);
-   return;
-  }
-  if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
-  Browser.mainLoop.currentFrameNumber = Browser.mainLoop.currentFrameNumber + 1 | 0;
-  if (Browser.mainLoop.timingMode == 1 && Browser.mainLoop.timingValue > 1 && Browser.mainLoop.currentFrameNumber % Browser.mainLoop.timingValue != 0) {
-   Browser.mainLoop.scheduler();
-   return;
-  } else if (Browser.mainLoop.timingMode == 0) {
-   Browser.mainLoop.tickStartTime = _emscripten_get_now();
-  }
-  if (Browser.mainLoop.method === "timeout" && Module.ctx) {
-   warnOnce("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!");
-   Browser.mainLoop.method = "";
-  }
-  Browser.mainLoop.runIter(browserIterationFunc);
-  checkStackCookie();
-  if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
-  if (typeof SDL === "object" && SDL.audio && SDL.audio.queueNewAudioData) SDL.audio.queueNewAudioData();
-  Browser.mainLoop.scheduler();
- };
- if (!noSetTiming) {
-  if (fps && fps > 0) _emscripten_set_main_loop_timing(0, 1e3 / fps); else _emscripten_set_main_loop_timing(1, 1);
-  Browser.mainLoop.scheduler();
- }
- if (simulateInfiniteLoop) {
-  throw "unwind";
- }
-}
-
-var Browser = {
- mainLoop: {
-  scheduler: null,
-  method: "",
-  currentlyRunningMainloop: 0,
-  func: null,
-  arg: 0,
-  timingMode: 0,
-  timingValue: 0,
-  currentFrameNumber: 0,
-  queue: [],
-  pause: function() {
-   Browser.mainLoop.scheduler = null;
-   Browser.mainLoop.currentlyRunningMainloop++;
-  },
-  resume: function() {
-   Browser.mainLoop.currentlyRunningMainloop++;
-   var timingMode = Browser.mainLoop.timingMode;
-   var timingValue = Browser.mainLoop.timingValue;
-   var func = Browser.mainLoop.func;
-   Browser.mainLoop.func = null;
-   setMainLoop(func, 0, false, Browser.mainLoop.arg, true);
-   _emscripten_set_main_loop_timing(timingMode, timingValue);
-   Browser.mainLoop.scheduler();
-  },
-  updateStatus: function() {
-   if (Module["setStatus"]) {
-    var message = Module["statusMessage"] || "Please wait...";
-    var remaining = Browser.mainLoop.remainingBlockers;
-    var expected = Browser.mainLoop.expectedBlockers;
-    if (remaining) {
-     if (remaining < expected) {
-      Module["setStatus"](message + " (" + (expected - remaining) + "/" + expected + ")");
-     } else {
-      Module["setStatus"](message);
-     }
-    } else {
-     Module["setStatus"]("");
-    }
-   }
-  },
-  runIter: function(func) {
-   if (ABORT) return;
-   if (Module["preMainLoop"]) {
-    var preRet = Module["preMainLoop"]();
-    if (preRet === false) {
-     return;
-    }
-   }
-   try {
-    func();
-   } catch (e) {
-    if (e instanceof ExitStatus) {
-     return;
-    } else if (e == "unwind") {
-     return;
-    } else {
-     if (e && typeof e === "object" && e.stack) err("exception thrown: " + [ e, e.stack ]);
-     throw e;
-    }
-   }
-   if (Module["postMainLoop"]) Module["postMainLoop"]();
-  }
- },
- isFullscreen: false,
- pointerLock: false,
- moduleContextCreatedCallbacks: [],
- workers: [],
- init: function() {
-  if (!Module["preloadPlugins"]) Module["preloadPlugins"] = [];
-  if (Browser.initted) return;
-  Browser.initted = true;
-  try {
-   new Blob();
-   Browser.hasBlobConstructor = true;
-  } catch (e) {
-   Browser.hasBlobConstructor = false;
-   console.log("warning: no blob constructor, cannot create blobs with mimetypes");
-  }
-  Browser.BlobBuilder = typeof MozBlobBuilder != "undefined" ? MozBlobBuilder : typeof WebKitBlobBuilder != "undefined" ? WebKitBlobBuilder : !Browser.hasBlobConstructor ? console.log("warning: no BlobBuilder") : null;
-  Browser.URLObject = typeof window != "undefined" ? window.URL ? window.URL : window.webkitURL : undefined;
-  if (!Module.noImageDecoding && typeof Browser.URLObject === "undefined") {
-   console.log("warning: Browser does not support creating object URLs. Built-in browser image decoding will not be available.");
-   Module.noImageDecoding = true;
-  }
-  var imagePlugin = {};
-  imagePlugin["canHandle"] = function imagePlugin_canHandle(name) {
-   return !Module.noImageDecoding && /\.(jpg|jpeg|png|bmp)$/i.test(name);
-  };
-  imagePlugin["handle"] = function imagePlugin_handle(byteArray, name, onload, onerror) {
-   var b = null;
-   if (Browser.hasBlobConstructor) {
-    try {
-     b = new Blob([ byteArray ], {
-      type: Browser.getMimetype(name)
-     });
-     if (b.size !== byteArray.length) {
-      b = new Blob([ new Uint8Array(byteArray).buffer ], {
-       type: Browser.getMimetype(name)
-      });
-     }
-    } catch (e) {
-     warnOnce("Blob constructor present but fails: " + e + "; falling back to blob builder");
-    }
-   }
-   if (!b) {
-    var bb = new Browser.BlobBuilder();
-    bb.append(new Uint8Array(byteArray).buffer);
-    b = bb.getBlob();
-   }
-   var url = Browser.URLObject.createObjectURL(b);
-   assert(typeof url == "string", "createObjectURL must return a url as a string");
-   var img = new Image();
-   img.onload = function img_onload() {
-    assert(img.complete, "Image " + name + " could not be decoded");
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    Module["preloadedImages"][name] = canvas;
-    Browser.URLObject.revokeObjectURL(url);
-    if (onload) onload(byteArray);
-   };
-   img.onerror = function img_onerror(event) {
-    console.log("Image " + url + " could not be decoded");
-    if (onerror) onerror();
-   };
-   img.src = url;
-  };
-  Module["preloadPlugins"].push(imagePlugin);
-  var audioPlugin = {};
-  audioPlugin["canHandle"] = function audioPlugin_canHandle(name) {
-   return !Module.noAudioDecoding && name.substr(-4) in {
-    ".ogg": 1,
-    ".wav": 1,
-    ".mp3": 1
-   };
-  };
-  audioPlugin["handle"] = function audioPlugin_handle(byteArray, name, onload, onerror) {
-   var done = false;
-   function finish(audio) {
-    if (done) return;
-    done = true;
-    Module["preloadedAudios"][name] = audio;
-    if (onload) onload(byteArray);
-   }
-   function fail() {
-    if (done) return;
-    done = true;
-    Module["preloadedAudios"][name] = new Audio();
-    if (onerror) onerror();
-   }
-   if (Browser.hasBlobConstructor) {
-    try {
-     var b = new Blob([ byteArray ], {
-      type: Browser.getMimetype(name)
-     });
-    } catch (e) {
-     return fail();
-    }
-    var url = Browser.URLObject.createObjectURL(b);
-    assert(typeof url == "string", "createObjectURL must return a url as a string");
-    var audio = new Audio();
-    audio.addEventListener("canplaythrough", function() {
-     finish(audio);
-    }, false);
-    audio.onerror = function audio_onerror(event) {
-     if (done) return;
-     console.log("warning: browser could not fully decode audio " + name + ", trying slower base64 approach");
-     function encode64(data) {
-      var BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-      var PAD = "=";
-      var ret = "";
-      var leftchar = 0;
-      var leftbits = 0;
-      for (var i = 0; i < data.length; i++) {
-       leftchar = leftchar << 8 | data[i];
-       leftbits += 8;
-       while (leftbits >= 6) {
-        var curr = leftchar >> leftbits - 6 & 63;
-        leftbits -= 6;
-        ret += BASE[curr];
-       }
-      }
-      if (leftbits == 2) {
-       ret += BASE[(leftchar & 3) << 4];
-       ret += PAD + PAD;
-      } else if (leftbits == 4) {
-       ret += BASE[(leftchar & 15) << 2];
-       ret += PAD;
-      }
-      return ret;
-     }
-     audio.src = "data:audio/x-" + name.substr(-3) + ";base64," + encode64(byteArray);
-     finish(audio);
-    };
-    audio.src = url;
-    Browser.safeSetTimeout(function() {
-     finish(audio);
-    }, 1e4);
-   } else {
-    return fail();
-   }
-  };
-  Module["preloadPlugins"].push(audioPlugin);
-  function pointerLockChange() {
-   Browser.pointerLock = document["pointerLockElement"] === Module["canvas"] || document["mozPointerLockElement"] === Module["canvas"] || document["webkitPointerLockElement"] === Module["canvas"] || document["msPointerLockElement"] === Module["canvas"];
-  }
-  var canvas = Module["canvas"];
-  if (canvas) {
-   canvas.requestPointerLock = canvas["requestPointerLock"] || canvas["mozRequestPointerLock"] || canvas["webkitRequestPointerLock"] || canvas["msRequestPointerLock"] || function() {};
-   canvas.exitPointerLock = document["exitPointerLock"] || document["mozExitPointerLock"] || document["webkitExitPointerLock"] || document["msExitPointerLock"] || function() {};
-   canvas.exitPointerLock = canvas.exitPointerLock.bind(document);
-   document.addEventListener("pointerlockchange", pointerLockChange, false);
-   document.addEventListener("mozpointerlockchange", pointerLockChange, false);
-   document.addEventListener("webkitpointerlockchange", pointerLockChange, false);
-   document.addEventListener("mspointerlockchange", pointerLockChange, false);
-   if (Module["elementPointerLock"]) {
-    canvas.addEventListener("click", function(ev) {
-     if (!Browser.pointerLock && Module["canvas"].requestPointerLock) {
-      Module["canvas"].requestPointerLock();
-      ev.preventDefault();
-     }
-    }, false);
-   }
-  }
- },
- createContext: function(canvas, useWebGL, setInModule, webGLContextAttributes) {
-  if (useWebGL && Module.ctx && canvas == Module.canvas) return Module.ctx;
-  var ctx;
-  var contextHandle;
-  if (useWebGL) {
-   var contextAttributes = {
-    antialias: false,
-    alpha: false,
-    majorVersion: 1
-   };
-   if (webGLContextAttributes) {
-    for (var attribute in webGLContextAttributes) {
-     contextAttributes[attribute] = webGLContextAttributes[attribute];
-    }
-   }
-   if (typeof GL !== "undefined") {
-    contextHandle = GL.createContext(canvas, contextAttributes);
-    if (contextHandle) {
-     ctx = GL.getContext(contextHandle).GLctx;
-    }
-   }
-  } else {
-   ctx = canvas.getContext("2d");
-  }
-  if (!ctx) return null;
-  if (setInModule) {
-   if (!useWebGL) assert(typeof GLctx === "undefined", "cannot set in module if GLctx is used, but we are a non-GL context that would replace it");
-   Module.ctx = ctx;
-   if (useWebGL) GL.makeContextCurrent(contextHandle);
-   Module.useWebGL = useWebGL;
-   Browser.moduleContextCreatedCallbacks.forEach(function(callback) {
-    callback();
-   });
-   Browser.init();
-  }
-  return ctx;
- },
- destroyContext: function(canvas, useWebGL, setInModule) {},
- fullscreenHandlersInstalled: false,
- lockPointer: undefined,
- resizeCanvas: undefined,
- requestFullscreen: function(lockPointer, resizeCanvas) {
-  Browser.lockPointer = lockPointer;
-  Browser.resizeCanvas = resizeCanvas;
-  if (typeof Browser.lockPointer === "undefined") Browser.lockPointer = true;
-  if (typeof Browser.resizeCanvas === "undefined") Browser.resizeCanvas = false;
-  var canvas = Module["canvas"];
-  function fullscreenChange() {
-   Browser.isFullscreen = false;
-   var canvasContainer = canvas.parentNode;
-   if ((document["fullscreenElement"] || document["mozFullScreenElement"] || document["msFullscreenElement"] || document["webkitFullscreenElement"] || document["webkitCurrentFullScreenElement"]) === canvasContainer) {
-    canvas.exitFullscreen = Browser.exitFullscreen;
-    if (Browser.lockPointer) canvas.requestPointerLock();
-    Browser.isFullscreen = true;
-    if (Browser.resizeCanvas) {
-     Browser.setFullscreenCanvasSize();
-    } else {
-     Browser.updateCanvasDimensions(canvas);
-    }
-   } else {
-    canvasContainer.parentNode.insertBefore(canvas, canvasContainer);
-    canvasContainer.parentNode.removeChild(canvasContainer);
-    if (Browser.resizeCanvas) {
-     Browser.setWindowedCanvasSize();
-    } else {
-     Browser.updateCanvasDimensions(canvas);
-    }
-   }
-   if (Module["onFullScreen"]) Module["onFullScreen"](Browser.isFullscreen);
-   if (Module["onFullscreen"]) Module["onFullscreen"](Browser.isFullscreen);
-  }
-  if (!Browser.fullscreenHandlersInstalled) {
-   Browser.fullscreenHandlersInstalled = true;
-   document.addEventListener("fullscreenchange", fullscreenChange, false);
-   document.addEventListener("mozfullscreenchange", fullscreenChange, false);
-   document.addEventListener("webkitfullscreenchange", fullscreenChange, false);
-   document.addEventListener("MSFullscreenChange", fullscreenChange, false);
-  }
-  var canvasContainer = document.createElement("div");
-  canvas.parentNode.insertBefore(canvasContainer, canvas);
-  canvasContainer.appendChild(canvas);
-  canvasContainer.requestFullscreen = canvasContainer["requestFullscreen"] || canvasContainer["mozRequestFullScreen"] || canvasContainer["msRequestFullscreen"] || (canvasContainer["webkitRequestFullscreen"] ? function() {
-   canvasContainer["webkitRequestFullscreen"](Element["ALLOW_KEYBOARD_INPUT"]);
-  } : null) || (canvasContainer["webkitRequestFullScreen"] ? function() {
-   canvasContainer["webkitRequestFullScreen"](Element["ALLOW_KEYBOARD_INPUT"]);
-  } : null);
-  canvasContainer.requestFullscreen();
- },
- requestFullScreen: function() {
-  abort("Module.requestFullScreen has been replaced by Module.requestFullscreen (without a capital S)");
- },
- exitFullscreen: function() {
-  if (!Browser.isFullscreen) {
-   return false;
-  }
-  var CFS = document["exitFullscreen"] || document["cancelFullScreen"] || document["mozCancelFullScreen"] || document["msExitFullscreen"] || document["webkitCancelFullScreen"] || function() {};
-  CFS.apply(document, []);
-  return true;
- },
- nextRAF: 0,
- fakeRequestAnimationFrame: function(func) {
-  var now = Date.now();
-  if (Browser.nextRAF === 0) {
-   Browser.nextRAF = now + 1e3 / 60;
-  } else {
-   while (now + 2 >= Browser.nextRAF) {
-    Browser.nextRAF += 1e3 / 60;
-   }
-  }
-  var delay = Math.max(Browser.nextRAF - now, 0);
-  setTimeout(func, delay);
- },
- requestAnimationFrame: function(func) {
-  if (typeof requestAnimationFrame === "function") {
-   requestAnimationFrame(func);
-   return;
-  }
-  var RAF = Browser.fakeRequestAnimationFrame;
-  RAF(func);
- },
- safeCallback: function(func) {
-  return function() {
-   if (!ABORT) return func.apply(null, arguments);
-  };
- },
- allowAsyncCallbacks: true,
- queuedAsyncCallbacks: [],
- pauseAsyncCallbacks: function() {
-  Browser.allowAsyncCallbacks = false;
- },
- resumeAsyncCallbacks: function() {
-  Browser.allowAsyncCallbacks = true;
-  if (Browser.queuedAsyncCallbacks.length > 0) {
-   var callbacks = Browser.queuedAsyncCallbacks;
-   Browser.queuedAsyncCallbacks = [];
-   callbacks.forEach(function(func) {
-    func();
-   });
-  }
- },
- safeRequestAnimationFrame: function(func) {
-  return Browser.requestAnimationFrame(function() {
-   if (ABORT) return;
-   if (Browser.allowAsyncCallbacks) {
-    func();
-   } else {
-    Browser.queuedAsyncCallbacks.push(func);
-   }
-  });
- },
- safeSetTimeout: function(func, timeout) {
-  noExitRuntime = true;
-  return setTimeout(function() {
-   if (ABORT) return;
-   if (Browser.allowAsyncCallbacks) {
-    func();
-   } else {
-    Browser.queuedAsyncCallbacks.push(func);
-   }
-  }, timeout);
- },
- safeSetInterval: function(func, timeout) {
-  noExitRuntime = true;
-  return setInterval(function() {
-   if (ABORT) return;
-   if (Browser.allowAsyncCallbacks) {
-    func();
-   }
-  }, timeout);
- },
- getMimetype: function(name) {
-  return {
-   "jpg": "image/jpeg",
-   "jpeg": "image/jpeg",
-   "png": "image/png",
-   "bmp": "image/bmp",
-   "ogg": "audio/ogg",
-   "wav": "audio/wav",
-   "mp3": "audio/mpeg"
-  }[name.substr(name.lastIndexOf(".") + 1)];
- },
- getUserMedia: function(func) {
-  if (!window.getUserMedia) {
-   window.getUserMedia = navigator["getUserMedia"] || navigator["mozGetUserMedia"];
-  }
-  window.getUserMedia(func);
- },
- getMovementX: function(event) {
-  return event["movementX"] || event["mozMovementX"] || event["webkitMovementX"] || 0;
- },
- getMovementY: function(event) {
-  return event["movementY"] || event["mozMovementY"] || event["webkitMovementY"] || 0;
- },
- getMouseWheelDelta: function(event) {
-  var delta = 0;
-  switch (event.type) {
-  case "DOMMouseScroll":
-   delta = event.detail / 3;
-   break;
-
-  case "mousewheel":
-   delta = event.wheelDelta / 120;
-   break;
-
-  case "wheel":
-   delta = event.deltaY;
-   switch (event.deltaMode) {
-   case 0:
-    delta /= 100;
-    break;
-
-   case 1:
-    delta /= 3;
-    break;
-
-   case 2:
-    delta *= 80;
-    break;
-
-   default:
-    throw "unrecognized mouse wheel delta mode: " + event.deltaMode;
-   }
-   break;
-
-  default:
-   throw "unrecognized mouse wheel event: " + event.type;
-  }
-  return delta;
- },
- mouseX: 0,
- mouseY: 0,
- mouseMovementX: 0,
- mouseMovementY: 0,
- touches: {},
- lastTouches: {},
- calculateMouseEvent: function(event) {
-  if (Browser.pointerLock) {
-   if (event.type != "mousemove" && "mozMovementX" in event) {
-    Browser.mouseMovementX = Browser.mouseMovementY = 0;
-   } else {
-    Browser.mouseMovementX = Browser.getMovementX(event);
-    Browser.mouseMovementY = Browser.getMovementY(event);
-   }
-   if (typeof SDL != "undefined") {
-    Browser.mouseX = SDL.mouseX + Browser.mouseMovementX;
-    Browser.mouseY = SDL.mouseY + Browser.mouseMovementY;
-   } else {
-    Browser.mouseX += Browser.mouseMovementX;
-    Browser.mouseY += Browser.mouseMovementY;
-   }
-  } else {
-   var rect = Module["canvas"].getBoundingClientRect();
-   var cw = Module["canvas"].width;
-   var ch = Module["canvas"].height;
-   var scrollX = typeof window.scrollX !== "undefined" ? window.scrollX : window.pageXOffset;
-   var scrollY = typeof window.scrollY !== "undefined" ? window.scrollY : window.pageYOffset;
-   assert(typeof scrollX !== "undefined" && typeof scrollY !== "undefined", "Unable to retrieve scroll position, mouse positions likely broken.");
-   if (event.type === "touchstart" || event.type === "touchend" || event.type === "touchmove") {
-    var touch = event.touch;
-    if (touch === undefined) {
-     return;
-    }
-    var adjustedX = touch.pageX - (scrollX + rect.left);
-    var adjustedY = touch.pageY - (scrollY + rect.top);
-    adjustedX = adjustedX * (cw / rect.width);
-    adjustedY = adjustedY * (ch / rect.height);
-    var coords = {
-     x: adjustedX,
-     y: adjustedY
-    };
-    if (event.type === "touchstart") {
-     Browser.lastTouches[touch.identifier] = coords;
-     Browser.touches[touch.identifier] = coords;
-    } else if (event.type === "touchend" || event.type === "touchmove") {
-     var last = Browser.touches[touch.identifier];
-     if (!last) last = coords;
-     Browser.lastTouches[touch.identifier] = last;
-     Browser.touches[touch.identifier] = coords;
-    }
-    return;
-   }
-   var x = event.pageX - (scrollX + rect.left);
-   var y = event.pageY - (scrollY + rect.top);
-   x = x * (cw / rect.width);
-   y = y * (ch / rect.height);
-   Browser.mouseMovementX = x - Browser.mouseX;
-   Browser.mouseMovementY = y - Browser.mouseY;
-   Browser.mouseX = x;
-   Browser.mouseY = y;
-  }
- },
- asyncLoad: function(url, onload, onerror, noRunDep) {
-  var dep = !noRunDep ? getUniqueRunDependency("al " + url) : "";
-  readAsync(url, function(arrayBuffer) {
-   assert(arrayBuffer, 'Loading data file "' + url + '" failed (no arrayBuffer).');
-   onload(new Uint8Array(arrayBuffer));
-   if (dep) removeRunDependency(dep);
-  }, function(event) {
-   if (onerror) {
-    onerror();
-   } else {
-    throw 'Loading data file "' + url + '" failed.';
-   }
-  });
-  if (dep) addRunDependency(dep);
- },
- resizeListeners: [],
- updateResizeListeners: function() {
-  var canvas = Module["canvas"];
-  Browser.resizeListeners.forEach(function(listener) {
-   listener(canvas.width, canvas.height);
-  });
- },
- setCanvasSize: function(width, height, noUpdates) {
-  var canvas = Module["canvas"];
-  Browser.updateCanvasDimensions(canvas, width, height);
-  if (!noUpdates) Browser.updateResizeListeners();
- },
- windowedWidth: 0,
- windowedHeight: 0,
- setFullscreenCanvasSize: function() {
-  if (typeof SDL != "undefined") {
-   var flags = SAFE_HEAP_LOAD(SDL.screen | 0, 4, 1) >>> 0;
-   flags = flags | 8388608;
-   SAFE_HEAP_STORE(SDL.screen | 0, flags | 0, 4);
-  }
-  Browser.updateCanvasDimensions(Module["canvas"]);
-  Browser.updateResizeListeners();
- },
- setWindowedCanvasSize: function() {
-  if (typeof SDL != "undefined") {
-   var flags = SAFE_HEAP_LOAD(SDL.screen | 0, 4, 1) >>> 0;
-   flags = flags & ~8388608;
-   SAFE_HEAP_STORE(SDL.screen | 0, flags | 0, 4);
-  }
-  Browser.updateCanvasDimensions(Module["canvas"]);
-  Browser.updateResizeListeners();
- },
- updateCanvasDimensions: function(canvas, wNative, hNative) {
-  if (wNative && hNative) {
-   canvas.widthNative = wNative;
-   canvas.heightNative = hNative;
-  } else {
-   wNative = canvas.widthNative;
-   hNative = canvas.heightNative;
-  }
-  var w = wNative;
-  var h = hNative;
-  if (Module["forcedAspectRatio"] && Module["forcedAspectRatio"] > 0) {
-   if (w / h < Module["forcedAspectRatio"]) {
-    w = Math.round(h * Module["forcedAspectRatio"]);
-   } else {
-    h = Math.round(w / Module["forcedAspectRatio"]);
-   }
-  }
-  if ((document["fullscreenElement"] || document["mozFullScreenElement"] || document["msFullscreenElement"] || document["webkitFullscreenElement"] || document["webkitCurrentFullScreenElement"]) === canvas.parentNode && typeof screen != "undefined") {
-   var factor = Math.min(screen.width / w, screen.height / h);
-   w = Math.round(w * factor);
-   h = Math.round(h * factor);
-  }
-  if (Browser.resizeCanvas) {
-   if (canvas.width != w) canvas.width = w;
-   if (canvas.height != h) canvas.height = h;
-   if (typeof canvas.style != "undefined") {
-    canvas.style.removeProperty("width");
-    canvas.style.removeProperty("height");
-   }
-  } else {
-   if (canvas.width != wNative) canvas.width = wNative;
-   if (canvas.height != hNative) canvas.height = hNative;
-   if (typeof canvas.style != "undefined") {
-    if (w != wNative || h != hNative) {
-     canvas.style.setProperty("width", w + "px", "important");
-     canvas.style.setProperty("height", h + "px", "important");
-    } else {
-     canvas.style.removeProperty("width");
-     canvas.style.removeProperty("height");
-    }
-   }
-  }
- },
- wgetRequests: {},
- nextWgetRequestHandle: 0,
- getNextWgetRequestHandle: function() {
-  var handle = Browser.nextWgetRequestHandle;
-  Browser.nextWgetRequestHandle++;
-  return handle;
- }
-};
 
 function abortStackOverflow(allocSize) {
  abort("Stack overflow! Attempted to allocate " + allocSize + " bytes on the stack, but stack has only " + (_emscripten_stack_get_free() + allocSize) + " bytes available!");
@@ -5074,6 +4329,16 @@ function ___sys_stat64(path, buf) {
  }
 }
 
+function __emscripten_fetch_free(id) {
+ delete Fetch.xhrs[id - 1];
+}
+
+function _emscripten_is_main_browser_thread() {
+ return !ENVIRONMENT_IS_WORKER;
+}
+
+Module["_emscripten_is_main_browser_thread"] = _emscripten_is_main_browser_thread;
+
 function _emscripten_memcpy_big(dest, src, num) {
  HEAPU8.copyWithin(dest, src, src + num);
 }
@@ -5113,6 +4378,349 @@ function _emscripten_resize_heap(requestedSize) {
  }
  err("Failed to grow the heap from " + oldSize + " bytes to " + newSize + " bytes, not enough memory!");
  return false;
+}
+
+var Fetch = {
+ xhrs: [],
+ setu64: function(addr, val) {
+  SAFE_HEAP_STORE((addr >> 2) * 4, val, 4);
+  SAFE_HEAP_STORE((addr + 4 >> 2) * 4, val / 4294967296 | 0, 4);
+ },
+ openDatabase: function(dbname, dbversion, onsuccess, onerror) {
+  try {
+   var openRequest = indexedDB.open(dbname, dbversion);
+  } catch (e) {
+   return onerror(e);
+  }
+  openRequest.onupgradeneeded = function(event) {
+   var db = event.target.result;
+   if (db.objectStoreNames.contains("FILES")) {
+    db.deleteObjectStore("FILES");
+   }
+   db.createObjectStore("FILES");
+  };
+  openRequest.onsuccess = function(event) {
+   onsuccess(event.target.result);
+  };
+  openRequest.onerror = function(error) {
+   onerror(error);
+  };
+ },
+ staticInit: function() {
+  var isMainThread = true;
+  var onsuccess = function(db) {
+   Fetch.dbInstance = db;
+   if (isMainThread) {
+    removeRunDependency("library_fetch_init");
+   }
+  };
+  var onerror = function() {
+   Fetch.dbInstance = false;
+   if (isMainThread) {
+    removeRunDependency("library_fetch_init");
+   }
+  };
+  Fetch.openDatabase("emscripten_filesystem", 1, onsuccess, onerror);
+  if (typeof ENVIRONMENT_IS_FETCH_WORKER === "undefined" || !ENVIRONMENT_IS_FETCH_WORKER) addRunDependency("library_fetch_init");
+ }
+};
+
+function __emscripten_fetch_xhr(fetch, onsuccess, onerror, onprogress, onreadystatechange) {
+ var url = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ if (!url) {
+  onerror(fetch, 0, "no url specified!");
+  return;
+ }
+ var url_ = UTF8ToString(url);
+ var fetch_attr = fetch + 112;
+ var requestMethod = UTF8ToString(fetch_attr);
+ if (!requestMethod) requestMethod = "GET";
+ var userData = SAFE_HEAP_LOAD((fetch + 4 >> 2) * 4, 4, 1);
+ var fetchAttributes = SAFE_HEAP_LOAD((fetch_attr + 52 >> 2) * 4, 4, 1);
+ var timeoutMsecs = SAFE_HEAP_LOAD((fetch_attr + 56 >> 2) * 4, 4, 1);
+ var withCredentials = !!SAFE_HEAP_LOAD((fetch_attr + 60 >> 2) * 4, 4, 1);
+ var destinationPath = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ var userName = SAFE_HEAP_LOAD((fetch_attr + 68 >> 2) * 4, 4, 1);
+ var password = SAFE_HEAP_LOAD((fetch_attr + 72 >> 2) * 4, 4, 1);
+ var requestHeaders = SAFE_HEAP_LOAD((fetch_attr + 76 >> 2) * 4, 4, 1);
+ var overriddenMimeType = SAFE_HEAP_LOAD((fetch_attr + 80 >> 2) * 4, 4, 1);
+ var dataPtr = SAFE_HEAP_LOAD((fetch_attr + 84 >> 2) * 4, 4, 1);
+ var dataLength = SAFE_HEAP_LOAD((fetch_attr + 88 >> 2) * 4, 4, 1);
+ var fetchAttrLoadToMemory = !!(fetchAttributes & 1);
+ var fetchAttrStreamData = !!(fetchAttributes & 2);
+ var fetchAttrPersistFile = !!(fetchAttributes & 4);
+ var fetchAttrAppend = !!(fetchAttributes & 8);
+ var fetchAttrReplace = !!(fetchAttributes & 16);
+ var fetchAttrSynchronous = !!(fetchAttributes & 64);
+ var fetchAttrWaitable = !!(fetchAttributes & 128);
+ var userNameStr = userName ? UTF8ToString(userName) : undefined;
+ var passwordStr = password ? UTF8ToString(password) : undefined;
+ var overriddenMimeTypeStr = overriddenMimeType ? UTF8ToString(overriddenMimeType) : undefined;
+ var xhr = new XMLHttpRequest();
+ xhr.withCredentials = withCredentials;
+ xhr.open(requestMethod, url_, !fetchAttrSynchronous, userNameStr, passwordStr);
+ if (!fetchAttrSynchronous) xhr.timeout = timeoutMsecs;
+ xhr.url_ = url_;
+ assert(!fetchAttrStreamData, "streaming uses moz-chunked-arraybuffer which is no longer supported; TODO: rewrite using fetch()");
+ xhr.responseType = "arraybuffer";
+ if (overriddenMimeType) {
+  xhr.overrideMimeType(overriddenMimeTypeStr);
+ }
+ if (requestHeaders) {
+  for (;;) {
+   var key = SAFE_HEAP_LOAD((requestHeaders >> 2) * 4, 4, 1);
+   if (!key) break;
+   var value = SAFE_HEAP_LOAD((requestHeaders + 4 >> 2) * 4, 4, 1);
+   if (!value) break;
+   requestHeaders += 8;
+   var keyStr = UTF8ToString(key);
+   var valueStr = UTF8ToString(value);
+   xhr.setRequestHeader(keyStr, valueStr);
+  }
+ }
+ Fetch.xhrs.push(xhr);
+ var id = Fetch.xhrs.length;
+ SAFE_HEAP_STORE((fetch + 0 >> 2) * 4, id, 4);
+ var data = dataPtr && dataLength ? HEAPU8.slice(dataPtr, dataPtr + dataLength) : null;
+ function saveResponse(condition) {
+  var ptr = 0;
+  var ptrLen = 0;
+  if (condition) {
+   ptrLen = xhr.response ? xhr.response.byteLength : 0;
+   ptr = _malloc(ptrLen);
+   HEAPU8.set(new Uint8Array(xhr.response), ptr);
+  }
+  SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, ptr, 4);
+  Fetch.setu64(fetch + 16, ptrLen);
+ }
+ xhr.onload = function(e) {
+  saveResponse(fetchAttrLoadToMemory && !fetchAttrStreamData);
+  var len = xhr.response ? xhr.response.byteLength : 0;
+  Fetch.setu64(fetch + 24, 0);
+  if (len) {
+   Fetch.setu64(fetch + 32, len);
+  }
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, xhr.status, 2);
+  if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
+  if (xhr.status >= 200 && xhr.status < 300) {
+   if (onsuccess) onsuccess(fetch, xhr, e);
+  } else {
+   if (onerror) onerror(fetch, xhr, e);
+  }
+ };
+ xhr.onerror = function(e) {
+  saveResponse(fetchAttrLoadToMemory);
+  var status = xhr.status;
+  Fetch.setu64(fetch + 24, 0);
+  Fetch.setu64(fetch + 32, xhr.response ? xhr.response.byteLength : 0);
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, status, 2);
+  if (onerror) onerror(fetch, xhr, e);
+ };
+ xhr.ontimeout = function(e) {
+  if (onerror) onerror(fetch, xhr, e);
+ };
+ xhr.onprogress = function(e) {
+  var ptrLen = fetchAttrLoadToMemory && fetchAttrStreamData && xhr.response ? xhr.response.byteLength : 0;
+  var ptr = 0;
+  if (fetchAttrLoadToMemory && fetchAttrStreamData) {
+   assert(onprogress, "When doing a streaming fetch, you should have an onprogress handler registered to receive the chunks!");
+   ptr = _malloc(ptrLen);
+   HEAPU8.set(new Uint8Array(xhr.response), ptr);
+  }
+  SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, ptr, 4);
+  Fetch.setu64(fetch + 16, ptrLen);
+  Fetch.setu64(fetch + 24, e.loaded - ptrLen);
+  Fetch.setu64(fetch + 32, e.total);
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  if (xhr.readyState >= 3 && xhr.status === 0 && e.loaded > 0) xhr.status = 200;
+  SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, xhr.status, 2);
+  if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
+  if (onprogress) onprogress(fetch, xhr, e);
+  if (ptr) {
+   _free(ptr);
+  }
+ };
+ xhr.onreadystatechange = function(e) {
+  SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, xhr.readyState, 2);
+  if (xhr.readyState >= 2) {
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, xhr.status, 2);
+  }
+  if (onreadystatechange) onreadystatechange(fetch, xhr, e);
+ };
+ try {
+  xhr.send(data);
+ } catch (e) {
+  if (onerror) onerror(fetch, xhr, e);
+ }
+}
+
+function __emscripten_fetch_cache_data(db, fetch, data, onsuccess, onerror) {
+ if (!db) {
+  onerror(fetch, 0, "IndexedDB not available!");
+  return;
+ }
+ var fetch_attr = fetch + 112;
+ var destinationPath = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ if (!destinationPath) destinationPath = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ var destinationPathStr = UTF8ToString(destinationPath);
+ try {
+  var transaction = db.transaction([ "FILES" ], "readwrite");
+  var packages = transaction.objectStore("FILES");
+  var putRequest = packages.put(data, destinationPathStr);
+  putRequest.onsuccess = function(event) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 200, 2);
+   stringToUTF8("OK", fetch + 44, 64);
+   onsuccess(fetch, 0, destinationPathStr);
+  };
+  putRequest.onerror = function(error) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 413, 2);
+   stringToUTF8("Payload Too Large", fetch + 44, 64);
+   onerror(fetch, 0, error);
+  };
+ } catch (e) {
+  onerror(fetch, 0, e);
+ }
+}
+
+function __emscripten_fetch_load_cached_data(db, fetch, onsuccess, onerror) {
+ if (!db) {
+  onerror(fetch, 0, "IndexedDB not available!");
+  return;
+ }
+ var fetch_attr = fetch + 112;
+ var path = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ if (!path) path = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ var pathStr = UTF8ToString(path);
+ try {
+  var transaction = db.transaction([ "FILES" ], "readonly");
+  var packages = transaction.objectStore("FILES");
+  var getRequest = packages.get(pathStr);
+  getRequest.onsuccess = function(event) {
+   if (event.target.result) {
+    var value = event.target.result;
+    var len = value.byteLength || value.length;
+    var ptr = _malloc(len);
+    HEAPU8.set(new Uint8Array(value), ptr);
+    SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, ptr, 4);
+    Fetch.setu64(fetch + 16, len);
+    Fetch.setu64(fetch + 24, 0);
+    Fetch.setu64(fetch + 32, len);
+    SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+    SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 200, 2);
+    stringToUTF8("OK", fetch + 44, 64);
+    onsuccess(fetch, 0, value);
+   } else {
+    SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+    SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 404, 2);
+    stringToUTF8("Not Found", fetch + 44, 64);
+    onerror(fetch, 0, "no data");
+   }
+  };
+  getRequest.onerror = function(error) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 404, 2);
+   stringToUTF8("Not Found", fetch + 44, 64);
+   onerror(fetch, 0, error);
+  };
+ } catch (e) {
+  onerror(fetch, 0, e);
+ }
+}
+
+function __emscripten_fetch_delete_cached_data(db, fetch, onsuccess, onerror) {
+ if (!db) {
+  onerror(fetch, 0, "IndexedDB not available!");
+  return;
+ }
+ var fetch_attr = fetch + 112;
+ var path = SAFE_HEAP_LOAD((fetch_attr + 64 >> 2) * 4, 4, 1);
+ if (!path) path = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
+ var pathStr = UTF8ToString(path);
+ try {
+  var transaction = db.transaction([ "FILES" ], "readwrite");
+  var packages = transaction.objectStore("FILES");
+  var request = packages.delete(pathStr);
+  request.onsuccess = function(event) {
+   var value = event.target.result;
+   SAFE_HEAP_STORE((fetch + 12 >> 2) * 4, 0, 4);
+   Fetch.setu64(fetch + 16, 0);
+   Fetch.setu64(fetch + 24, 0);
+   Fetch.setu64(fetch + 32, 0);
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 200, 2);
+   stringToUTF8("OK", fetch + 44, 64);
+   onsuccess(fetch, 0, value);
+  };
+  request.onerror = function(error) {
+   SAFE_HEAP_STORE((fetch + 40 >> 1) * 2, 4, 2);
+   SAFE_HEAP_STORE((fetch + 42 >> 1) * 2, 404, 2);
+   stringToUTF8("Not Found", fetch + 44, 64);
+   onerror(fetch, 0, error);
+  };
+ } catch (e) {
+  onerror(fetch, 0, e);
+ }
+}
+
+function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readystatechangecb) {
+ if (typeof noExitRuntime !== "undefined") noExitRuntime = true;
+ var fetch_attr = fetch + 112;
+ var requestMethod = UTF8ToString(fetch_attr);
+ var onsuccess = SAFE_HEAP_LOAD((fetch_attr + 36 >> 2) * 4, 4, 1);
+ var onerror = SAFE_HEAP_LOAD((fetch_attr + 40 >> 2) * 4, 4, 1);
+ var onprogress = SAFE_HEAP_LOAD((fetch_attr + 44 >> 2) * 4, 4, 1);
+ var onreadystatechange = SAFE_HEAP_LOAD((fetch_attr + 48 >> 2) * 4, 4, 1);
+ var fetchAttributes = SAFE_HEAP_LOAD((fetch_attr + 52 >> 2) * 4, 4, 1);
+ var fetchAttrLoadToMemory = !!(fetchAttributes & 1);
+ var fetchAttrStreamData = !!(fetchAttributes & 2);
+ var fetchAttrPersistFile = !!(fetchAttributes & 4);
+ var fetchAttrNoDownload = !!(fetchAttributes & 32);
+ var fetchAttrAppend = !!(fetchAttributes & 8);
+ var fetchAttrReplace = !!(fetchAttributes & 16);
+ var reportSuccess = function(fetch, xhr, e) {
+  if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+ };
+ var reportProgress = function(fetch, xhr, e) {
+  if (onprogress) wasmTable.get(onprogress)(fetch); else if (progresscb) progresscb(fetch);
+ };
+ var reportError = function(fetch, xhr, e) {
+  if (onerror) wasmTable.get(onerror)(fetch); else if (errorcb) errorcb(fetch);
+ };
+ var reportReadyStateChange = function(fetch, xhr, e) {
+  if (onreadystatechange) wasmTable.get(onreadystatechange)(fetch); else if (readystatechangecb) readystatechangecb(fetch);
+ };
+ var performUncachedXhr = function(fetch, xhr, e) {
+  __emscripten_fetch_xhr(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
+ };
+ var cacheResultAndReportSuccess = function(fetch, xhr, e) {
+  var storeSuccess = function(fetch, xhr, e) {
+   if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+  };
+  var storeError = function(fetch, xhr, e) {
+   if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+  };
+  __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
+ };
+ var performCachedXhr = function(fetch, xhr, e) {
+  __emscripten_fetch_xhr(fetch, cacheResultAndReportSuccess, reportError, reportProgress, reportReadyStateChange);
+ };
+ if (requestMethod === "EM_IDB_STORE") {
+  var ptr = SAFE_HEAP_LOAD((fetch_attr + 84 >> 2) * 4, 4, 1);
+  __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, HEAPU8.slice(ptr, ptr + SAFE_HEAP_LOAD((fetch_attr + 88 >> 2) * 4, 4, 1)), reportSuccess, reportError);
+ } else if (requestMethod === "EM_IDB_DELETE") {
+  __emscripten_fetch_delete_cached_data(Fetch.dbInstance, fetch, reportSuccess, reportError);
+ } else if (!fetchAttrReplace) {
+  __emscripten_fetch_load_cached_data(Fetch.dbInstance, fetch, reportSuccess, fetchAttrNoDownload ? reportError : fetchAttrPersistFile ? performCachedXhr : performUncachedXhr);
+ } else if (!fetchAttrNoDownload) {
+  __emscripten_fetch_xhr(fetch, fetchAttrPersistFile ? cacheResultAndReportSuccess : reportSuccess, reportError, reportProgress, reportReadyStateChange);
+ } else {
+  return 0;
+ }
+ return fetch;
 }
 
 function _fd_close(fd) {
@@ -5161,38 +4769,6 @@ function _fd_write(fd, iov, iovcnt, pnum) {
 function _setTempRet0($i) {
  setTempRet0($i | 0);
 }
-
-Module["requestFullscreen"] = function Module_requestFullscreen(lockPointer, resizeCanvas) {
- Browser.requestFullscreen(lockPointer, resizeCanvas);
-};
-
-Module["requestFullScreen"] = function Module_requestFullScreen() {
- Browser.requestFullScreen();
-};
-
-Module["requestAnimationFrame"] = function Module_requestAnimationFrame(func) {
- Browser.requestAnimationFrame(func);
-};
-
-Module["setCanvasSize"] = function Module_setCanvasSize(width, height, noUpdates) {
- Browser.setCanvasSize(width, height, noUpdates);
-};
-
-Module["pauseMainLoop"] = function Module_pauseMainLoop() {
- Browser.mainLoop.pause();
-};
-
-Module["resumeMainLoop"] = function Module_resumeMainLoop() {
- Browser.mainLoop.resume();
-};
-
-Module["getUserMedia"] = function Module_getUserMedia() {
- Browser.getUserMedia();
-};
-
-Module["createContext"] = function Module_createContext(canvas, useWebGL, setInModule, webGLContextAttributes) {
- return Browser.createContext(canvas, useWebGL, setInModule, webGLContextAttributes);
-};
 
 var FSNode = function(parent, name, mode, rdev) {
  if (!parent) {
@@ -5258,6 +4834,8 @@ Module["FS_createDevice"] = FS.createDevice;
 
 Module["FS_unlink"] = FS.unlink;
 
+Fetch.staticInit();
+
 var ASSERTIONS = true;
 
 function intArrayFromString(stringy, dontAddNull, length) {
@@ -5286,9 +4864,12 @@ function intArrayToString(array) {
 var asmLibraryArg = {
  "__assert_fail": ___assert_fail,
  "__sys_stat64": ___sys_stat64,
+ "_emscripten_fetch_free": __emscripten_fetch_free,
  "alignfault": alignfault,
+ "emscripten_is_main_browser_thread": _emscripten_is_main_browser_thread,
  "emscripten_memcpy_big": _emscripten_memcpy_big,
  "emscripten_resize_heap": _emscripten_resize_heap,
+ "emscripten_start_fetch": _emscripten_start_fetch,
  "fd_close": _fd_close,
  "fd_seek": _fd_seek,
  "fd_write": _fd_write,
@@ -6074,6 +5655,26 @@ if (!Object.getOwnPropertyDescriptor(Module, "runAndAbortIfError")) Module["runA
  abort("'runAndAbortIfError' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
+if (!Object.getOwnPropertyDescriptor(Module, "Fetch")) Module["Fetch"] = function() {
+ abort("'Fetch' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_delete_cached_data")) Module["__emscripten_fetch_delete_cached_data"] = function() {
+ abort("'__emscripten_fetch_delete_cached_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_load_cached_data")) Module["__emscripten_fetch_load_cached_data"] = function() {
+ abort("'__emscripten_fetch_load_cached_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_cache_data")) Module["__emscripten_fetch_cache_data"] = function() {
+ abort("'__emscripten_fetch_cache_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_xhr")) Module["__emscripten_fetch_xhr"] = function() {
+ abort("'__emscripten_fetch_xhr' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
 if (!Object.getOwnPropertyDescriptor(Module, "warnOnce")) Module["warnOnce"] = function() {
  abort("'warnOnce' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
@@ -6233,13 +5834,42 @@ function run(args) {
 
 Module["run"] = run;
 
+function checkUnflushedContent() {
+ var oldOut = out;
+ var oldErr = err;
+ var has = false;
+ out = err = function(x) {
+  has = true;
+ };
+ try {
+  var flush = Module["_fflush"];
+  if (flush) flush(0);
+  [ "stdout", "stderr" ].forEach(function(name) {
+   var info = FS.analyzePath("/dev/" + name);
+   if (!info) return;
+   var stream = info.object;
+   var rdev = stream.rdev;
+   var tty = TTY.ttys[rdev];
+   if (tty && tty.output && tty.output.length) {
+    has = true;
+   }
+  });
+ } catch (e) {}
+ out = oldOut;
+ err = oldErr;
+ if (has) {
+  warnOnce("stdio streams had content in them that was not flushed. you should set EXIT_RUNTIME to 1 (see the FAQ), or make sure to emit a newline when you printf etc.");
+ }
+}
+
 function exit(status, implicit) {
+ checkUnflushedContent();
  if (implicit && noExitRuntime && status === 0) {
   return;
  }
  if (noExitRuntime) {
   if (!implicit) {
-   var msg = "program exited (with status: " + status + "), but noExitRuntime is set due to an async operation, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)";
+   var msg = "program exited (with status: " + status + "), but EXIT_RUNTIME is not set, so halting execution but not exiting the runtime or preventing further async execution (build with EXIT_RUNTIME=1, if you want a true shutdown)";
    err(msg);
   }
  } else {
@@ -6261,5 +5891,7 @@ if (Module["preInit"]) {
 var shouldRunNow = true;
 
 if (Module["noInitialRun"]) shouldRunNow = false;
+
+noExitRuntime = true;
 
 run();

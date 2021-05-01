@@ -1,14 +1,15 @@
 AR		= $(CROSS_COMPILE)ar
 CC		= $(CROSS_COMPILE)cc
 
-LDSHFLAGS	= -rdynamic -shared 
-ARFLAGS		= rcv
+#LDSHFLAGS	= -rdynamic -shared 
+#ARFLAGS		= rcv
 CFLAGS		= -Wall -g -fPIC -I../src -I..
 
-EMS 		+= --preload-file cacert.pem --use-preload-plugins
+CFLAGS 		+= --preload-file cacert.pem@certs/cacert.pem
 EMS 		+= -s ALLOW_MEMORY_GROWTH=1
-EMS 		+= -s DISABLE_EXCEPTION_CATCHING=1 -s EXIT_RUNTIME=1
+EMS 		+= -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1
 EMS 		+= -s ASSERTIONS=1 -s SAFE_HEAP=1 
+EMS 		+= -s FETCH=1
 CFLAGS += $(EMS)
 
 #LDFLAGS		= -L.. -llibiotexemscripten -lcurl -L.. -ltrezor-crypto
@@ -37,7 +38,7 @@ $(TARGETS):
 	$(CC) $(CFLAGS) -o $(OBJDIR)/$@ $^ $(LDFLAGS)
 
 no_int128:
-	@make clean && make CFLAGS="$(CFLAGS) -D_NO_128INT_"
+	@make CFLAGS="$(CFLAGS) -D_NO_128INT_"
 
 # Examples
 transfer: transfer.o

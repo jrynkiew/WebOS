@@ -12,7 +12,8 @@ int main(int argc, char **argv) {
     const char *account_address = (argc >= 2) ? argv[1] : "io1e2nqsyt7fkpzs5x7zf2uk0jj72teu5n6aku3tr";
 
     /* Configure cert file */
-    config.cert_file = "cacert.pem";
+    config.cert_file = "certs/cacert.pem";
+    config.cert_dir = "certs/";
 
     if ((ret = iotex_emb_init(&config)) != 0) {
         fprintf(stderr, "Initialize iotex emb failed, error code: %d\n", ret);
