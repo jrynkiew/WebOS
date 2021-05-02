@@ -180,7 +180,7 @@ void WebOS::showRightClickContextMenu()
 
 struct ExampleAppConsole
 {
-    char                  InputBuf[256];
+    char                  InputBuf[2560];
     ImVector<char*>       Items;
     ImVector<const char*> Commands;
     char                  _return;
@@ -202,8 +202,9 @@ struct ExampleAppConsole
 
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
     {
-        ((std::string*)userp)->append((char*)contents, size * nmemb);
         
+        ((std::string*)userp)->append((char*)contents, size * nmemb);
+        //printf(((std::string*)userp)->c_str());
         return size * nmemb;
     }
 
@@ -217,10 +218,10 @@ struct ExampleAppConsole
         Commands.push_back("CLEAR");
         Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
         Commands.push_back("FETCH [url]");
-        Commands.push_back("IOCTL");
+        /*Commands.push_back("IOCTL");
         Commands.push_back("SECRET - do not use");
         Commands.push_back("ENCRYPT - do not use");
-        Commands.push_back("DECRYPT - do not use");
+        Commands.push_back("DECRYPT - do not use");*/
         AutoScroll = true;
         ScrollToBottom = false;
         AddLog("[warning] This feature is still under development");
@@ -236,7 +237,7 @@ struct ExampleAppConsole
     static int   Stricmp(const char* str1, const char* str2)         { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; } return d; }
     static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
     static char* Strdup(const char *str)                             { size_t len = strlen(str) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)str, len); }
-    static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0; }
+    static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0;}
     bool         isNumber(const std::string& str)                    { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
     //modulo privte key encryption test
     int64_t      generateSecretKey(int64_t secretInput)                   { return secret = secretInput; }
@@ -253,11 +254,11 @@ struct ExampleAppConsole
     const void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
         // FIXME-OPT
-        char buf[1024];
+        char buf[48000];
         va_list args;
         va_start(args, fmt);
-        vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
-        buf[IM_ARRAYSIZE(buf)-1] = 0;
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        buf[sizeof(buf)-1] = 0;
         va_end(args);
         Items.push_back(Strdup(buf));
     }
@@ -319,7 +320,8 @@ struct ExampleAppConsole
                     res = curl_easy_perform(curl);
                     curl_easy_cleanup(curl);
                     //std::cout << readBuffer << std::endl;
-                    AddLog(buffer.c_str());
+                    //AddLog(buffer.c_str());
+                    ImGui::TextWrapped(buffer.c_str());
                 }  
             #endif
             }
@@ -330,7 +332,7 @@ struct ExampleAppConsole
 
     void fetch(const char* URL, std::string& buffer)
     {
-        readBuffer.clear();
+        //buffer.clear();
         if ((URL != NULL) && (URL[0] != '\0')) {     
             if (isNumber(URL))
             {
@@ -359,9 +361,10 @@ struct ExampleAppConsole
                     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
                     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
                     res = curl_easy_perform(curl);
+                    AddLog(buffer.c_str());
                     curl_easy_cleanup(curl);
                     //std::cout << readBuffer << std::endl;
-                    AddLog(buffer.c_str());
+                    
                 }  
             #endif
             }
@@ -456,6 +459,14 @@ struct ExampleAppConsole
         for (int i = 0; i < Items.Size; i++)
         {
             const char* item = Items[i];
+            char title[256];     // Destination string
+
+            //strncpy(title, item, 10);
+            //need to have 1 "buffer" which will hold all the text, delimited by return carriages.
+            //every Item.push call must also be matched with appending this character string
+            //then display this string in this selectable textbox
+            ImGui::InputTextMultiline(item, (char*)item, IM_ARRAYSIZE((char*)item), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 2), ImGuiInputTextFlags_ReadOnly);
+            
             if (!Filter.PassFilter(item))
                 continue;
 
@@ -469,7 +480,7 @@ struct ExampleAppConsole
             //else if (strstr(item, "[error]"))            { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); pop_color = true; }
             //else if (strstr(item, "[warning]"))          { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.74f, 0.0f, 1.0f)); pop_color = true; }
             
-            ImGui::TextUnformatted(item);
+            //ImGui::TextUnformatted(item);
             if (pop_color)
                 ImGui::PopStyleColor();
         }
@@ -531,27 +542,31 @@ struct ExampleAppConsole
         {
             ClearLog();
         }
+        /*
         else if (Stricmp(command_line, "TEST") == 0)
         {
             AddLog("Fetch:");
             fetch("http://localhost/", readBuffer);
         }
+        */
         else if (Stricmp(command_line, "HELP") == 0)
         {
             AddLog("Commands:");
             for (int i = 0; i < Commands.Size; i++)
                 AddLog("- %s", Commands[i]);
         }
+        /*
         else if (Stricmp(command_line, "SECRET") == 0)
         {
             token = strtok(NULL," ");
             generateSecretKey(atoll(token));
             AddLog("Secret Key: %s", std::to_string(secret).c_str());
         }
-        else if (Stricmp(command_line, "IOCTL") == 0)
-        {
+        */
+        //else if (Stricmp(command_line, "IOCTL") == 0)
+        //{
 
-            post("http://localhost:8080/", readBuffer, command_line);
+        //    post("http://localhost:8080/", readBuffer, command_line);
 
             /*if(token = strtok(NULL," ")) {
                 if(Stricmp(token, "BC") == 0)
@@ -575,13 +590,14 @@ struct ExampleAppConsole
                 AddLog("[error] Correct usage: ioctl bc info");
                 AddLog("[info] More features will be made available soon");
             }*/
-        }
+        //}
         else if (Stricmp(command_line, "CURL") == 0)
         {
 
-            post("https://babel-api.testnet.iotex.io/", readBuffer, command_line);
+            post("https://babel-api.testnet.iotex.io", readBuffer, command_line);
 
         }
+        /*
         else if (Stricmp(command_line, "ENCRYPT") == 0)
         {
             token = strtok(NULL," ");
@@ -599,6 +615,7 @@ struct ExampleAppConsole
             sharedDecryptionKey = decrypt(atoll(token));
             AddLog("The secret decryption key is: %s", std::to_string(secretKey).c_str());
         }
+        */
         else if (Stricmp(command_line, "HISTORY") == 0)
         {
             int first = History.Size - 10;
