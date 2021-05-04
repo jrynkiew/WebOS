@@ -116,7 +116,7 @@ static const ImU64          IM_U64_MAX = (2ULL * 9223372036854775807LL + 1);
 static bool             InputTextFilterCharacter(unsigned int* p_char, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data);
 static int              InputTextCalcTextLenAndLineCount(const char* text_begin, const char** out_text_end);
 static ImVec2           InputTextCalcTextSizeW(const ImWchar* text_begin, const ImWchar* text_end, const ImWchar** remaining = NULL, ImVec2* out_offset = NULL, bool stop_on_new_line = false);
-
+static std::vector<std::string> split(std::string stringToBeSplitted, std::string delimeter);
 //-------------------------------------------------------------------------
 // [SECTION] Widgets: Text, etc.
 //-------------------------------------------------------------------------
@@ -3437,6 +3437,25 @@ static bool InputTextFilterCharacter(unsigned int* p_char, ImGuiInputTextFlags f
     return true;
 }
 
+static std::vector<std::string> split(std::string stringToBeSplitted, std::string delimeter)
+{
+    std::vector<std::string> splittedString;
+    int startIndex = 0;
+    int  endIndex = 0;
+    while( (endIndex = stringToBeSplitted.find(delimeter, startIndex)) < stringToBeSplitted.size() )
+    {
+        std::string val = stringToBeSplitted.substr(startIndex, endIndex - startIndex);
+        splittedString.push_back(val);
+        startIndex = endIndex + delimeter.size();
+    }
+    if(startIndex < stringToBeSplitted.size())
+    {
+        std::string val = stringToBeSplitted.substr(startIndex);
+        splittedString.push_back(val);
+    }
+    return splittedString;
+}
+
 // Edit a string of text
 // - buf_size account for the zero-terminator, so a buf_size of 6 can hold "Hello" but not "Hello!".
 //   This is so we can easily call InputText() on static arrays using ARRAYSIZE() and to match
@@ -4162,7 +4181,17 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
         if (is_multiline || (buf_display_end - buf_display) < buf_display_max_length)
         {
             ImU32 col = GetColorU32(is_displaying_hint ? ImGuiCol_TextDisabled : ImGuiCol_Text);
+            //ImU32 col = ImGui::GetColorU32(ImVec4(1.0f, 0.4f, 0.4f, 1.0f));
+            //std::vector<std::string> formattedVector = split(buf_display, "Copyright");
             draw_window->DrawList->AddText(g.Font, g.FontSize, draw_pos - draw_scroll, col, buf_display, buf_display_end, 0.0f, is_multiline ? NULL : &clip_rect);
+            /*for (int i=0; i<formattedVector.size(); i++)
+            {
+                TotalLength += strlen(formattedVector[i].c_str());
+                if(i%2)
+                draw_window->DrawList->AddText(g.Font, g.FontSize, draw_pos - draw_scroll, col2, formattedVector[i].c_str(), formattedVector[i].c_str() + TotalLength, 0.0f, is_multiline ? NULL : &clip_rect);
+                else 
+                draw_window->DrawList->AddText(g.Font, g.FontSize, draw_pos - draw_scroll, col, formattedVector[i].c_str(), formattedVector[i].c_str() + TotalLength, 0.0f, is_multiline ? NULL : &clip_rect);
+            }*/
         }
 
         // Draw blinking cursor
@@ -4194,6 +4223,12 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
         {
             ImU32 col = GetColorU32(is_displaying_hint ? ImGuiCol_TextDisabled : ImGuiCol_Text);
             draw_window->DrawList->AddText(g.Font, g.FontSize, draw_pos, col, buf_display, buf_display_end, 0.0f, is_multiline ? NULL : &clip_rect);
+            //ImU32 col = GetColorU32(is_displaying_hint ? ImGuiCol_TextDisabled : ImGuiCol_Text);
+            //ImU32 col = ImGui::GetColorU32(ImVec4(1.0f, 0.4f, 0.4f, 1.0f));
+            
+            //call recursive function which takes in required parameters, plus the previously drawn buffer text
+            
+        
         }
     }
 
