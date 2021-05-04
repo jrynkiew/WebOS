@@ -178,7 +178,7 @@ void WebOS::showRightClickContextMenu()
     }
 }
 
-struct ExampleAppConsole
+struct WebOSConsole
 {
     char                  InputBuf[256];
     ImVector<char*>       Items;
@@ -205,15 +205,14 @@ struct ExampleAppConsole
 
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void* userp)
     {
-        ExampleAppConsole* console = (ExampleAppConsole*)userp;
+        WebOSConsole* console = (WebOSConsole*)userp;
         console->consoleBuffer.append((char*)contents, size * nmemb);
+        console->consoleBuffer.append(std::string("\n"));
 
-        //((std::string*)userp)->append((char*)contents, size * nmemb);
-        //printf(((std::string*)userp)->c_str());
         return size * nmemb;
     }
 
-    ExampleAppConsole()
+    WebOSConsole()
     {
         ClearLog();
         memset(InputBuf, 0, sizeof(InputBuf));
@@ -229,9 +228,10 @@ struct ExampleAppConsole
         Commands.push_back("DECRYPT - do not use");*/
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("[warning] This feature is still under development");
+
+        consoleBuffer.append("[warning] This feature is still under development \n");
     }
-    ~ExampleAppConsole()
+    ~WebOSConsole()
     {
         ClearLog();
         for (int i = 0; i < History.Size; i++)
@@ -244,6 +244,7 @@ struct ExampleAppConsole
     static char* Strdup(const char *str)                             { size_t len = strlen(str) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)str, len); }
     static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0;}
     bool         isNumber(const std::string& str)                    { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
+    
     //modulo privte key encryption test
     //int64_t      generateSecretKey(int64_t secretInput)                   { return secret = secretInput; }
     //int64_t      encrypt(int64_t public_prime_base, int64_t public_prime_modulus)        { sharedEncryptionKey = (int64_t)std::pow(public_prime_base, secret) % public_prime_modulus; return sharedEncryptionKey;}
@@ -251,12 +252,11 @@ struct ExampleAppConsole
 
     void    ClearLog()
     {
-        for (int i = 0; i < Items.Size; i++)
-            free(Items[i]);
-        Items.clear();
+        consoleBuffer.clear();
     }
 
-    const void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
+    //To Do - write an AddLog function which takes in a string and outputs to consoleBuffer with newline char appended to it
+    /*const void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
         // FIXME-OPT
         char buf[32000];
@@ -266,37 +266,39 @@ struct ExampleAppConsole
         buf[sizeof(buf)-1] = 0;
         va_end(args);
         Items.push_back(Strdup(buf));
-    }
+    }*/
 
      #if defined(__EMSCRIPTEN__)
         static void onLoaded(emscripten_fetch_t *fetch) 
         {
             printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
-            //ExampleAppConsole* console = (ExampleAppConsole*)fetch->data;
-            //console->consoleBuffer.append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
-            ((std::string*)(fetch->userData))->append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
+
+            ExampleAppConsole* console = (ExampleAppConsole*)fetch->userData;
+            console->consoleBuffer.append((char*)fetch->data, fetch->totalBytes);
+            console->consoleBuffer.append(std::string("\n"));
+            
             emscripten_fetch_close(fetch);
         }
         static void onError(emscripten_fetch_t *fetch)
         {
-            //std::string error = std::string("[error] Connection Failed!\n") + std::string("GET ") + fetch->url + " - HTTP failure status code: " + std::to_string(fetch->status) + std::string("\n");
-            //printf("Connection %s failed, HTTP failure status code: %d.\nSee browser debug console log for more details", fetch->url, fetch->status);
-            ExampleAppConsole* console = (ExampleAppConsole*)fetch->data;
-            console->consoleBuffer.append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
+            std::string error = std::string("[error] Connection Failed!\n") + fetch->url + " - HTTP failure status code: " + std::to_string(fetch->status) + std::string("\n");
             
-            //((std::string*)(fetch->userData))->append(error);
-            //((std::string*)(fetch->userData))->append((char*)fetch->data, fetch->totalBytes * fetch->numBytes);
+            printf("Connection %s failed, HTTP failure status code: %d.\nSee browser debug console log for more details", fetch->url, fetch->status);
+            
+            ExampleAppConsole* console = (ExampleAppConsole*)fetch->userData;
+            console->consoleBuffer.append(error);
+            console->consoleBuffer.append(std::string("\n"));
+
             emscripten_fetch_close(fetch);
         }
     #endif
 
-    void post(const char* URL, std::string& buffer, const char* command_line)
+    void post(const char* URL, const char* command_line)
     {
-        //readBuffer.clear();
         if ((URL != NULL) && (URL[0] != '\0')) {     
             if (isNumber(URL))
             {
-                AddLog("[info] Correct usage: POST [url]");
+                consoleBuffer.append("[info] Correct usage: POST [url] \n");
                 return;
             }
             if ((strncmp(URL, "http://", 7) == 0) || (strncmp(URL, "https://", 8) == 0)) {   
@@ -311,15 +313,12 @@ struct ExampleAppConsole
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
-                //attr.userData = &readBuffer;
-                attr.userData = &buffer;
+                attr.userData = (void*)this;
                 attr.requestHeaders = headers;
                 attr.requestData = command;
                 attr.requestDataSize = strlen(attr.requestData);
 
                 emscripten_fetch(&attr, URL);
-                //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-                AddLog("Connecting to %s using HTTPS POST request", URL);
             #else
                 curl = curl_easy_init();
                 if(curl) {
@@ -328,24 +327,24 @@ struct ExampleAppConsole
                     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)this);
                     res = curl_easy_perform(curl);
                     curl_easy_cleanup(curl);
-                    //std::cout << readBuffer << std::endl;
-                    //AddLog(buffer.c_str());
-                    ImGui::TextWrapped(buffer.c_str());
                 }  
             #endif
             }
-            else { AddLog("[info] Correct usage: POST [url]"); }
+            else {  
+                    consoleBuffer.append("[info] Correct usage: POST [url] \n");
+                 }
         }
-        else { AddLog("[info] Correct usage: POST [url]"); }
+        else { 
+                consoleBuffer.append("[info] Correct usage: POST [url] \n");
+             }
     }
 
-    void fetch(const char* URL, std::string& buffer)
+    void fetch(const char* URL)
     {
-        //buffer.clear();
         if ((URL != NULL) && (URL[0] != '\0')) {     
             if (isNumber(URL))
             {
-                AddLog("[info] Correct usage: FETCH [url]");
+                consoleBuffer.append("[info] Correct usage: FETCH [url] \n");
                 return;
             }
             if ((strncmp(URL, "http://", 7) == 0) || (strncmp(URL, "https://", 8) == 0)) {   
@@ -356,12 +355,13 @@ struct ExampleAppConsole
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
                 attr.onerror = onError;
-                //attr.userData = &readBuffer;
-                attr.userData = &buffer;
+                attr.userData = (void*)this;
 
                 emscripten_fetch(&attr, URL);
                 //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-                AddLog("Connecting to %s using HTTPS GET request", URL);
+                consoleBuffer.append("Connecting to ");
+                consoleBuffer.append(URL);
+                consoleBuffer.append(" using HTTPS GET request \n");
             #else
                 curl = curl_easy_init();
                 if(curl) {
@@ -375,9 +375,13 @@ struct ExampleAppConsole
                 }  
             #endif
             }
-            else { AddLog("[info] Correct usage: FETCH [url]"); }
+            else { 
+                    consoleBuffer.append("[info] Correct usage: FETCH [url] \n"); 
+                 }
         }
-        else { AddLog("[info] Correct usage: FETCH [url]"); }
+        else { 
+                consoleBuffer.append("[info] Correct usage: FETCH [url] \n"); 
+             }
     }
 
     const void    Draw(const char* title, bool* p_open)
@@ -403,23 +407,13 @@ struct ExampleAppConsole
         // TODO: display items starting from the bottom
             
         if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-            AddLog("Running command: ./ioctl bc info");
-            fetch("https://89.70.221.154/", readBuffer);
+            consoleBuffer.append("Running command: ./ioctl bc info \n");
+            fetch("https://89.70.221.154/");
         } 
-        /*#if defined(__EMSCRIPTEN__)
-        if(!printed)
-        {
-            if(readBuffer.length()!=0)
-            {
-                AddLog(readBuffer.c_str());
-                printf("Size of buffer after fetch %p\n", readBuffer.length());
-                printed = true;
-            }
-        }
-        #endif*/
+
         ImGui::SameLine();
         if (ImGui::SmallButton("Commit Transaction")) { 
-            AddLog("[error] Wallet not connected"); 
+            consoleBuffer.append("[error] Wallet not connected \n");
         } ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy");
@@ -464,12 +458,7 @@ struct ExampleAppConsole
         if (copy_to_clipboard)
             ImGui::LogToClipboard();
         
-
-        #if defined(__EMSCRIPTEN__)       
-        ImGui::InputTextMultiline("##inputTextArea", (char*)readBuffer.c_str(), strlen(readBuffer.c_str()), ImVec2(ImGui::GetWindowContentRegionMax().x, ImGui::GetWindowContentRegionMax().y), ImGuiInputTextFlags_ReadOnly);
-        #else
-        ImGui::InputTextMultiline("##inputTextArea", (char*)consoleBuffer.c_str(), strlen(consoleBuffer.c_str()), ImVec2(ImGui::GetWindowContentRegionMax().x, ImGui::GetWindowContentRegionMax().y), ImGuiInputTextFlags_ReadOnly);
-        #endif
+        ImGui::OutputConsoleMultiline("Console", (char*)consoleBuffer.c_str(), strlen(consoleBuffer.c_str()), ImVec2(ImGui::GetWindowContentRegionMax().x, ImGui::GetWindowContentRegionMax().y), ImGuiInputTextFlags_ReadOnly);
         /*for (int i = 0; i < Items.Size; i++)
         {
             const char* item = Items[i];
@@ -538,12 +527,13 @@ struct ExampleAppConsole
 
         // Command-line
         bool reclaim_focus = false;
-        if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &TextEditCallbackStub, (void*)this))
+        if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &InputCommandConsoleCallbackStub, (void*)this))
         {
             char* s = InputBuf;
             Strtrim(s);
             if (s[0])
                 ExecCommand(s);
+            //ConsoleWindowId;
             strcpy(s, "");
             reclaim_focus = true;
         }
@@ -563,10 +553,7 @@ struct ExampleAppConsole
         consoleBuffer += command_line;
         consoleBuffer += "\n";
         //test InsertChar to console output
-
-
-
-        AddLog("# > %s\n", command_line);
+        
         char * token = strtok((char *)command_line, " ");
         
         
@@ -598,9 +585,12 @@ struct ExampleAppConsole
         */
         else if (Stricmp(command_line, "HELP") == 0)
         {
-            AddLog("Commands:");
+            consoleBuffer.append("Commands: \n");
             for (int i = 0; i < Commands.Size; i++)
-                AddLog("- %s", Commands[i]);
+            {
+                consoleBuffer.append("- ");
+                consoleBuffer.append(Commands[i]);
+            }
         }
         /*
         else if (Stricmp(command_line, "SECRET") == 0)
@@ -641,7 +631,7 @@ struct ExampleAppConsole
         else if (Stricmp(command_line, "CURL") == 0)
         {
 
-            post("https://babel-api.testnet.iotex.io", readBuffer, command_line);
+            post("https://babel-api.testnet.iotex.io", command_line);
 
         }
         /*
@@ -667,30 +657,40 @@ struct ExampleAppConsole
         {
             int first = History.Size - 10;
             for (int i = first > 0 ? first : 0; i < History.Size; i++)
-                AddLog("%3d: %s\n", i, History[i]);
+            {
+                consoleBuffer.append(std::to_string(i));
+                consoleBuffer.append(History[i]);
+                consoleBuffer.append(" \n");
+            }
         }
         else if (Stricmp(token, "FETCH") == 0)
         {
             token = strtok(NULL," ");          
-            fetch(token, readBuffer); 
+            fetch(token); 
         }
         else
         {
-            AddLog("[error] Unknown command: '%s'\n", command_line);
+            consoleBuffer.append("[error] Unknown command: ");
+            consoleBuffer.append(command_line);
+            consoleBuffer.append("\n");
         }
 
         // On commad input, we scroll to bottom even if AutoScroll==false
         ScrollToBottom = true;
     }
 
-    static int TextEditCallbackStub(ImGuiInputTextCallbackData* data) // In C++11 you are better off using lambdas for this sort of forwarding callbacks
+    static int InputCommandConsoleCallbackStub(ImGuiInputTextCallbackData* data) // In C++11 you are better off using lambdas for this sort of forwarding callbacks
     {
-        ExampleAppConsole* console = (ExampleAppConsole*)data->UserData;   
-        data->InsertChars(0, "test", NULL);
-        return console->TextEditCallback(data);
+        ImGuiWindow*          window            = ImGui::GetCurrentWindow();
+        const ImGuiID         ConsoleWindowId   = window->GetID("Console");
+
+        WebOSConsole* console = (WebOSConsole*)data->UserData; 
+        ImGui::GetInputTextState(ImGui::GetID("Console"))->SelectAll();
+        //data->InsertChars(0, "test", NULL);  
+        return console->InputCommandConsoleCallback(data);
     }
 
-    int     TextEditCallback(ImGuiInputTextCallbackData* data)
+    int     InputCommandConsoleCallback(ImGuiInputTextCallbackData* data)
     {
         //AddLog("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart, data->SelectionEnd);
         switch (data->EventFlag)
@@ -719,7 +719,7 @@ struct ExampleAppConsole
                 if (candidates.Size == 0)
                 {
                     // No match
-                    AddLog("No match for \"%.*s\"!\n", (int)(word_end-word_start), word_start);
+                    //AddLog("No match for \"%.*s\"!\n", (int)(word_end-word_start), word_start);
                 }
                 else if (candidates.Size == 1)
                 {
@@ -753,9 +753,9 @@ struct ExampleAppConsole
                     }
 
                     // List matches
-                    AddLog("Possible matches:\n");
-                    for (int i = 0; i < candidates.Size; i++)
-                        AddLog("- %s\n", candidates[i]);
+                    //AddLog("Possible matches:\n");
+                    //for (int i = 0; i < candidates.Size; i++)
+                        //AddLog("- %s\n", candidates[i]);
                 }
 
                 break;
@@ -793,7 +793,7 @@ struct ExampleAppConsole
 
 void WebOS::ShowExampleAppConsole(bool* p_open)
 {
-    static ExampleAppConsole console;
+    static WebOSConsole console;
     ImGui::SetNextWindowPos(ImVec2(534, 73), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(520,600), ImGuiCond_FirstUseEver);
     console.Draw("IoTeX Console", p_open);
