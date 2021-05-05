@@ -19,10 +19,10 @@ OUTPUTFOLDER = out/Linux/
 #To fix, EXE should always be the same, the debug or not debug should only change behaviour, not specify different variables
 EXE = $(OUTPUTFOLDER)WebOS
 
-SOURCES = src/cpp/main.cpp
-SOURCES += src/cpp/ImGui/examples/imgui_impl_sdl.cpp src/cpp/ImGui/examples/imgui_impl_opengl3.cpp
-SOURCES += src/cpp/ImGui/imgui.cpp src/cpp/ImGui/imgui_demo.cpp src/cpp/ImGui/imgui_draw.cpp src/cpp/ImGui/imgui_widgets.cpp
-SOURCES += src/cpp/WebOS/Elements/Menu.cpp src/cpp/WebOS/Elements/rightClickContextMenu.cpp src/cpp/WebOS/WebOS.cpp 
+SOURCES = src/main.cpp
+SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
+SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_window.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
+SOURCES += src/WebOS/Menu.cpp src/WebOS/rightClickContextMenu.cpp src/WebOS/WebOS.cpp 
 SOURCES += /home/jeremi-solus/Coding/libraries/gl3w/src/gl3w.c
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
@@ -38,11 +38,11 @@ LIBDIR += -L/home/jeremi-solus/Coding/libraries/Xorg/lib
 LIBDIR += -L/home/jeremi-solus/Coding/libraries/glfw/out/lib64
 LIBDIR += -L/usr/lib64
 
-# include ImGui folders
-CPPFLAGS += -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/ -I/home/jeremi-solus/Coding/libraries/gl3w/include 
+# include ImGui required folders
+CPPFLAGS += -I/home/jeremi-solus/Coding/libraries/gl3w/include 
 
 # include WebOS folders
-CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include -Isrc/cpp/WebOS/include/Elements
+CPPFLAGS += -Isrc/WebOS -Isrc/WebOS/include
 
 # include 3rd party libraires
 CPPFLAGS += -Iusr/include/curl
@@ -57,19 +57,10 @@ LIBS = -lSDL2 -lX11 -lSDL2_image -ldl -lm -lGL -lGLU -lpthread -lXi -lXrandr -lX
 %.o:/home/jeremi-solus/Coding/libraries/gl3w/src/%.c
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
-%.o:src/cpp/%.cpp
+%.o:src/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
-%.o:src/cpp/ImGui/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
-
-%.o:src/cpp/ImGui/examples/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
-	
-%.o:src/cpp/WebOS/Elements/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
-	
-%.o:src/cpp/WebOS/%.cpp
+%.o:src/WebOS/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
 all: $(EXE)
@@ -91,7 +82,7 @@ OUTPUTFOLDER = out/WASM/
 #To fix, EXE should always be the same, the debug or not debug should only change behaviour, not specify different variables
 ifneq ($(DEBUG), 1)
 
-HTMLINPUT = src/html/index.html src/html/style.css
+HTMLINPUT = html/index.html html/style.css
 HTMLOUTPUT = $(addprefix $(OUTPUTFOLDER), $(notdir $(HTMLINPUT)))
 JAVASCRIPT = $(addsuffix .js, $(basename $(notdir $(EXE))))
 DATA = $(addsuffix .data, $(basename $(notdir $(EXE))))
@@ -111,10 +102,10 @@ DEBUGFILES = $(addprefix $(OUTPUTFOLDER), $(JAVASCRIPT) $(WASM) $(DEBUGDATA))
 
 endif
 
-SOURCES = src/cpp/main.cpp
-SOURCES += src/cpp/ImGui/examples/imgui_impl_sdl.cpp src/cpp/ImGui/examples/imgui_impl_opengl3.cpp
-SOURCES += src/cpp/ImGui/imgui.cpp src/cpp/ImGui/imgui_demo.cpp src/cpp/ImGui/imgui_draw.cpp src/cpp/ImGui/imgui_widgets.cpp
-SOURCES += src/cpp/WebOS/Elements/Menu.cpp src/cpp/WebOS/WebOS.cpp 
+SOURCES = src/main.cpp
+SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
+SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_window.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
+SOURCES += src/WebOS/Menu.cpp src/WebOS/WebOS.cpp 
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
@@ -143,11 +134,8 @@ endif
 # for the std::functional hack
 CXXFLAGS = -std=c++11
 
-# include ImGui folders
-CPPFLAGS = -Isrc/cpp/ImGui/ -Isrc/cpp/ImGui/examples/
-
 # include WebOS folders
-CPPFLAGS += -Isrc/cpp/WebOS -Isrc/cpp/WebOS/include -Isrc/cpp/WebOS/include/Elements
+CPPFLAGS += -Isrc/WebOS -Isrc/WebOS/include
 
 CPPFLAGS += -g -Wall -Wformat -O3
 CPPFLAGS += $(EMS)
@@ -157,22 +145,13 @@ LIBS = $(EMS)
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-%.o:src/cpp/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
-
-%.o:src/cpp/ImGui/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
-
-%.o:src/cpp/ImGui/examples/%.cpp
+%.o:src/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 	
-%.o:src/cpp/WebOS/Elements/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
-	
-%.o:src/cpp/WebOS/%.cpp
+%.o:src/WebOS/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
-%.o:src/cpp/ImGui/examples/libs/gl3w/GL/%.c
+%.o:src/ImGui/examples/libs/gl3w/GL/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
 ifneq ($(DEBUG), 1)
