@@ -69,6 +69,7 @@ void WebOS::setStyle() {
 ImVec4* WebOS::getBackgroundColor() {
 	return &this->style.backgroundColor;
 }
+
 void WebOS::showWelcomePopup(bool* p_open)
 {
     ImGui::SetNextWindowSize(ImVec2(365, 210), ImGuiCond_FirstUseEver);
@@ -100,16 +101,36 @@ void WebOS::showWelcomePopup(bool* p_open)
         ImGui::End();
     }
 }
+    char animatedBuf[128];
+void WebOS::ShowSuccessPopup(bool* p_open)
+{
     
+    sprintf(animatedBuf, "You Won! %c ###YouWon", "|/-\\"[(int)(ImGui::GetTime() / 0.25f) & 3]);
+    ImGui::SetNextWindowSize(ImVec2(200, 270), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2-100, ImGui::GetIO().DisplaySize.y/2-50), ImGuiCond_FirstUseEver);
+    if(!ImGui::Begin(animatedBuf, p_open))
+    {
+        ImGui::End();
+    }else
+    {
+        ImVec2 pos = ImGui::GetCursorScreenPos();
+        ImGui::GetWindowDrawList()->AddImage((void*)(intptr_t)wallpaper, ImGui::GetWindowContentRegionMin(), ImGui::GetWindowContentRegionMax(), ImVec2(0, 0), ImVec2(1, 1));
+        //ImGui::GetBackgroundDrawList()->PushTextureID(&wallpaper);
+        //ImGui::GetBackgroundDrawList()->AddImage(&wallpaper, ImGui::GetWindowContentRegionMin(), ImGui::GetWindowContentRegionMax(), ImVec2(0,0), ImVec2(1,1), NULL);
+        ImGui::TextWrapped("You Won!!");
+        ImGui::Separator();
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); ImGui::TextWrapped("Congratulations! Post this screenshot to Telegram to claim your prize! First place wins 2 JRPC!"); ImGui::PopStyleColor();
+        ImGui::End();
+    }
+}
 
-    // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar. So e.g. IsItemHovered() will return true when hovering the title bar.
-    // Here we create a context menu only available from the title bar.
-    
-    /*
-    ImVec2 welcomePopupLocation = ImVec2(520,600);
-    ImGui::SetNextWindowSize(welcomePopupLocation, ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x-welcomePopupLocation.x, ImGui::GetIO().DisplaySize.y-welcomePopupLocation.y), ImGuiCond_FirstUseEver);
-    */
+void WebOS::showWebOS()
+{
+    if(success_pflag)
+    {
+        ShowSuccessPopup(&success_pflag);
+    }
+}
 
 void WebOS::showIcon()
 {
@@ -126,13 +147,7 @@ void WebOS::showIcon()
     ImGui::Begin("JRPC_Icon", NULL, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
         if (ImGui::ImageButton((void*)(intptr_t)icon, ImVec2(32,32), ImVec2(0,0), iconSize, 3, ImVec4(0.0f,0.0f,0.0f,0.0f)))
         {
-            if(show_test_window)
-            {
-                show_test_window = false;
-            }
-            else {
-                show_test_window = true;
-            }
+            show_test_window = !show_test_window;
             
             printf("JRPC icon clicked \n");
         }
@@ -208,7 +223,7 @@ struct WebOSConsole
         WebOSConsole* console = (WebOSConsole*)userp;
         console->consoleBuffer.append((char*)contents, size * nmemb);
         console->consoleBuffer.append(std::string("\n"));
-
+        success_pflag = true;
         return size * nmemb;
     }
 

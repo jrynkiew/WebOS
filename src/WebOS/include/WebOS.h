@@ -35,6 +35,7 @@ static bool show_welcome_popup = true;
 static bool show_main_menu = true;
 static bool show_another_window = false;
 static bool show_main_hook = true;
+static bool success_pflag = false;
 
 //void showMenu();				//Show menu on side of screen
 
@@ -81,10 +82,13 @@ public:
 	ImVec4* getBackgroundColor();
 	//static void ShowHookMenu();
 	void showIcon();
+	void showWebOS();
 	void showBackgroundWallpaper();
 	void showRightClickContextMenu();
 	void ShowExampleAppConsole(bool* p_open);
 	void showWelcomePopup(bool* p_open);
+	void ShowSuccessPopup(bool* p_open);
+	
 
 	WebOS();
 	//~WebOS();

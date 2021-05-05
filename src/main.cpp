@@ -225,10 +225,12 @@ int main(int, char**)
 
         //interface->showBackgroundWallpaper();
         interface->showIcon();
-
+        
         interface->getMainMenu().showMainMenu();
         interface->getMainMenu().showMainMenuBar();
-        
+
+        interface->showWebOS();
+
         // Rendering
         ImGui::Render();
         SDL_GL_MakeCurrent(window, gl_context);
