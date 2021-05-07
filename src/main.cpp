@@ -49,7 +49,7 @@ static void main_loop() { loop(); }
 #endif
 
  #if defined(__EMSCRIPTEN__)
-    extern "C" {
+extern "C" {
     EMSCRIPTEN_KEEPALIVE int Sum(int a, int b) {
         int sum = a + b;
         return EM_ASM_INT({
@@ -57,7 +57,7 @@ static void main_loop() { loop(); }
         return $0;
         }, sum);
     }
-    }
+}
 #endif
 
 int main(int, char**)
@@ -120,7 +120,7 @@ int main(int, char**)
     SDL_Window* window = SDL_CreateWindow("JRPC Web Console | WebOS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_SetSwapInterval(1); // Enable vsync
-
+    
     SDL_version compile_version;
     const SDL_version* link_version = IMG_Linked_Version();
     SDL_IMAGE_VERSION(&compile_version);
@@ -233,6 +233,7 @@ int main(int, char**)
 
         // Rendering
         ImGui::Render();
+        //SDL_Delay(10);
         SDL_GL_MakeCurrent(window, gl_context);
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
         //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);

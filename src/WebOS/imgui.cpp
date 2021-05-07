@@ -3337,6 +3337,14 @@ void ImGui::MemFree(void* ptr)
 
 const char* ImGui::GetClipboardText()
 {
+    #if defined(__EMSCRIPTEN__)
+    EM_ASM({
+    document.addEventListener("paste", function(e) {
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        console.log(text);
+    });
+    });
+    #endif
     ImGuiContext& g = *GImGui;
     return g.IO.GetClipboardTextFn ? g.IO.GetClipboardTextFn(g.IO.ClipboardUserData) : "";
 }

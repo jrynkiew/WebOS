@@ -84,13 +84,13 @@ void WebOS::showWelcomePopup(bool* p_open)
             draw_list->AddCircleFilled(pos, draw_list->_Data->FontSize * 0.20f, col, 8);
         }*/
         //ImGui::GetBackgroundDrawList()->PushTextureID(&wallpaper);
-        ImGui::Image((void*)(intptr_t)wallpaper, ImVec2(365, 210));
+        //ImGui::Image((void*)(intptr_t)wallpaper, ImVec2(365, 210));
         //ImGui::GetBackgroundDrawList()->AddRect(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255));
         //ImGui::RenderTextClipped(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), "text", NULL, NULL, ImVec2(0.5f,0.0f));
         //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
         //ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 2),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y +5)), 2, IM_COL32(255,255,255,255), 8);
         //ImGui::GetWindowDrawList()->BulletText();
-        ImGui::GetWindowDrawList()->AddText(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 10),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255), "testing");
+        //ImGui::GetWindowDrawList()->AddText(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 10),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255), "testing");
         ImGui::TextWrapped("Please use the right mouse click to open Menu");
         ImGui::TextWrapped("Click the JRPC token icon to open command console");
         ImGui::Separator();
@@ -106,15 +106,16 @@ void WebOS::ShowSuccessPopup(bool* p_open)
 {
     
     sprintf(animatedBuf, "You Won! %c ###YouWon", "|/-\\"[(int)(ImGui::GetTime() / 0.25f) & 3]);
-    ImGui::SetNextWindowSize(ImVec2(200, 270), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(381, 342), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2-100, ImGui::GetIO().DisplaySize.y/2-50), ImGuiCond_FirstUseEver);
     if(!ImGui::Begin(animatedBuf, p_open))
     {
+        success_fetch_pflag = false;
         ImGui::End();
     }else
     {
         ImVec2 pos = ImGui::GetCursorScreenPos();
-        ImGui::GetWindowDrawList()->AddImage((void*)(intptr_t)wallpaper, ImGui::GetWindowContentRegionMin(), ImGui::GetWindowContentRegionMax(), ImVec2(0, 0), ImVec2(1, 1));
+        ImGui::GetWindowDrawList()->AddImage((void*)(intptr_t)wallpaper, ImVec2(ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x, ImGui::GetWindowContentRegionMin().y+100 + ImGui::GetWindowPos().y), ImVec2(ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x, ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y), ImVec2(0, 0), ImVec2(1, 1));
         //ImGui::GetBackgroundDrawList()->PushTextureID(&wallpaper);
         //ImGui::GetBackgroundDrawList()->AddImage(&wallpaper, ImGui::GetWindowContentRegionMin(), ImGui::GetWindowContentRegionMax(), ImVec2(0,0), ImVec2(1,1), NULL);
         ImGui::TextWrapped("You Won!!");
@@ -126,9 +127,9 @@ void WebOS::ShowSuccessPopup(bool* p_open)
 
 void WebOS::showWebOS()
 {
-    if(success_pflag)
+    if(success_fetch_pflag && success_curl_pflag)
     {
-        ShowSuccessPopup(&success_pflag);
+        ShowSuccessPopup(&success_curl_pflag);
     }
 }
 
@@ -223,7 +224,7 @@ struct WebOSConsole
         WebOSConsole* console = (WebOSConsole*)userp;
         console->consoleBuffer.append((char*)contents, size * nmemb);
         console->consoleBuffer.append(std::string("\n"));
-        success_pflag = true;
+        success_fetch_pflag = true;
         return size * nmemb;
     }
 
@@ -232,11 +233,11 @@ struct WebOSConsole
         ClearLog();
         memset(InputBuf, 0, sizeof(InputBuf));
         HistoryPos = -1;
-        Commands.push_back("HELP");
-        Commands.push_back("HISTORY");
-        Commands.push_back("CLEAR");
-        Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
-        Commands.push_back("FETCH [url]");
+        Commands.push_back("HELP\n");
+        Commands.push_back("HISTORY\n");
+        Commands.push_back("CLEAR\n");
+        Commands.push_back("CLASSIFY\n");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
+        Commands.push_back("FETCH [url]\n");
         /*Commands.push_back("IOCTL");
         Commands.push_back("SECRET - do not use");
         Commands.push_back("ENCRYPT - do not use");
@@ -291,7 +292,7 @@ struct WebOSConsole
             WebOSConsole* console = (WebOSConsole*)fetch->userData;
             console->consoleBuffer.append((char*)fetch->data, fetch->totalBytes);
             console->consoleBuffer.append(std::string("\n"));
-            
+            success_fetch_pflag = true;
             emscripten_fetch_close(fetch);
         }
         static void onError(emscripten_fetch_t *fetch)
@@ -322,7 +323,7 @@ struct WebOSConsole
                 emscripten_fetch_attr_init(&attr);
                 strcpy(attr.requestMethod, "POST");
                 const char * headers[] = {"Content-Type", "application/json", 0};
-                const char * command = "{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}";
+                const char * requestData = "{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}";
                 //const char * command = "{\"ioctl\": \"command\"}";           
 //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
@@ -330,7 +331,7 @@ struct WebOSConsole
                 attr.onerror = onError;
                 attr.userData = (void*)this;
                 attr.requestHeaders = headers;
-                attr.requestData = command;
+                attr.requestData = requestData;
                 attr.requestDataSize = strlen(attr.requestData);
 
                 emscripten_fetch(&attr, URL);
@@ -452,10 +453,9 @@ struct WebOSConsole
         if (copy_to_clipboard)
             ImGui::LogFinish();
 
-        if (ScrollToBottom || (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
+        if ((AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
         {
             ImGui::SetScrollHereY(1.0f);
-            ScrollToBottom = false;
         }
 
         ImGui::PopStyleVar();
@@ -469,6 +469,7 @@ struct WebOSConsole
             if (s[0])
                 ExecCommand(s);
             strcpy(s, "");
+            if(!success_fetch_pflag)
             reclaim_focus = true;
         }
 
@@ -506,6 +507,7 @@ struct WebOSConsole
     
         else if (Stricmp(command_line, "CURL") == 0)
         {
+            success_curl_pflag = false;
             post("https://babel-api.testnet.iotex.io", command_line);
         }
         else if (Stricmp(command_line, "HISTORY") == 0)

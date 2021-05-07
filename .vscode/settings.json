@@ -73,6 +73,7 @@
         "locale": "cpp",
         "queue": "cpp",
         "semaphore": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "__functional_03": "cpp"
     }
 }

@@ -35,7 +35,8 @@ static bool show_welcome_popup = true;
 static bool show_main_menu = true;
 static bool show_another_window = false;
 static bool show_main_hook = true;
-static bool success_pflag = false;
+static bool success_fetch_pflag = false;
+static bool success_curl_pflag = false;
 
 //void showMenu();				//Show menu on side of screen
 
