@@ -1,4 +1,0 @@
-{
-  "main": "./node-rpc-method",
-  "browser": "./browser-rpc-method"
-}
