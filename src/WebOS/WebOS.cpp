@@ -507,7 +507,6 @@ struct WebOSConsole
     
         else if (Stricmp(command_line, "CURL") == 0)
         {
-            success_curl_pflag = false;
             post("https://babel-api.testnet.iotex.io", command_line);
         }
         else if (Stricmp(command_line, "HISTORY") == 0)
