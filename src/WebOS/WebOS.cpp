@@ -209,7 +209,9 @@ struct WebOSConsole
   	CURLcode              res;
   	std::string           readBuffer;
     std::string           consoleBuffer;
-
+    std::string           requestDataBuffer;
+    int                   requestDataBufferSize;
+    
     //bool                  printed;
 
     /*int64_t               secret;
@@ -238,8 +240,9 @@ struct WebOSConsole
         Commands.push_back("CLEAR\n");
         Commands.push_back("CLASSIFY\n");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
         Commands.push_back("FETCH [url]\n");
-        /*Commands.push_back("IOCTL");
-        Commands.push_back("SECRET - do not use");
+        Commands.push_back("IOCTL\n");
+        Commands.push_back("CURL\n");
+        /*Commands.push_back("SECRET - do not use");
         Commands.push_back("ENCRYPT - do not use");
         Commands.push_back("DECRYPT - do not use");*/
         AutoScroll = true;
@@ -255,11 +258,12 @@ struct WebOSConsole
     }
 
     // Portable helpers
-    static int   Stricmp(const char* str1, const char* str2)         { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; } return d; }
+    static int   Stricmp(const char* str1, const char* str2)         { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; if(*str1 == ' ') {return d;} if(!*str2) {return d;}} return d; }
     static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
     static char* Strdup(const char *str)                             { size_t len = strlen(str) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)str, len); }
     static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0;}
-    bool         isNumber(const std::string& str)                    { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
+    static bool  isNumber(const std::string& str)                    { for (char const &c : str) { if (std::isdigit(c) == 0) return false; } return true; }
+    static char* strcat(char * dst, const char * src)                { char *p = dst; while (*p){++p;}while (*p++ = *src++);return dst;}
     
     //modulo privte key encryption test
     //int64_t      generateSecretKey(int64_t secretInput)                   { return secret = secretInput; }
@@ -309,6 +313,69 @@ struct WebOSConsole
         }
     #endif
 
+    void printCurlHelp()
+    {
+        consoleBuffer.append(
+            "[info] Usage: curl [options...] <url>\n \
+            -d, --data <data>   HTTP POST data (partial support)\n \
+            -f, --fail          Fail silently (no output at all) on HTTP errors (no support)\n \ 
+            -h, --help <category> Get help for commands\n \
+            -i, --include       Include protocol response headers in the output (no support)\n \
+            -o, --output <file> Write to file instead of stdout (no support)\n \
+            -O, --remote-name   Write output to a file named as the remote file (no support)\n \
+            -s, --silent        Silent mode (no support)\n \
+            -T, --upload-file <file> Transfer local FILE to destination (no support)\n \
+            -u, --user <user:password> Server user and password (no support)\n \
+            -A, --user-agent <name> Send User-Agent <name> to server (no support)\n \
+            -v, --verbose       Make the operation more talkative (no support)\n \
+            -V, --version       Show version number and quit (no support)\n \
+            -X, --request <command> Specify custom request method (partial support)\n"
+        );
+    }
+
+    void easycurl(const char* command_line)
+    {
+        char * command_line_copy = strdup(command_line); //we copy the parameter so that we don't lose the data when tokenizing it
+        char * token = strtok((char *)command_line_copy, " "); //tokenize the command into parameters
+
+        if((token = strtok(NULL," ")) && token) //flag parameter (since http* is out of the question, handled in earlier calls to CURL command)
+        {
+            if((Stricmp(token, "-") == 0) && token)
+            {
+                switch (token[1]) {
+                    case 'X': 
+                        token = strtok(NULL," "); 
+                        printf("test success");
+                        consoleBuffer.append("test success\n");
+                        break;
+                    case 'h':
+                        printCurlHelp();
+                        break;
+                }  
+                if((Stricmp(token, "--") == 0) && token)
+                {
+                    if(Stricmp(token, "--data") == 0)
+                    {
+                        token = strtok(NULL," "); 
+                        printf("test success");
+                        consoleBuffer.append("test success");
+                    }
+                    else if((Stricmp(token, "--help") == 0) && token)
+                    {
+                        printCurlHelp();
+                    }
+                } 
+            }
+            else 
+            {
+                printCurlHelp();
+            }
+        } else { printCurlHelp(); }
+        //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
+        //post(command_line, command_line);
+        //fetch(command_line);
+    }
+
     void post(const char* URL, const char* command_line)
     {
         if ((URL != NULL) && (URL[0] != '\0')) {     
@@ -323,8 +390,23 @@ struct WebOSConsole
                 emscripten_fetch_attr_init(&attr);
                 strcpy(attr.requestMethod, "POST");
                 const char * headers[] = {"Content-Type", "application/json", 0};
-                const char * requestData = "{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}";
-                //const char * command = "{\"ioctl\": \"command\"}";           
+                //const char * requestData = "{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}";
+                
+                /*char command[100];
+                strcpy (command, "{\"ioctl\": \"");
+                strcat (command, command_line);
+                strcat (command, "\"}");
+                Strtrim(command);*/
+                
+                //std::string command = "{\"ioctl\": \"";
+                requestDataBuffer = "{\"";
+                requestDataBuffer += command_line;
+                requestDataBuffer += "\": \"test\"}";
+                //requestDataBuffer = "{\"ioctlasdasdasdasd\": \"test\"}";
+                //command += "\"}";
+  
+                const char * requestData = requestDataBuffer.data();
+
 //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
                 attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
                 attr.onsuccess = onLoaded;
@@ -332,7 +414,7 @@ struct WebOSConsole
                 attr.userData = (void*)this;
                 attr.requestHeaders = headers;
                 attr.requestData = requestData;
-                attr.requestDataSize = strlen(attr.requestData);
+                attr.requestDataSize = strlen(requestData);
 
                 emscripten_fetch(&attr, URL);
             #else
@@ -488,8 +570,6 @@ struct WebOSConsole
         consoleBuffer += command_line;
         consoleBuffer += "\n";
         
-        char * token = strtok((char *)command_line, " ");
-
         // Process command
         if (Stricmp(command_line, "CLEAR") == 0)
         {
@@ -497,6 +577,7 @@ struct WebOSConsole
         }
         else if (Stricmp(command_line, "HELP") == 0)
         {
+            char * token = strtok((char *)command_line, " ");
             consoleBuffer.append("Commands: \n");
             for (int i = 0; i < Commands.Size; i++)
             {
@@ -504,10 +585,57 @@ struct WebOSConsole
                 consoleBuffer.append(Commands[i]);
             }
         }
-    
+        else if (Stricmp(command_line, "IOCTL") == 0)
+        {
+            //char * token = strtok((char *)command_line, " ");
+            post("https://89.70.221.154/", command_line);
+
+            /*if(token = strtok(NULL," ")) {
+                if(Stricmp(token, "BC") == 0)
+                {
+                    if(token = strtok(NULL," ")) {
+                        if(Stricmp(token, "INFO") == 0)
+                        {
+                            fetch("https://89.70.221.154/", readBuffer);
+                        } else {
+                            AddLog("[error] Correct usage: ioctl bc info");
+                            AddLog("[info] More features will be made available soon");
+                        }
+                    }
+                }
+                else {
+                    AddLog("[error] Correct usage: ioctl bc info");
+                    AddLog("[info] More features will be made available soon");
+                }
+            }
+            else {
+                AddLog("[error] Correct usage: ioctl bc info");
+                AddLog("[info] More features will be made available soon");
+            }*/
+        }
         else if (Stricmp(command_line, "CURL") == 0)
         {
-            post("https://babel-api.testnet.iotex.io", command_line);
+            printf(command_line);
+            char * requestData;
+            char * command_line_copy = strdup(command_line);
+            char * token = strtok((char *)command_line_copy, " "); //tokenize the command into parameters
+            
+            if((token = strtok(NULL," ")) && token) // first parameter of CURL command
+            {     
+                if(Stricmp(token, "http") == 0) //if it's just curl http (website request) return fetch command
+                    fetch(token); 
+                else {
+                    easycurl(command_line); //else try to process command
+                }
+                //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
+                //      ^
+                //if(Stricmp(command_line, "-X")
+            }
+            else {
+                easycurl(command_line);
+            }
+            //char * token = strtok((char *)command_line, " ");
+            //post("https://babel-api.testnet.iotex.io", token);
         }
         else if (Stricmp(command_line, "HISTORY") == 0)
         {
@@ -519,9 +647,10 @@ struct WebOSConsole
                 consoleBuffer.append(" \n");
             }
         }
-        else if (Stricmp(token, "FETCH") == 0)
+        else if (Stricmp(command_line, "FETCH") == 0)
         {
-            token = strtok(NULL," ");          
+            char * token = strtok((char *)command_line, " ");
+            token = strtok(NULL," "); //second parameter         
             fetch(token); 
         }
         else

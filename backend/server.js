@@ -12,18 +12,22 @@ const HOST = '0.0.0.0';
 
 // App
 const app = express();
+
 app.use(cors());
-app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.post('/', (req, res) => {
   console.log(req.body);
-  res.send({requestBody: req.body});
+  res.send("test");
+  //console.log(JSON.stringify(req.body));
+  //res.send({requestBody: JSON.stringify(req.body)});
   //console.log({requestBody: req.body});
   //res.json({requestBody: req.body});
 });
 
 app.get('/', (req, res) => {
-  console.log(req);
+  
   exec("./ioctl bc info", (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);

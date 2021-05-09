@@ -15,7 +15,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN ./ioctl config set endpoint 172.18.0.2:14014 --insecure
+RUN ./ioctl config set endpoint api.iotex.one:443
 
 EXPOSE 443 
 CMD [ "node", "server.js" ]

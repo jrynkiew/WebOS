@@ -1,1 +1,1 @@
-docker build -t webos-backend . && docker stop webos-backend && docker rm webos-backend && docker run -it -d --restart always -p 443:443 --net webos-net --ip 172.18.0.3 --name webos-backend webos-backend
+docker build -t webos-backend . && docker stop webos-backend && docker rm webos-backend && docker run -it --restart always -p 443:443 --net webos-net --ip 172.18.0.3 --name webos-backend webos-backend
