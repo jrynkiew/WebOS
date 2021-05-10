@@ -23,7 +23,6 @@ private:
         //_this->consoleBufferPtr->append((char*)contents, size * nmemb);
         //_this->consoleBufferPtr->append(std::string("\n"));
         _this->AddLog((char*)contents);
-        success_fetch_pflag = true;
         return size * nmemb;
     }
 
@@ -31,11 +30,13 @@ private:
         static void onLoaded(emscripten_fetch_t *fetch) 
         {
             std::string success = std::string("Finished downloading " + std::to_string(fetch->numBytes) + " bytes from: " + fetch->url);
+            std::string result = result.append((char*)fetch->data, fetch->totalBytes);
+
             EasyCurl* _this = (EasyCurl*)fetch->userData;
-            //console->consoleBuffer.append((char*)fetch->data, fetch->totalBytes);
-            //console->consoleBuffer.append(std::string("\n"));
+
             _this->AddLog(success.data());
-            _this->AddLog((char*)fetch->data);
+            _this->AddLog(result.data());
+
             emscripten_fetch_close(fetch);
         }
         static void onError(emscripten_fetch_t *fetch)
@@ -111,13 +112,14 @@ public:
         char acClose[] = {"\"\'"}; //same as above, but to close
         //char acStr[] = {"this contains \'blocks \"a [quoted\" block\" and a [bracketed \"block]' and <other ]\" blocks>\""};
 
-        token = strmbtok ( command_line_copy, " ", acOpen, acClose);
-        while ( ( token = strmbtok ( NULL, " ", acOpen, acClose)) != NULL) {
+        token = strmbtok ( command_line_copy, " ", acOpen, acClose); //first command (just curl)
+        while ( ( token = strmbtok ( NULL, " ", acOpen, acClose)) != NULL) { //token is now at the second parameter, if exists)
             CommandParameters.push_back(token);
         }
-        if(CommandParameters.size() == 1) //if only 1 parameter in commandParameter,s it means that only "curl was called with no parameters" -> Display help.
+        if(CommandParameters.size() <= 1) //if only 1 parameter in commandParameter,s it means that only "curl was called with no parameters" -> Display help.
         {
             printCurlHelp();
+            AddLog("curl -X POST -H \"Content-Type:application/json\" --data \'{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}\' https://babel-api.testnet.iotex.io");
         }
         for(int i=0; i<CommandParameters.size(); i++)
         {
@@ -129,7 +131,10 @@ public:
                     {
                         if(CommandParameters.size() > i+1)
                         {
-                            data = wrapSingleQuotes(CommandParameters[i+1]);
+                            char *s, *d;
+                            char * tmpdata = strdup(CommandParameters[i+1]);
+                            for (s=d=tmpdata;*d=*s;d+=(*s++!='\''));
+                            data = tmpdata;
                         } 
                     }
                     else if(Stricmp(CommandParameters[i], "--help") == 0)
@@ -166,20 +171,26 @@ public:
                               //  AddLog(headers[p]); //headers contains the tokenized parameters for header data in an array like <key,value,key,value,...>
                         }
                         break;
-                    case 'd':
+                    /*case 'd':
                         if(CommandParameters.size() > i+1)
                         {
                             data = wrapSingleQuotes(CommandParameters[i+1]);
                         } 
-                        break;
+                        break;*/
                 }
             }
-            if((Stricmprlx(CommandParameters[i], "http://") == 0) || (Stricmp(CommandParameters[i], "http://") == 0))
+            if((Stricmprlx(CommandParameters[i], "https://") == 0) || (Stricmp(CommandParameters[i], "http://") == 0))
             {
                 url = CommandParameters[i];
+
+                AddLog(url.data());
+                AddLog(method.data());
+                AddLog(data.data());
+                for(int t=0; t<headers.size()-1; t++)
+                    AddLog(headers[t]);
                 post(method.data(), headers.data(), data.data(), url.data());
             }
-            AddLog(CommandParameters[i]);
+            //AddLog(CommandParameters[i]);
         }
     }
 
@@ -233,9 +244,16 @@ public:
                     curl = curl_easy_init();
                     if(curl) 
                     {
+                        if(Stricmp(method, "POST") == 0)
+                        {
+                            curl_easy_setopt(curl, CURLOPT_POST, 1);
+                        }
                         curl_easy_setopt(curl, CURLOPT_URL, URL);
+                        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
                         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
                         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)this);
+                        //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
                         res = curl_easy_perform(curl);
                         curl_easy_cleanup(curl);
                     }  
