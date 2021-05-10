@@ -9,6 +9,7 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "Menu.h"
+
 //need to specify full path to curl, otherwise Emscripten compiler will complain
 #include "/usr/include/curl/curl.h"
 #include <cmath>

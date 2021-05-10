@@ -1,4 +1,6 @@
+#pragma once
 #include "WebOS.h"
+#include "easycurl.h"
 
 WebOS::WebOS() {
 	//WebOS_style style;
@@ -73,7 +75,7 @@ ImVec4* WebOS::getBackgroundColor() {
 void WebOS::showWelcomePopup(bool* p_open)
 {
     ImGui::SetNextWindowSize(ImVec2(365, 210), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2-200, ImGui::GetIO().DisplaySize.y/2-100), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2+250, ImGui::GetIO().DisplaySize.y/2-100), ImGuiCond_FirstUseEver);
     if(!ImGui::Begin("Welcome to IoTeX console", p_open))
     {
         ImGui::End();
@@ -207,10 +209,11 @@ struct WebOSConsole
     bool                  ScrollToBottom;
     CURL                  *curl;
   	CURLcode              res;
-  	std::string           readBuffer;
+  	ImVector<const char*> CommandParameters;
     std::string           consoleBuffer;
     std::string           requestDataBuffer;
     int                   requestDataBufferSize;
+    EasyCurl              *easyCurl = new EasyCurl(&consoleBuffer);
     
     //bool                  printed;
 
@@ -258,7 +261,7 @@ struct WebOSConsole
     }
 
     // Portable helpers
-    static int   Stricmp(const char* str1, const char* str2)         { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; if(*str1 == ' ') {return d;} if(!*str2) {return d;}} return d; }
+    //static int   easyCurl->Stricmp(const char* str1, const char* str2)         { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; if(*str1 == ' ') {return d;} if(!*str2) {return d;}} return d; }
     static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
     static char* Strdup(const char *str)                             { size_t len = strlen(str) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)str, len); }
     static void  Strtrim(char* str)                                  { char* str_end = str + strlen(str); while (str_end > str && str_end[-1] == ' ') str_end--; *str_end = 0;}
@@ -313,54 +316,42 @@ struct WebOSConsole
         }
     #endif
 
-    void printCurlHelp()
-    {
-        consoleBuffer.append(
-            "[info] Usage: curl [options...] <url>\n \
-            -d, --data <data>   HTTP POST data (partial support)\n \
-            -f, --fail          Fail silently (no output at all) on HTTP errors (no support)\n \ 
-            -h, --help <category> Get help for commands\n \
-            -i, --include       Include protocol response headers in the output (no support)\n \
-            -o, --output <file> Write to file instead of stdout (no support)\n \
-            -O, --remote-name   Write output to a file named as the remote file (no support)\n \
-            -s, --silent        Silent mode (no support)\n \
-            -T, --upload-file <file> Transfer local FILE to destination (no support)\n \
-            -u, --user <user:password> Server user and password (no support)\n \
-            -A, --user-agent <name> Send User-Agent <name> to server (no support)\n \
-            -v, --verbose       Make the operation more talkative (no support)\n \
-            -V, --version       Show version number and quit (no support)\n \
-            -X, --request <command> Specify custom request method (partial support)\n"
-        );
-    }
-
     void easycurl(const char* command_line)
     {
-        char * command_line_copy = strdup(command_line); //we copy the parameter so that we don't lose the data when tokenizing it
-        char * token = strtok((char *)command_line_copy, " "); //tokenize the command into parameters
+        easyCurl->execute_command(command_line);
+        //ImVector<const char*> currentCallOptions;
+
+        /*
 
         if((token = strtok(NULL," ")) && token) //flag parameter (since http* is out of the question, handled in earlier calls to CURL command)
         {
-            if((Stricmp(token, "-") == 0) && token)
+            if((easyCurl->Stricmp(token, "-") == 0) && token)
             {
                 switch (token[1]) {
                     case 'X': 
-                        token = strtok(NULL," "); 
+                        if((token = strtok(NULL," ")) && token) // this is the -X flag data (POST OR PUT, etc)
+                        {
+                            if((easyCurl->Stricmp(token, "POST") != 0) && token)
+                            {
+                                consoleBuffer.append("[error] only -X POST method is currently supported");
+                            }
+                        } 
                         printf("test success");
-                        consoleBuffer.append("test success\n");
+                        
                         break;
                     case 'h':
                         printCurlHelp();
                         break;
                 }  
-                if((Stricmp(token, "--") == 0) && token)
+                if((easyCurl->Stricmp(token, "--") == 0) && token)
                 {
-                    if(Stricmp(token, "--data") == 0)
+                    if(easyCurl->Stricmp(token, "--data") == 0)
                     {
                         token = strtok(NULL," "); 
                         printf("test success");
                         consoleBuffer.append("test success");
                     }
-                    else if((Stricmp(token, "--help") == 0) && token)
+                    else if((easyCurl->Stricmp(token, "--help") == 0) && token)
                     {
                         printCurlHelp();
                     }
@@ -370,7 +361,7 @@ struct WebOSConsole
             {
                 printCurlHelp();
             }
-        } else { printCurlHelp(); }
+        } else { printCurlHelp(); }*/
         //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
         //post(command_line, command_line);
         //fetch(command_line);
@@ -571,11 +562,11 @@ struct WebOSConsole
         consoleBuffer += "\n";
         
         // Process command
-        if (Stricmp(command_line, "CLEAR") == 0)
+        if (easyCurl->Stricmprlx(command_line, "CLEAR") == 0)
         {
             ClearLog();
         }
-        else if (Stricmp(command_line, "HELP") == 0)
+        else if (easyCurl->Stricmprlx(command_line, "HELP") == 0)
         {
             char * token = strtok((char *)command_line, " ");
             consoleBuffer.append("Commands: \n");
@@ -585,16 +576,16 @@ struct WebOSConsole
                 consoleBuffer.append(Commands[i]);
             }
         }
-        else if (Stricmp(command_line, "IOCTL") == 0)
+        else if (easyCurl->Stricmprlx(command_line, "IOCTL") == 0)
         {
             //char * token = strtok((char *)command_line, " ");
             post("https://89.70.221.154/", command_line);
 
             /*if(token = strtok(NULL," ")) {
-                if(Stricmp(token, "BC") == 0)
+                if(easyCurl->Stricmp(token, "BC") == 0)
                 {
                     if(token = strtok(NULL," ")) {
-                        if(Stricmp(token, "INFO") == 0)
+                        if(easyCurl->Stricmp(token, "INFO") == 0)
                         {
                             fetch("https://89.70.221.154/", readBuffer);
                         } else {
@@ -613,23 +604,22 @@ struct WebOSConsole
                 AddLog("[info] More features will be made available soon");
             }*/
         }
-        else if (Stricmp(command_line, "CURL") == 0)
+        else if (easyCurl->Stricmprlx(command_line, "CURL") == 0)
         {
-            printf(command_line);
             char * requestData;
             char * command_line_copy = strdup(command_line);
             char * token = strtok((char *)command_line_copy, " "); //tokenize the command into parameters
             
             if((token = strtok(NULL," ")) && token) // first parameter of CURL command
             {     
-                if(Stricmp(token, "http") == 0) //if it's just curl http (website request) return fetch command
+                if(easyCurl->Stricmprlx(token, "http") == 0) //if it's just curl http (website request) return fetch command
                     fetch(token); 
                 else {
                     easycurl(command_line); //else try to process command
                 }
                 //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' http://babel-api.mainnet.iotex.io:8545
                 //      ^
-                //if(Stricmp(command_line, "-X")
+                //if(easyCurl->Stricmp(command_line, "-X")
             }
             else {
                 easycurl(command_line);
@@ -637,7 +627,7 @@ struct WebOSConsole
             //char * token = strtok((char *)command_line, " ");
             //post("https://babel-api.testnet.iotex.io", token);
         }
-        else if (Stricmp(command_line, "HISTORY") == 0)
+        else if (easyCurl->Stricmprlx(command_line, "HISTORY") == 0)
         {
             int first = History.Size - 10;
             for (int i = first > 0 ? first : 0; i < History.Size; i++)
@@ -647,7 +637,7 @@ struct WebOSConsole
                 consoleBuffer.append(" \n");
             }
         }
-        else if (Stricmp(command_line, "FETCH") == 0)
+        else if (easyCurl->Stricmprlx(command_line, "FETCH") == 0)
         {
             char * token = strtok((char *)command_line, " ");
             token = strtok(NULL," "); //second parameter         
@@ -675,7 +665,7 @@ struct WebOSConsole
 void WebOS::ShowExampleAppConsole(bool* p_open)
 {
     static WebOSConsole console;
-    ImGui::SetNextWindowPos(ImVec2(534, 73), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(520,600), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(253, 54), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(644,421), ImGuiCond_FirstUseEver);
     console.Draw("IoTeX Console", p_open);
 }
