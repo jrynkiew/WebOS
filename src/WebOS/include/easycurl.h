@@ -8,7 +8,9 @@ private:
     ImVector<const char*> CommandParameters;
     //curl -X POST -H "Content-Type:application/json" --data '{"id": 1, "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46", ""]}' https://babel-api.testnet.iotex.io
     std::string method;
-    std::vector<const char*> headers;
+    std::vector<const char*> emsc_headers; //for emscripten
+    struct curl_slist *curl_headers=NULL; //for binaries using curl natively
+
     std::string data;
     std::string url;
 
@@ -95,17 +97,16 @@ public:
     }
 
     void setMethod(const char * _method) { method = _method;}
-    void setHeaders(std::vector<const char*> _headers) { headers = _headers;}
+    void setHeaders(std::vector<const char*> _headers) { emsc_headers = _headers;}
     
     const char * getMethod() { return method.data(); }
-    const char ** getHeaders() { return headers.data(); }
+    const char ** getHeaders() { return emsc_headers.data(); }
     std::string wrapDoubleQuotes(const char * _str) { std::string result; if(*_str != '\"') { result = '"'; result += _str; result += '"';}  return result; }
     std::string wrapSingleQuotes(const char * _str) { std::string result; if(*_str != '\'') { result = "'"; result += _str; result += "'";}  return result; }
     
 
     void execute_command(const char* command_line)
     {
-        CommandParameters.clear(); //clear past parameters from previous calls to easycurl 
         char * command_line_copy = strdup(command_line); //we copy the parameter so that we don't lose the data when tokenizing it
         char *token;
         char acOpen[]  = {"\"\'"}; //can specify any character to start the "block" on, like { < [ etc
@@ -118,9 +119,10 @@ public:
         }
         if(CommandParameters.size() <= 1) //if only 1 parameter in commandParameter,s it means that only "curl was called with no parameters" -> Display help.
         {
+            AddLog("curl -X POST -H \"Accept:application/wasm\" -H \"Content-Type:application/json\" --data \'{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}\' https://babel-api.testnet.iotex.io");
             printCurlHelp();
-            AddLog("curl -X POST -H \"Content-Type:application/json\" --data \'{\"id\": 1, \"jsonrpc\": \"2.0\", \"method\": \"eth_getBalance\", \"params\": [\"0xE584ca6F469c11140Bb9c4617Cb8f373E38C5D46\", \"\"]}\' https://babel-api.testnet.iotex.io");
         }
+        
         for(int i=0; i<CommandParameters.size(); i++)
         {
             if(Stricmprlx(CommandParameters[i], "-") == 0)
@@ -135,7 +137,7 @@ public:
                             char * tmpdata = strdup(CommandParameters[i+1]);
                             for (s=d=tmpdata;*d=*s;d+=(*s++!='\''));
                             data = tmpdata;
-                        } 
+                        }  else {printCurlHelp();}
                     }
                     else if(Stricmp(CommandParameters[i], "--help") == 0)
                     {
@@ -150,7 +152,7 @@ public:
                             {
                                 method = "POST";
                             }
-                        }
+                        } else {printCurlHelp();}
                         break;
                      case 'h':
                         printCurlHelp();
@@ -158,45 +160,69 @@ public:
                     case 'H':
                         if(CommandParameters.size() > i+1)
                         {
+                            #if defined(__EMSCRIPTEN__)
                             char * headerData = strdup(CommandParameters[i+1]); //we copy the parameter so that we don't lose the data when tokenizing it
                             char *s, *d;
-                            for (s=d=headerData;*d=*s;d+=(*s++!='"')); //remove the extra " from beginning and end
+                            for (s=d=headerData;*d=*s;d+=(*s++!='"')){}; //remove the extra " from beginning and end
                             char * tok = strtok(headerData, ":");
                             while(tok != NULL) { //divide up the passed parameters into tokens based : delimiter
-                                headers.push_back(tok);
+                                emsc_headers.push_back(tok);
                                 tok = strtok(NULL, ":");
                             }
-                            headers.push_back(0);
+                            
+                            #else
+                            char * headerData = strdup(CommandParameters[i+1]); //we copy the parameter so that we don't lose the data when tokenizing it
+                            char *s, *d;
+                            for (s=d=headerData;*d=*s;d+=(*s++!='"')){}; //remove the extra " from beginning and end
+                            curl_headers = curl_slist_append(curl_headers, headerData);
+                            
+                            #endif
                             //for (int p = 0; p < headers.size(); p++)
                               //  AddLog(headers[p]); //headers contains the tokenized parameters for header data in an array like <key,value,key,value,...>
-                        }
+                        } else {printCurlHelp();}
                         break;
-                    /*case 'd':
-                        if(CommandParameters.size() > i+1)
+                    case 'd':
+                        /*if(CommandParameters.size() > i+1)
                         {
-                            data = wrapSingleQuotes(CommandParameters[i+1]);
-                        } 
-                        break;*/
+                            char *f, *b;
+                            char * tmpdata = strdup(CommandParameters[i+1]);
+                            for (f=b=tmpdata;*f=*b;f+=(*b++!='\''));
+                            data = tmpdata;
+                        }  else {printCurlHelp();}*/
+                        break;
                 }
             }
             if((Stricmprlx(CommandParameters[i], "https://") == 0) || (Stricmp(CommandParameters[i], "http://") == 0))
             {
                 url = CommandParameters[i];
-
-                AddLog(url.data());
-                AddLog(method.data());
-                AddLog(data.data());
-                for(int t=0; t<headers.size()-1; t++)
-                    AddLog(headers[t]);
-                post(method.data(), headers.data(), data.data(), url.data());
+                AddLog("URL: %s", url.data());
+                AddLog("METHOD: %s", method.data());
+                AddLog("data: %s", data.data());
+                #if defined(__EMSCRIPTEN__)
+                for(int i=0; i<emsc_headers.size(); i++)
+                    AddLog("headers: %s", emsc_headers[i]);
+                emsc_headers.push_back(0);
+                post(method.data(), (void*)this, data.data(), url.data());
+                #else
+                for(int i=0; i<emsc_headers.size(); i++)
+                    AddLog("headers: %s", emsc_headers[i]);
+                post(method.data(), (void*)this, data.data(), url.data());
+                #endif
             }
             //AddLog(CommandParameters[i]);
         }
     }
 
-    void AddLog(const char* str)
+    void AddLog(const char* str, ...) IM_FMTARGS(2)
     {
-        consoleBufferPtr->append(str);
+        char buf[32000];
+        va_list args;
+        va_start(args, str);
+        vsnprintf(buf, sizeof(buf), str, args);
+        buf[sizeof(buf)-1] = 0;
+        va_end(args);
+
+        consoleBufferPtr->append(buf);
         consoleBufferPtr->append("\n");
     }
 
@@ -221,8 +247,9 @@ public:
         );
     }
 
-    void post(const char * method, const char * headers[], const char * data, const char * URL)
+    void post(const char * method, void * userp, const char * data, const char * URL)
     {
+        EasyCurl* _this = (EasyCurl*)userp;
         if ((URL != NULL) && (URL[0] != '\0')) 
         {     
             if ((Stricmprlx(URL, "http://") == 0) || (Stricmprlx(URL, "https://") == 0)) 
@@ -235,12 +262,13 @@ public:
                     attr.onsuccess = onLoaded;
                     attr.onerror = onError;
                     attr.userData = (void*)this;
-                    attr.requestHeaders = headers;
+                    attr.requestHeaders = _this->emsc_headers.data();
                     attr.requestData = data;
                     attr.requestDataSize = strlen(data);
 
                     emscripten_fetch(&attr, URL);
                 #else
+                    
                     curl = curl_easy_init();
                     if(curl) 
                     {
@@ -252,7 +280,7 @@ public:
                         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
                         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
                         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)this);
-                        //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+                        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, _this->curl_headers);
 
                         res = curl_easy_perform(curl);
                         curl_easy_cleanup(curl);
@@ -268,6 +296,14 @@ public:
         { 
             AddLog("[info] Correct usage: POST [url]");
         }
+
+        _this->CommandParameters.clear(); //clear past parameters from previous calls to easycurl 
+        #if defined(__EMSCRIPTEN__)
+        _this->emsc_headers.clear(); //clear past parameters from previous calls to easycurl. All other parameters are one line strings which get overwritten naturally
+        #else
+        curl_slist_free_all(curl_headers);
+        #endif
+
     }
 
     EasyCurl(std::string* _consoleBuffer);

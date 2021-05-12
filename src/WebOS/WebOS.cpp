@@ -528,7 +528,9 @@ struct WebOSConsole
 
         if ((AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
         {
-            ImGui::SetScrollHereY(1.0f);
+            ImGui::GetID("Console");
+            ImGui::SetScrollHereY();
+            //ImGui::SetScrollHereY(1.0f);
         }
 
         ImGui::PopStyleVar();
@@ -649,6 +651,7 @@ struct WebOSConsole
             consoleBuffer.append(command_line);
             consoleBuffer.append("\n");
         }
+        ScrollToBottom = true;
     }
 
     static int InputCommandConsoleCallbackStub(ImGuiInputTextCallbackData* data) // In C++11 you are better off using lambdas for this sort of forwarding callbacks
