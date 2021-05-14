@@ -2,11 +2,6 @@
 #include "WebOS.h"
 #include "easycurl.h"
 
-#ifdef IMGUI_STB_NAMESPACE
-} // namespace ImStb
-using namespace IMGUI_STB_NAMESPACE;
-#endif
-
 //-----------------------------------------------------------------------------
 // [SECTION] Style functions
 //-----------------------------------------------------------------------------
@@ -113,9 +108,10 @@ void WebOS::setStyle() {
 
 	//Set all ImGui styles
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/DroidSans.ttf", 17.0f, nullptr, io.Fonts->GetGlyphRangesCyrillic());
     io.Fonts->Build();
+    
     //font->AddRemapChar(0xF9, 0142);
     ImGui::StyleColorsIoTeX();
 	this->style.WindowPadding = this->imGuiStylePtr->WindowPadding				= ImVec2(4, 7);
@@ -144,37 +140,7 @@ ImVec4* WebOS::getBackgroundColor() {
 	return &this->style.backgroundColor;
 }
 
-void WebOS::showWelcomePopup(bool* p_open)
-{
-    ImGui::SetNextWindowSize(ImVec2(365, 210), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2+250, ImGui::GetIO().DisplaySize.y/2-100), ImGuiCond_FirstUseEver);
-    if(!ImGui::Begin("Welcome to IoTeX console", p_open))
-    {
-        ImGui::End();
-    }else
-    {
-        /*void ImGui::RenderBullet(ImDrawList* draw_list, ImVec2 pos, ImU32 col)
-        {
-            draw_list->AddCircleFilled(pos, draw_list->_Data->FontSize * 0.20f, col, 8);
-        }*/
-        //ImGui::GetBackgroundDrawList()->PushTextureID(&wallpaper);
-        //ImGui::Image((void*)(intptr_t)wallpaper, ImVec2(365, 210));
-        //ImGui::GetBackgroundDrawList()->AddRect(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255));
-        //ImGui::RenderTextClipped(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), "text", NULL, NULL, ImVec2(0.5f,0.0f));
-        //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
-        //ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 2),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y +5)), 2, IM_COL32(255,255,255,255), 8);
-        //ImGui::GetWindowDrawList()->BulletText();
-        //ImGui::GetWindowDrawList()->AddText(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 10),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255), "testing");
-        ImGui::TextWrapped("Please use the right mouse click to open Menu");
-        ImGui::TextWrapped("Click the JRPC token icon to open command console");
-        ImGui::Separator();
-        ImGui::TextWrapped("Application average %.3f ms/frame (%.1f FPS)",
-                    1000.0f / ImGui::GetIO().Framerate,
-                    ImGui::GetIO().Framerate);
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); ImGui::TextWrapped("This website is still under development!!"); ImGui::PopStyleColor();
-        ImGui::End();
-    }
-}
+
     char animatedBuf[128];
 void WebOS::ShowSuccessPopup(bool* p_open)
 {
@@ -239,10 +205,7 @@ void WebOS::showIcon()
     ImGui::PopStyleVar();
     ImGui::PopStyleVar();
     */
-    if(show_welcome_popup)
-    {
-        showWelcomePopup(&show_welcome_popup);
-    }
+
 }
 
 void WebOS::showBackgroundWallpaper()

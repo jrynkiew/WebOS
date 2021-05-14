@@ -32,13 +32,23 @@
 
 static bool show_demo_window = false;
 static bool show_test_window = false;
-static bool show_welcome_popup = true;
+
+static bool show_webOS_window = true;
+
 static bool show_main_menu = true;
 static bool show_another_window = false;
 static bool show_main_hook = true;
 static bool success_fetch_pflag = false;
 static bool success_curl_pflag = false;
 
+namespace ImGui
+{
+	//Web OS IoTeX Console Styles forward declarations
+	IMGUI_API void          StyleColorsIoTeX(ImGuiStyle* dst = NULL);
+
+	//Web OS Welcome Popup 
+	IMGUI_API void          ShowWebOSWindow(bool* p_open = NULL); 
+}
 //void showMenu();				//Show menu on side of screen
 
 class WebOS {

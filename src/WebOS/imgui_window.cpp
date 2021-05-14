@@ -76,7 +76,7 @@ Index of this file:
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include "imgui.h"
+#include "WebOS.h"
 #ifndef IMGUI_DISABLE
 
 // System includes
@@ -187,6 +187,55 @@ static void ShowExampleAppWindowTitles(bool* p_open);
 static void ShowExampleAppCustomRendering(bool* p_open);
 static void ShowExampleMenuFile();
 
+static void showWelcomePopup(bool* p_open);
+
+
+
+void ImGui::ShowWebOSWindow(bool* p_open)
+{
+
+    static bool show_welcome_popup = true;
+    static bool show_app_dockspace = true;
+
+    ShowExampleAppDockSpace(&show_app_dockspace);     // Process the Docking app first, as explicit DockSpace() nodes needs to be submitted early (read comments near the DockSpace function)
+
+    if(show_welcome_popup)              showWelcomePopup(&show_welcome_popup);
+}
+
+static void showWelcomePopup(bool* p_open)
+{
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    const ImVec2 base_pos = viewport->Pos;
+    ImGui::SetNextWindowSize(ImVec2(365, 210), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(base_pos.x + 100, base_pos.y + 100), ImGuiCond_FirstUseEver);
+    if(!ImGui::Begin("Welcome to IoTeX console", p_open))
+    {
+        ImGui::End();
+    }else
+    {
+        /*void ImGui::RenderBullet(ImDrawList* draw_list, ImVec2 pos, ImU32 col)
+        {
+            draw_list->AddCircleFilled(pos, draw_list->_Data->FontSize * 0.20f, col, 8);
+        }*/
+        //ImGui::GetBackgroundDrawList()->PushTextureID(&wallpaper);
+        //ImGui::Image((void*)(intptr_t)wallpaper, ImVec2(365, 210));
+        //ImGui::GetBackgroundDrawList()->AddRect(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255));
+        //ImGui::RenderTextClipped(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), ImVec2((ImGui::GetWindowContentRegionMax().x + ImGui::GetWindowPos().x),(ImGui::GetWindowContentRegionMax().y + ImGui::GetWindowPos().y)), "text", NULL, NULL, ImVec2(0.5f,0.0f));
+        //ImGui::Text("Loading %c", "|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]);
+        //ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 2),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y +5)), 2, IM_COL32(255,255,255,255), 8);
+        //ImGui::GetWindowDrawList()->BulletText();
+        //ImGui::GetWindowDrawList()->AddText(ImVec2((ImGui::GetWindowContentRegionMin().x + ImGui::GetWindowPos().x + 10),(ImGui::GetWindowContentRegionMin().y + ImGui::GetWindowPos().y)), IM_COL32(255,255,255,255), "testing");
+        ImGui::TextWrapped("Please use the right mouse click to open Menu");
+        ImGui::TextWrapped("Click the JRPC token icon to open command console");
+        ImGui::Separator();
+        ImGui::TextWrapped("Application average %.3f ms/frame (%.1f FPS)",
+                    1000.0f / ImGui::GetIO().Framerate,
+                    ImGui::GetIO().Framerate);
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.4f, 0.4f, 1.0f)); ImGui::TextWrapped("This website is still under development!!"); ImGui::PopStyleColor();
+        ImGui::End();
+    }
+}
+
 // Helper to display a little (?) mark which shows a tooltip when hovered.
 // In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.md)
 static void HelpMarker(const char* desc)
@@ -291,7 +340,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     static bool show_app_custom_rendering = false;
 
     if (show_app_main_menu_bar)       ShowExampleAppMainMenuBar();
-    if (show_app_dockspace)           ShowExampleAppDockSpace(&show_app_dockspace);     // Process the Docking app first, as explicit DockSpace() nodes needs to be submitted early (read comments near the DockSpace function)
+
     if (show_app_documents)           ShowExampleAppDocuments(&show_app_documents);     // Process the Document app next, as it may also use a DockSpace()
 
     if (show_app_console)             ShowExampleAppConsole(&show_app_console);
