@@ -21,8 +21,8 @@ EXE = $(OUTPUTFOLDER)WebOS
 
 SOURCES = src/main.cpp
 SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
-SOURCES += src/WebOS/imgui.cpp  src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
-SOURCES += src/WebOS/Menu.cpp src/WebOS/rightClickContextMenu.cpp src/WebOS/WebOS.cpp  src/WebOS/imgui_window.cpp
+SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
+SOURCES += src/WebOS/webos.cpp src/WebOS/webos_window.cpp src/WebOS/webos_image.cpp src/WebOS/webos_icon.cpp src/WebOS/webos_console.cpp
 SOURCES += /home/jeremi-solus/Coding/libraries/gl3w/src/gl3w.c
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
@@ -104,8 +104,8 @@ endif
 
 SOURCES = src/main.cpp
 SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
-SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_window.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
-SOURCES += src/WebOS/Menu.cpp src/WebOS/WebOS.cpp 
+SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
+SOURCES += src/WebOS/webos.cpp src/WebOS/webos_window.cpp src/WebOS/webos_image.cpp src/WebOS/webos_icon.cpp src/WebOS/webos_console.cpp
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))

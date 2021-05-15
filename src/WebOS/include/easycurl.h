@@ -1,5 +1,4 @@
 #pragma once
-#include "WebOS.h"
 #include <vector>
 
 class EasyCurl
@@ -54,47 +53,7 @@ private:
 public:
     int Stricmprlx(const char* str1, const char* str2) { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; if(*str1 == ' ') {return d;} if(!*str2) {return d;}} return d; }
     int Stricmp(const char* str1, const char* str2) { int d; while ((d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; } return d; }
-    char *strmbtok ( char *input, char *delimit, char *openblock, char *closeblock) {
-        static char *token = NULL;
-        char *lead = NULL;
-        char *block = NULL;
-        int iBlock = 0;
-        int iBlockIndex = 0;
-
-        if ( input != NULL) {
-            token = input;
-            lead = input;
-        }
-        else {
-            lead = token;
-            if ( *token == '\0') {
-                lead = NULL;
-            }
-        }
-
-        while ( *token != '\0') {
-            if ( iBlock) {
-                if ( closeblock[iBlockIndex] == *token) {
-                    iBlock = 0;
-                }
-                token++;
-                continue;
-            }
-            if ( ( block = strchr ( openblock, *token)) != NULL) {
-                iBlock = 1;
-                iBlockIndex = block - openblock;
-                token++;
-                continue;
-            }
-            if ( strchr ( delimit, *token) != NULL) {
-                *token = '\0';
-                token++;
-                break;
-            }
-            token++;
-        }
-        return lead;
-    }
+    char *strmbtok ( char *input, char *delimit, char *openblock, char *closeblock) { static char *token = NULL; char *lead = NULL; char *block = NULL; int iBlock = 0; int iBlockIndex = 0; if ( input != NULL) { token = input; lead = input; } else { lead = token; if ( *token == '\0') { lead = NULL; } } while ( *token != '\0') { if ( iBlock) { if ( closeblock[iBlockIndex] == *token) { iBlock = 0; } token++; continue; } if ( ( block = strchr ( openblock, *token)) != NULL) { iBlock = 1; iBlockIndex = block - openblock; token++; continue; } if ( strchr ( delimit, *token) != NULL) { *token = '\0'; token++; break; } token++; } return lead; }
 
     void setMethod(const char * _method) { method = _method;}
     void setHeaders(std::vector<const char*> _headers) { emsc_headers = _headers;}

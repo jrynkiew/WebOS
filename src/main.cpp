@@ -7,16 +7,12 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-//STB Headers
-//#define STB_IMAGE_IMPLEMENTATION
-//#include <stb_image.h>
-
 //Windows headers
 #include <stdio.h>
 
 #pragma comment(lib, "shell32.lib")
 
-#include "WebOS.h"
+#include "webos.h"
 
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
 // Helper libraries are often used for this purpose! Here we are supporting a few common ones: gl3w, glew, glad.
@@ -48,18 +44,6 @@ static std::function<void()> loop;
 static void main_loop() { loop(); }
 #endif
 
- #if defined(__EMSCRIPTEN__)
-extern "C" {
-    EMSCRIPTEN_KEEPALIVE int Sum(int a, int b) {
-        int sum = a + b;
-        return EM_ASM_INT({
-        console.log($0);
-        return $0;
-        }, sum);
-    }
-}
-#endif
-
 int main(int, char**)
 {
     // Setup SDL
@@ -68,23 +52,8 @@ int main(int, char**)
         printf("Error in SDL_Init: %s\n", SDL_GetError());
         return -1;
     }
-
-    //WebOS::WebOS_Init WebOS;
-
     // Decide GL+GLSL versions
 #if defined(__EMSCRIPTEN__)
-    char *str = (char*)EM_ASM_INT({
-        var jsString = 'Hello with some exotic Unicode characters: Tässä on yksi lumiukko: ☃, ole hyvä.';
-        var lengthBytes = lengthBytesUTF8(jsString)+1;
-        // 'jsString.length' would return the length of the string as UTF-16
-        // units, but Emscripten C strings operate as UTF-8.
-        var stringOnWasmHeap = _malloc(lengthBytes);
-        stringToUTF8(jsString, stringOnWasmHeap, lengthBytes);
-        return stringOnWasmHeap;
-    });
-    printf("UTF8 string says: %s\n", str);
-    free(str); // Each call to _malloc() must be paired with free(), or heap memory will leak!     
-    
     // GLES 3.0
     // For the browser using emscripten, we are going to use WebGL2 with GLES3. See the Makefile.emscripten for requirement details.
     // It is very likely the generated file won't work in many browsers. Firefox is the only sure bet, but I have successfully
@@ -109,7 +78,6 @@ int main(int, char**)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif
-
     // Create window with graphics context
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -133,7 +101,6 @@ int main(int, char**)
         link_version->minor,
         link_version->patch);
 
-
     // Initialize OpenGL loader
 #if defined(__EMSCRIPTEN__)
     bool err = false; // Emscripten loads everything during SDL_GL_CreateContext
@@ -156,22 +123,14 @@ int main(int, char**)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-    
-    // Setup Dear ImGui style
-    //ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
 
+    // Setup WebOS interface
     WebOS* interface = new WebOS();
     interface->setStyle();
     
-
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-
     ImGui_ImplOpenGL3_Init(glsl_version);
-
-    //ImVec4 clear_color = *interface->getBackgroundColor(); //Background color
 
     // Main loop
     bool done = false;
@@ -200,46 +159,26 @@ int main(int, char**)
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
-
             //Only for right click context menu
-            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
-            {
-                interface->getMainMenu().setShowMainMenu();
-            }
-            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-            {
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT) {}
+                //interface->getMainMenu().setShowMainMenu();
+            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {}
                 //interface->setShowContextMenu(false);
-            }
- 
         }
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        //Show Menu bar at the top
-        //ImGui::Begin("Menu test");
-        //interface->ShowStartHook(&show_main_hook);
-        //ImGui::End();
-
-        //interface->showBackgroundWallpaper();
-        ImGui::ShowWebOSWindow(&show_webOS_window);
-        interface->showIcon();
+        // Show the WebOS entry docking window
         
-        interface->getMainMenu().showMainMenu();
-        interface->getMainMenu().showMainMenuBar();
 
-        interface->showWebOS();
+        ImGui::ShowWebOSInterface(interface);
 
         // Rendering
         ImGui::Render();
-        //SDL_Delay(10);
         SDL_GL_MakeCurrent(window, gl_context);
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-        //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-
-        //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
