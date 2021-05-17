@@ -154,25 +154,27 @@ int main(int, char**)
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (event.type == SDL_QUIT)
-                //done = true means that the program is "done" and needs to close
+            if (event.type == SDL_QUIT) //done = true means that the program is "done" and needs to close
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
             //Only for right click context menu
-            if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT) {}
+            /*if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT) {}
                 //interface->getMainMenu().setShowMainMenu();
             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {}
                 //interface->setShowContextMenu(false);
+            */
+            /*if((event.type == SDL_MOUSEMOTION) || (event.type == SDL_MOUSEBUTTONDOWN) || (event.type == SDL_MOUSEBUTTONUP) || (event.type == SDL_KEYDOWN) || (event.type == SDL_KEYUP) || (event.type == SDL_MOUSEWHEEL))
+            {   
+            }*/
         }
+
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
         // Show the WebOS entry docking window
-        
-
         ImGui::ShowWebOSInterface(interface);
 
         // Rendering
@@ -182,6 +184,7 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
+       
     };
 #if defined(__EMSCRIPTEN__)
     // See comments around line 30.

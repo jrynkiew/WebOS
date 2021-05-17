@@ -79,6 +79,7 @@ private:
 		float WindowRounding;
 		float ChildRounding;
 		float GrabRounding;
+		ImVec2 iconSize;
 	};
 
 	ImGuiStyle* imGuiStylePtr; 
@@ -89,7 +90,16 @@ public:
 	webos_console console;
 	ImVector<webos_image*> images;
 	ImVector<webos_icon*> icons;
+
+	WebOS getPtr() {return *this;}
+
+	bool setup_docking = true;
+
+	ImGuiID dockspaceID = NULL;
+	ImGuiID dock_left = NULL;
+
  	void setStyle();
+	 WebOS_style* getStyle() { return &style; }
 	
 	WebOS();
 	~WebOS();
