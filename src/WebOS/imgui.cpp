@@ -3399,14 +3399,14 @@ const char* ImGui::GetClipboardText()
         // retrieve the pasted text with textarea.textContent
         // remove textarea from the document
         console.log(textarea.textContent);
-
+        */
         navigator.permissions.query({name: "clipboard-read"}).then(result => {
         // If permission to read the clipboard is granted or if the user will
         // be prompted to allow it, we proceed.
 
         if (result.state == "granted" || result.state == "prompt") {
             navigator.clipboard.read().then(data => {
-            for (let i=0; i<data.items.length; i++) {
+            for (let i=0; i<data.items.length; i++) { //this almost works
                 if (data.items[i].type != "image/png") {
                 alert("Clipboard contains non-image data. Unable to access it.");
                 console.log(data.items[i]);
@@ -3418,8 +3418,8 @@ const char* ImGui::GetClipboardText()
             });
         }
         });
-    
-    }); THIS IS BROKEN */
+
+    });
     #endif
 
     ImGuiContext& g = *GImGui;

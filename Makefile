@@ -122,7 +122,7 @@ EMS += -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
 #enable fetching like curl from within emscripten
 EMS += -s FETCH=1
 #enable asyncify
-#EMS += -s ASYNCIFY=1
+EMS += -s ASYNCIFY
 
 #enable BOOST library for 4096 ints
 EMS += -s USE_BOOST_HEADERS=1

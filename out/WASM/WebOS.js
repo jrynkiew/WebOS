@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "276449d3-809a-4090-b435-6e96288c0c88"
+  "package_uuid": "658b8996-8716-4677-bca9-66926a25f08f"
  });
 })();
 
@@ -914,8 +914,22 @@ function ccall(ident, returnType, argTypes, args, opts) {
   }
  }
  var ret = func.apply(null, cArgs);
+ var asyncMode = opts && opts.async;
+ var runningAsync = typeof Asyncify === "object" && Asyncify.currData;
+ var prevRunningAsync = typeof Asyncify === "object" && Asyncify.asyncFinalizers.length > 0;
+ assert(!asyncMode || !prevRunningAsync, "Cannot have multiple async ccalls in flight at once");
+ if (runningAsync && !prevRunningAsync) {
+  assert(asyncMode, "The call to " + ident + " is running asynchronously. If this was intended, add the async option to the ccall/cwrap call.");
+  return new Promise(function(resolve) {
+   Asyncify.asyncFinalizers.push(function(ret) {
+    if (stack !== 0) stackRestore(stack);
+    resolve(convertReturnValue(ret));
+   });
+  });
+ }
  ret = convertReturnValue(ret);
  if (stack !== 0) stackRestore(stack);
+ if (opts && opts.async) return Promise.resolve(ret);
  return ret;
 }
 
@@ -1529,6 +1543,7 @@ function createWasm() {
  };
  function receiveInstance(instance, module) {
   var exports = instance.exports;
+  exports = Asyncify.instrumentWasmExports(exports);
   Module["asm"] = exports;
   wasmMemory = Module["asm"]["memory"];
   assert(wasmMemory, "memory not found in wasm exports");
@@ -1571,6 +1586,7 @@ function createWasm() {
  if (Module["instantiateWasm"]) {
   try {
    var exports = Module["instantiateWasm"](info, receiveInstance);
+   exports = Asyncify.instrumentWasmExports(exports);
    return exports;
   } catch (e) {
    err("Module.instantiateWasm callback failed with error: " + e);
@@ -1587,17 +1603,25 @@ var tempI64;
 
 var ASM_CONSTS = {
  6812: function() {
-  document.addEventListener("paste", function(e) {
-   if (e.clipboardData.types.indexOf("text/html") > -1) {
-    var oldData = e.clipboardData.getData("text/html");
-    var newData = "<b>Ha Ha!</b> " + oldData;
-    pasteClipboardData(newData);
-    console.log(newData);
-    e.preventDefault();
+  navigator.permissions.query({
+   name: "clipboard-read"
+  }).then(result => {
+   if (result.state == "granted" || result.state == "prompt") {
+    navigator.clipboard.read().then(data => {
+     for (let i = 0; i < data.items.length; i++) {
+      if (data.items[i].type != "image/png") {
+       alert("Clipboard contains non-image data. Unable to access it.");
+       console.log(data.items[i]);
+      } else {
+       const blob = data.items[i].getType("image/png");
+       imgElem.src = URL.createObjectURL(blob);
+      }
+     }
+    });
    }
   });
  },
- 7092: function($0) {
+ 7281: function($0) {
   console.log(UTF8ToString($0));
   var tempInput = document.createElement("input");
   tempInput.value = UTF8ToString($0);
@@ -1606,16 +1630,16 @@ var ASM_CONSTS = {
   document.execCommand("copy");
   document.body.removeChild(tempInput);
  },
- 64148: function() {
+ 64340: function() {
   window.open("https://emscripten.org", "_blank");
  },
- 64368: function() {
+ 64560: function() {
   window.open("https://t.me/JRPC_Official", "_blank");
  },
- 64577: function() {
+ 64769: function() {
   window.open("https://mimo.exchange", "_blank");
  },
- 116570: function($0) {
+ 116762: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1623,7 +1647,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 152796: function($0, $1, $2) {
+ 152988: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1694,7 +1718,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 154275: function($0, $1, $2, $3, $4) {
+ 154467: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1731,36 +1755,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 155264: function($0) {
+ 155456: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 155357: function() {
+ 155549: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 156582: function() {
+ 156774: function() {
   return screen.width;
  },
- 156609: function() {
+ 156801: function() {
   return screen.height;
  },
- 156637: function() {
+ 156829: function() {
   return window.innerWidth;
  },
- 156669: function() {
+ 156861: function() {
   return window.innerHeight;
  },
- 156747: function($0) {
+ 156939: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 156881: function() {
+ 157073: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1768,7 +1792,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 157047: function() {
+ 157239: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1776,7 +1800,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 157273: function($0) {
+ 157465: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1798,11 +1822,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 157826: function() {
+ 158018: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 157896: function($0, $1, $2, $3) {
+ 158088: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1843,7 +1867,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 159548: function($0, $1, $2, $3) {
+ 159740: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1855,7 +1879,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 159958: function($0, $1) {
+ 160150: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1874,7 +1898,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 160563: function($0, $1) {
+ 160755: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1887,7 +1911,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 161043: function($0) {
+ 161235: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -2697,9 +2721,13 @@ function callRuntimeCallbacks(callbacks) {
   var func = callback.func;
   if (typeof func === "number") {
    if (callback.arg === undefined) {
-    wasmTable.get(func)();
+    (function() {
+     dynCall_v.call(null, func);
+    })();
    } else {
-    wasmTable.get(func)(callback.arg);
+    (function(a1) {
+     dynCall_vi.apply(null, [ func, a1 ]);
+    })(callback.arg);
    }
   } else {
    func(callback.arg === undefined ? null : callback.arg);
@@ -2734,11 +2762,7 @@ function dynCallLegacy(sig, ptr, args) {
 }
 
 function dynCall(sig, ptr, args) {
- if (sig.indexOf("j") != -1) {
-  return dynCallLegacy(sig, ptr, args);
- }
- assert(wasmTable.get(ptr), "missing table entry in dynCall: " + ptr);
- return wasmTable.get(ptr).apply(null, args);
+ return dynCallLegacy(sig, ptr, args);
 }
 
 function jsStackTrace() {
@@ -6697,7 +6721,9 @@ function registerRestoreOldStyle(canvas) {
    canvas.style.imageRendering = oldImageRendering;
    if (canvas.GLctxObject) canvas.GLctxObject.GLctx.viewport(0, 0, oldWidth, oldHeight);
    if (currentFullscreenStrategy.canvasResizedCallback) {
-    wasmTable.get(currentFullscreenStrategy.canvasResizedCallback)(37, 0, currentFullscreenStrategy.canvasResizedCallbackUserData);
+    (function(a1, a2, a3) {
+     dynCall_iiii.apply(null, [ currentFullscreenStrategy.canvasResizedCallback, a1, a2, a3 ]);
+    })(37, 0, currentFullscreenStrategy.canvasResizedCallbackUserData);
    }
   }
  }
@@ -6779,7 +6805,9 @@ function _JSEvents_requestFullscreen(target, strategy) {
  }
  currentFullscreenStrategy = strategy;
  if (strategy.canvasResizedCallback) {
-  wasmTable.get(strategy.canvasResizedCallback)(37, 0, strategy.canvasResizedCallbackUserData);
+  (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ strategy.canvasResizedCallback, a1, a2, a3 ]);
+  })(37, 0, strategy.canvasResizedCallbackUserData);
  }
  return 0;
 }
@@ -9406,7 +9434,7 @@ function _emscripten_glWaitSync(sync, flags, timeoutLo, timeoutHi) {
 }
 
 function _emscripten_has_asyncify() {
- return 0;
+ return 1;
 }
 
 function _emscripten_is_main_browser_thread() {
@@ -9512,7 +9540,9 @@ function _emscripten_sample_gamepad_data() {
 function registerBeforeUnloadEventCallback(target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString) {
  var beforeUnloadEventHandlerFunc = function(ev) {
   var e = ev || event;
-  var confirmationMessage = wasmTable.get(callbackfunc)(eventTypeId, 0, userData);
+  var confirmationMessage = function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, 0, userData);
   if (confirmationMessage) {
    confirmationMessage = UTF8ToString(confirmationMessage);
   }
@@ -9548,7 +9578,9 @@ function registerFocusEventCallback(target, userData, useCapture, callbackfunc, 
   var focusEvent = JSEvents.focusEvent;
   stringToUTF8(nodeName, focusEvent + 0, 128);
   stringToUTF8(id, focusEvent + 128, 128);
-  if (wasmTable.get(callbackfunc)(eventTypeId, focusEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, focusEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: findEventTarget(target),
@@ -9603,7 +9635,9 @@ function registerFullscreenChangeEventCallback(target, userData, useCapture, cal
   var e = ev || event;
   var fullscreenChangeEvent = JSEvents.fullscreenChangeEvent;
   fillFullscreenChangeEventData(fullscreenChangeEvent);
-  if (wasmTable.get(callbackfunc)(eventTypeId, fullscreenChangeEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, fullscreenChangeEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -9630,7 +9664,9 @@ function registerGamepadEventCallback(target, userData, useCapture, callbackfunc
   var e = ev || event;
   var gamepadEvent = JSEvents.gamepadEvent;
   fillGamepadEventData(gamepadEvent, e["gamepad"]);
-  if (wasmTable.get(callbackfunc)(eventTypeId, gamepadEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, gamepadEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: findEventTarget(target),
@@ -9674,7 +9710,9 @@ function registerKeyEventCallback(target, userData, useCapture, callbackfunc, ev
   stringToUTF8(e.code || "", keyEventData + 68, 32);
   stringToUTF8(e.char || "", keyEventData + 100, 32);
   stringToUTF8(e.locale || "", keyEventData + 132, 32);
-  if (wasmTable.get(callbackfunc)(eventTypeId, keyEventData, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, keyEventData, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: findEventTarget(target),
@@ -9703,7 +9741,9 @@ function _emscripten_set_keyup_callback_on_thread(target, userData, useCapture, 
 }
 
 function _emscripten_set_main_loop(func, fps, simulateInfiniteLoop, arg, noSetTiming) {
- var browserIterationFunc = wasmTable.get(func);
+ var browserIterationFunc = function() {
+  dynCall_v.call(null, func);
+ };
  setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSetTiming);
 }
 
@@ -9733,7 +9773,9 @@ function registerMouseEventCallback(target, userData, useCapture, callbackfunc, 
  var mouseEventHandlerFunc = function(ev) {
   var e = ev || event;
   fillMouseEventData(JSEvents.mouseEvent, e, target);
-  if (wasmTable.get(callbackfunc)(eventTypeId, JSEvents.mouseEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, JSEvents.mouseEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -9787,7 +9829,9 @@ function registerPointerlockChangeEventCallback(target, userData, useCapture, ca
   var e = ev || event;
   var pointerlockChangeEvent = JSEvents.pointerlockChangeEvent;
   fillPointerlockChangeEventData(pointerlockChangeEvent);
-  if (wasmTable.get(callbackfunc)(eventTypeId, pointerlockChangeEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, pointerlockChangeEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -9834,7 +9878,9 @@ function registerUiEventCallback(target, userData, useCapture, callbackfunc, eve
   SAFE_HEAP_STORE(uiEvent + 24 | 0, outerHeight | 0, 4);
   SAFE_HEAP_STORE(uiEvent + 28 | 0, pageXOffset | 0, 4);
   SAFE_HEAP_STORE(uiEvent + 32 | 0, pageYOffset | 0, 4);
-  if (wasmTable.get(callbackfunc)(eventTypeId, uiEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, uiEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -9903,7 +9949,9 @@ function registerTouchEventCallback(target, userData, useCapture, callbackfunc, 
    }
   }
   SAFE_HEAP_STORE(touchEvent | 0, numTouches | 0, 4);
-  if (wasmTable.get(callbackfunc)(eventTypeId, touchEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, touchEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -9949,7 +9997,9 @@ function registerVisibilityChangeEventCallback(target, userData, useCapture, cal
   var e = ev || event;
   var visibilityChangeEvent = JSEvents.visibilityChangeEvent;
   fillVisibilityChangeEventData(visibilityChangeEvent);
-  if (wasmTable.get(callbackfunc)(eventTypeId, visibilityChangeEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, visibilityChangeEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -9979,7 +10029,9 @@ function registerWheelEventCallback(target, userData, useCapture, callbackfunc, 
   SAFE_HEAP_STORE_D(wheelEvent + 72 | 0, +e["deltaY"], 8);
   SAFE_HEAP_STORE_D(wheelEvent + 80 | 0, +e["deltaZ"], 8);
   SAFE_HEAP_STORE(wheelEvent + 88 | 0, e["deltaMode"] | 0, 4);
-  if (wasmTable.get(callbackfunc)(eventTypeId, wheelEvent, userData)) e.preventDefault();
+  if (function(a1, a2, a3) {
+   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+  }(eventTypeId, wheelEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
   target: target,
@@ -10002,8 +10054,10 @@ function _emscripten_set_wheel_callback_on_thread(target, userData, useCapture, 
  }
 }
 
-function _emscripten_sleep() {
- throw "Please compile your program with async support in order to use asynchronous operations like emscripten_sleep";
+function _emscripten_sleep(ms) {
+ Asyncify.handleSleep(function(wakeUp) {
+  Browser.safeSetTimeout(wakeUp, ms);
+ });
 }
 
 var Fetch = {
@@ -10308,26 +10362,38 @@ function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readysta
  var fetchAttrAppend = !!(fetchAttributes & 8);
  var fetchAttrReplace = !!(fetchAttributes & 16);
  var reportSuccess = function(fetch, xhr, e) {
-  if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+  if (onsuccess) (function(a1) {
+   dynCall_vi.apply(null, [ onsuccess, a1 ]);
+  })(fetch); else if (successcb) successcb(fetch);
  };
  var reportProgress = function(fetch, xhr, e) {
-  if (onprogress) wasmTable.get(onprogress)(fetch); else if (progresscb) progresscb(fetch);
+  if (onprogress) (function(a1) {
+   dynCall_vi.apply(null, [ onprogress, a1 ]);
+  })(fetch); else if (progresscb) progresscb(fetch);
  };
  var reportError = function(fetch, xhr, e) {
-  if (onerror) wasmTable.get(onerror)(fetch); else if (errorcb) errorcb(fetch);
+  if (onerror) (function(a1) {
+   dynCall_vi.apply(null, [ onerror, a1 ]);
+  })(fetch); else if (errorcb) errorcb(fetch);
  };
  var reportReadyStateChange = function(fetch, xhr, e) {
-  if (onreadystatechange) wasmTable.get(onreadystatechange)(fetch); else if (readystatechangecb) readystatechangecb(fetch);
+  if (onreadystatechange) (function(a1) {
+   dynCall_vi.apply(null, [ onreadystatechange, a1 ]);
+  })(fetch); else if (readystatechangecb) readystatechangecb(fetch);
  };
  var performUncachedXhr = function(fetch, xhr, e) {
   __emscripten_fetch_xhr(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
  };
  var cacheResultAndReportSuccess = function(fetch, xhr, e) {
   var storeSuccess = function(fetch, xhr, e) {
-   if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+   if (onsuccess) (function(a1) {
+    dynCall_vi.apply(null, [ onsuccess, a1 ]);
+   })(fetch); else if (successcb) successcb(fetch);
   };
   var storeError = function(fetch, xhr, e) {
-   if (onsuccess) wasmTable.get(onsuccess)(fetch); else if (successcb) successcb(fetch);
+   if (onsuccess) (function(a1) {
+    dynCall_vi.apply(null, [ onsuccess, a1 ]);
+   })(fetch); else if (successcb) successcb(fetch);
   };
   __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
  };
@@ -10873,6 +10939,183 @@ function readAsmConstArgs(sigPtr, buf) {
  return readAsmConstArgsArray;
 }
 
+function runAndAbortIfError(func) {
+ try {
+  return func();
+ } catch (e) {
+  abort(e);
+ }
+}
+
+var Asyncify = {
+ State: {
+  Normal: 0,
+  Unwinding: 1,
+  Rewinding: 2
+ },
+ state: 0,
+ StackSize: 4096,
+ currData: null,
+ handleSleepReturnValue: 0,
+ exportCallStack: [],
+ callStackNameToId: {},
+ callStackIdToName: {},
+ callStackId: 0,
+ afterUnwind: null,
+ asyncFinalizers: [],
+ sleepCallbacks: [],
+ getCallStackId: function(funcName) {
+  var id = Asyncify.callStackNameToId[funcName];
+  if (id === undefined) {
+   id = Asyncify.callStackId++;
+   Asyncify.callStackNameToId[funcName] = id;
+   Asyncify.callStackIdToName[id] = funcName;
+  }
+  return id;
+ },
+ instrumentWasmImports: function(imports) {
+  var ASYNCIFY_IMPORTS = [ "env.invoke_*", "env.emscripten_sleep", "env.emscripten_wget", "env.emscripten_wget_data", "env.emscripten_idb_load", "env.emscripten_idb_store", "env.emscripten_idb_delete", "env.emscripten_idb_exists", "env.emscripten_idb_load_blob", "env.emscripten_idb_store_blob", "env.SDL_Delay", "env.emscripten_scan_registers", "env.emscripten_lazy_load_code", "env.emscripten_fiber_swap", "wasi_snapshot_preview1.fd_sync", "env.__wasi_fd_sync", "env._emval_await" ].map(function(x) {
+   return x.split(".")[1];
+  });
+  for (var x in imports) {
+   (function(x) {
+    var original = imports[x];
+    if (typeof original === "function") {
+     imports[x] = function() {
+      var originalAsyncifyState = Asyncify.state;
+      try {
+       return original.apply(null, arguments);
+      } finally {
+       if (Asyncify.state !== originalAsyncifyState && ASYNCIFY_IMPORTS.indexOf(x) < 0 && !(x.startsWith("invoke_") && true)) {
+        throw "import " + x + " was not in ASYNCIFY_IMPORTS, but changed the state";
+       }
+      }
+     };
+    }
+   })(x);
+  }
+ },
+ instrumentWasmExports: function(exports) {
+  var ret = {};
+  for (var x in exports) {
+   (function(x) {
+    var original = exports[x];
+    if (typeof original === "function") {
+     ret[x] = function() {
+      Asyncify.exportCallStack.push(x);
+      try {
+       return original.apply(null, arguments);
+      } finally {
+       if (ABORT) return;
+       var y = Asyncify.exportCallStack.pop();
+       assert(y === x);
+       Asyncify.maybeStopUnwind();
+      }
+     };
+    } else {
+     ret[x] = original;
+    }
+   })(x);
+  }
+  return ret;
+ },
+ maybeStopUnwind: function() {
+  if (Asyncify.currData && Asyncify.state === Asyncify.State.Unwinding && Asyncify.exportCallStack.length === 0) {
+   Asyncify.state = Asyncify.State.Normal;
+   runAndAbortIfError(Module["_asyncify_stop_unwind"]);
+   if (typeof Fibers !== "undefined") {
+    Fibers.trampoline();
+   }
+   if (Asyncify.afterUnwind) {
+    Asyncify.afterUnwind();
+    Asyncify.afterUnwind = null;
+   }
+  }
+ },
+ allocateData: function() {
+  var ptr = _malloc(12 + Asyncify.StackSize);
+  Asyncify.setDataHeader(ptr, ptr + 12, Asyncify.StackSize);
+  Asyncify.setDataRewindFunc(ptr);
+  return ptr;
+ },
+ setDataHeader: function(ptr, stack, stackSize) {
+  SAFE_HEAP_STORE(ptr | 0, stack | 0, 4);
+  SAFE_HEAP_STORE(ptr + 4 | 0, stack + stackSize | 0, 4);
+ },
+ setDataRewindFunc: function(ptr) {
+  var bottomOfCallStack = Asyncify.exportCallStack[0];
+  var rewindId = Asyncify.getCallStackId(bottomOfCallStack);
+  SAFE_HEAP_STORE(ptr + 8 | 0, rewindId | 0, 4);
+ },
+ getDataRewindFunc: function(ptr) {
+  var id = SAFE_HEAP_LOAD(ptr + 8 | 0, 4, 0) | 0;
+  var name = Asyncify.callStackIdToName[id];
+  var func = Module["asm"][name];
+  return func;
+ },
+ handleSleep: function(startAsync) {
+  if (ABORT) return;
+  noExitRuntime = true;
+  if (Asyncify.state === Asyncify.State.Normal) {
+   var reachedCallback = false;
+   var reachedAfterCallback = false;
+   startAsync(function(handleSleepReturnValue) {
+    assert(!handleSleepReturnValue || typeof handleSleepReturnValue === "number");
+    if (ABORT) return;
+    Asyncify.handleSleepReturnValue = handleSleepReturnValue || 0;
+    reachedCallback = true;
+    if (!reachedAfterCallback) {
+     return;
+    }
+    assert(!Asyncify.exportCallStack.length, "Waking up (starting to rewind) must be done from JS, without compiled code on the stack.");
+    Asyncify.state = Asyncify.State.Rewinding;
+    runAndAbortIfError(function() {
+     Module["_asyncify_start_rewind"](Asyncify.currData);
+    });
+    if (typeof Browser !== "undefined" && Browser.mainLoop.func) {
+     Browser.mainLoop.resume();
+    }
+    var start = Asyncify.getDataRewindFunc(Asyncify.currData);
+    var asyncWasmReturnValue = start();
+    if (!Asyncify.currData) {
+     var asyncFinalizers = Asyncify.asyncFinalizers;
+     Asyncify.asyncFinalizers = [];
+     asyncFinalizers.forEach(function(func) {
+      func(asyncWasmReturnValue);
+     });
+    }
+   });
+   reachedAfterCallback = true;
+   if (!reachedCallback) {
+    Asyncify.state = Asyncify.State.Unwinding;
+    Asyncify.currData = Asyncify.allocateData();
+    runAndAbortIfError(function() {
+     Module["_asyncify_start_unwind"](Asyncify.currData);
+    });
+    if (typeof Browser !== "undefined" && Browser.mainLoop.func) {
+     Browser.mainLoop.pause();
+    }
+   }
+  } else if (Asyncify.state === Asyncify.State.Rewinding) {
+   Asyncify.state = Asyncify.State.Normal;
+   runAndAbortIfError(Module["_asyncify_stop_rewind"]);
+   _free(Asyncify.currData);
+   Asyncify.currData = null;
+   Asyncify.sleepCallbacks.forEach(function(func) {
+    func();
+   });
+  } else {
+   abort("invalid state: " + Asyncify.state);
+  }
+  return Asyncify.handleSleepReturnValue;
+ },
+ handleAsync: function(startAsync) {
+  return Asyncify.handleSleep(function(wakeUp) {
+   startAsync().then(wakeUp);
+  });
+ }
+};
+
 Module["requestFullscreen"] = function Module_requestFullscreen(lockPointer, resizeCanvas) {
  Browser.requestFullscreen(lockPointer, resizeCanvas);
 };
@@ -11417,6 +11660,8 @@ var asmLibraryArg = {
  "signal": _signal
 };
 
+Asyncify.instrumentWasmImports(asmLibraryArg);
+
 var asm = createWasm();
 
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
@@ -11451,6 +11696,10 @@ var _emscripten_stack_init = Module["_emscripten_stack_init"] = function() {
  return (_emscripten_stack_init = Module["_emscripten_stack_init"] = Module["asm"]["emscripten_stack_init"]).apply(null, arguments);
 };
 
+var _emscripten_stack_set_limits = Module["_emscripten_stack_set_limits"] = function() {
+ return (_emscripten_stack_set_limits = Module["_emscripten_stack_set_limits"] = Module["asm"]["emscripten_stack_set_limits"]).apply(null, arguments);
+};
+
 var _emscripten_stack_get_free = Module["_emscripten_stack_get_free"] = function() {
  return (_emscripten_stack_get_free = Module["_emscripten_stack_get_free"] = Module["asm"]["emscripten_stack_get_free"]).apply(null, arguments);
 };
@@ -11469,9 +11718,85 @@ var _sbrk = Module["_sbrk"] = createExportWrapper("sbrk");
 
 var _emscripten_get_sbrk_ptr = Module["_emscripten_get_sbrk_ptr"] = createExportWrapper("emscripten_get_sbrk_ptr");
 
+var dynCall_v = Module["dynCall_v"] = createExportWrapper("dynCall_v");
+
+var dynCall_ii = Module["dynCall_ii"] = createExportWrapper("dynCall_ii");
+
+var dynCall_vi = Module["dynCall_vi"] = createExportWrapper("dynCall_vi");
+
+var dynCall_vii = Module["dynCall_vii"] = createExportWrapper("dynCall_vii");
+
+var dynCall_iii = Module["dynCall_iii"] = createExportWrapper("dynCall_iii");
+
+var dynCall_viii = Module["dynCall_viii"] = createExportWrapper("dynCall_viii");
+
+var dynCall_viiii = Module["dynCall_viiii"] = createExportWrapper("dynCall_viiii");
+
+var dynCall_iiii = Module["dynCall_iiii"] = createExportWrapper("dynCall_iiii");
+
+var dynCall_fii = Module["dynCall_fii"] = createExportWrapper("dynCall_fii");
+
+var dynCall_iiiii = Module["dynCall_iiiii"] = createExportWrapper("dynCall_iiiii");
+
 var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
 var dynCall_ji = Module["dynCall_ji"] = createExportWrapper("dynCall_ji");
+
+var dynCall_iiiiii = Module["dynCall_iiiiii"] = createExportWrapper("dynCall_iiiiii");
+
+var dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = createExportWrapper("dynCall_iiiiiiiiii");
+
+var dynCall_iiiiiidii = Module["dynCall_iiiiiidii"] = createExportWrapper("dynCall_iiiiiidii");
+
+var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = createExportWrapper("dynCall_iiiiiiiii");
+
+var dynCall_viiiiiii = Module["dynCall_viiiiiii"] = createExportWrapper("dynCall_viiiiiii");
+
+var dynCall_viiiiiiiiiii = Module["dynCall_viiiiiiiiiii"] = createExportWrapper("dynCall_viiiiiiiiiii");
+
+var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = createExportWrapper("dynCall_iiiiiiii");
+
+var dynCall_i = Module["dynCall_i"] = createExportWrapper("dynCall_i");
+
+var dynCall_iidiiii = Module["dynCall_iidiiii"] = createExportWrapper("dynCall_iidiiii");
+
+var dynCall_viiiiii = Module["dynCall_viiiiii"] = createExportWrapper("dynCall_viiiiii");
+
+var dynCall_viiiii = Module["dynCall_viiiii"] = createExportWrapper("dynCall_viiiii");
+
+var dynCall_vffff = Module["dynCall_vffff"] = createExportWrapper("dynCall_vffff");
+
+var dynCall_vf = Module["dynCall_vf"] = createExportWrapper("dynCall_vf");
+
+var dynCall_viiiiiiii = Module["dynCall_viiiiiiii"] = createExportWrapper("dynCall_viiiiiiii");
+
+var dynCall_viiiiiiiii = Module["dynCall_viiiiiiiii"] = createExportWrapper("dynCall_viiiiiiiii");
+
+var dynCall_vff = Module["dynCall_vff"] = createExportWrapper("dynCall_vff");
+
+var dynCall_vfi = Module["dynCall_vfi"] = createExportWrapper("dynCall_vfi");
+
+var dynCall_viif = Module["dynCall_viif"] = createExportWrapper("dynCall_viif");
+
+var dynCall_vif = Module["dynCall_vif"] = createExportWrapper("dynCall_vif");
+
+var dynCall_viff = Module["dynCall_viff"] = createExportWrapper("dynCall_viff");
+
+var dynCall_vifff = Module["dynCall_vifff"] = createExportWrapper("dynCall_vifff");
+
+var dynCall_viffff = Module["dynCall_viffff"] = createExportWrapper("dynCall_viffff");
+
+var dynCall_viiiiiiiiii = Module["dynCall_viiiiiiiiii"] = createExportWrapper("dynCall_viiiiiiiiii");
+
+var dynCall_viifi = Module["dynCall_viifi"] = createExportWrapper("dynCall_viifi");
+
+var _asyncify_start_unwind = Module["_asyncify_start_unwind"] = createExportWrapper("asyncify_start_unwind");
+
+var _asyncify_stop_unwind = Module["_asyncify_stop_unwind"] = createExportWrapper("asyncify_stop_unwind");
+
+var _asyncify_start_rewind = Module["_asyncify_start_rewind"] = createExportWrapper("asyncify_start_rewind");
+
+var _asyncify_stop_rewind = Module["_asyncify_stop_rewind"] = createExportWrapper("asyncify_stop_rewind");
 
 if (!Object.getOwnPropertyDescriptor(Module, "intArrayFromString")) Module["intArrayFromString"] = function() {
  abort("'intArrayFromString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
@@ -12213,6 +12538,14 @@ if (!Object.getOwnPropertyDescriptor(Module, "runAndAbortIfError")) Module["runA
  abort("'runAndAbortIfError' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
+if (!Object.getOwnPropertyDescriptor(Module, "Asyncify")) Module["Asyncify"] = function() {
+ abort("'Asyncify' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "Fibers")) Module["Fibers"] = function() {
+ abort("'Fibers' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
 if (!Object.getOwnPropertyDescriptor(Module, "Fetch")) Module["Fetch"] = function() {
  abort("'Fetch' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
@@ -12340,7 +12673,9 @@ function callMain(args) {
  SAFE_HEAP_STORE(((argv >> 2) + argc) * 4, 0, 4);
  try {
   var ret = entryFunction(argc, argv);
-  exit(ret, true);
+  if (!noExitRuntime) {
+   exit(ret, true);
+  }
  } catch (e) {
   if (e instanceof ExitStatus) {
    return;
