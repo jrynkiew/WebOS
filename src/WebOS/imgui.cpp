@@ -3398,7 +3398,7 @@ const char* ImGui::GetClipboardText()
             clipText => textarea.textContent = clipText);
         // retrieve the pasted text with textarea.textContent
         // remove textarea from the document
-        console.log(textarea.textContent);*/
+        console.log(textarea.textContent);
 
         navigator.permissions.query({name: "clipboard-read"}).then(result => {
         // If permission to read the clipboard is granted or if the user will
@@ -3418,8 +3418,8 @@ const char* ImGui::GetClipboardText()
             });
         }
         });
-
-    });
+    
+    }); THIS IS BROKEN */
     #endif
 
     ImGuiContext& g = *GImGui;
