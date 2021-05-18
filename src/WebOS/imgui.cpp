@@ -3387,12 +3387,60 @@ void ImGui::MemFree(void* ptr)
 
 const char* ImGui::GetClipboardText()
 {
+    #if defined(__EMSCRIPTEN__)
+    EM_ASM({
+        /*var textarea = document.createElement("textarea");
+        textarea.contentEditable = true;
+        // insert textarea somewhere in your document
+        textarea.focus();
+        document.execCommand("paste");
+        navigator.clipboard.readText().then(
+            clipText => textarea.textContent = clipText);
+        // retrieve the pasted text with textarea.textContent
+        // remove textarea from the document
+        console.log(textarea.textContent);*/
+
+        navigator.permissions.query({name: "clipboard-read"}).then(result => {
+        // If permission to read the clipboard is granted or if the user will
+        // be prompted to allow it, we proceed.
+
+        if (result.state == "granted" || result.state == "prompt") {
+            navigator.clipboard.read().then(data => {
+            for (let i=0; i<data.items.length; i++) {
+                if (data.items[i].type != "image/png") {
+                alert("Clipboard contains non-image data. Unable to access it.");
+                console.log(data.items[i]);
+                } else {
+                const blob = data.items[i].getType("image/png");
+                imgElem.src = URL.createObjectURL(blob);
+                }
+            }
+            });
+        }
+        });
+
+    });
+    #endif
+
     ImGuiContext& g = *GImGui;
     return g.IO.GetClipboardTextFn ? g.IO.GetClipboardTextFn(g.IO.ClipboardUserData) : "";
 }
 
 void ImGui::SetClipboardText(const char* text)
 {
+    //Emscripten hack to enable copy/paste mechanism in C++ compiled ImGui code
+    #if defined(__EMSCRIPTEN__)
+    EM_ASM({
+        console.log(UTF8ToString($0));
+        var tempInput = document.createElement("input");
+        tempInput.value = UTF8ToString($0);
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+    }, text);
+    #endif
+
     ImGuiContext& g = *GImGui;
     if (g.IO.SetClipboardTextFn)
         g.IO.SetClipboardTextFn(g.IO.ClipboardUserData, text);

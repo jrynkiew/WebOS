@@ -11,7 +11,7 @@ private:
     GLuint textureID = 0;
     
 public:
-    GLuint getImage() {return textureID;};
+    void* getImage()    {return (void*)(intptr_t)textureID; };
     void loadTextureFromFile(const char* file, GLuint* textureID);
 
     webos_image();

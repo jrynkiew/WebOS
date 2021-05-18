@@ -5,6 +5,9 @@ WebOS::WebOS() {
 	//Initiate connection to ImGui Style pointer
 	this->imGuiStylePtr = &ImGui::GetStyle();
 
+    // Set WebOS style
+    setStyle(); 
+
     //Load WebOS icons
     webos_icon*	icon_JRPC = new webos_icon("images/io1m43dzu4q5klmhu9yffperyrugu8dag58kq9syu.png", 32, 32);
     icons.push_back(icon_JRPC);
@@ -12,8 +15,8 @@ WebOS::WebOS() {
     icons.push_back(icon_WebOS);
 
     //Load WebOS images
-    //webos_image* image_WebOS_wallpaper = new webos_image("images/wallpaper.png");
-    //images.push_back(image_WebOS_wallpaper);
+    webos_image* image_WebOS_wallpaper = new webos_image("images/wallpaper.png");
+    images.push_back(image_WebOS_wallpaper);
 }
 
 //-----------------------------------------------------------------------------

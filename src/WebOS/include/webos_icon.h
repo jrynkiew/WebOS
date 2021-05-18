@@ -11,7 +11,7 @@ private:
     float sizeY;
 public:
 
-    GLuint getIconImage()   { return image->getImage(); };
+    void* getIconImage()    { return image->getImage(); };
     float getIconSizeX()    { return sizeX; }
     float getIconSizeY()    { return sizeY; }
     webos_icon(const char* file, float _sizeX, float _sizeY);

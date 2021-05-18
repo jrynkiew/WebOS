@@ -99,7 +99,7 @@ public:
 	ImGuiID dock_left = NULL;
 
  	void setStyle();
-	 WebOS_style* getStyle() { return &style; }
+	WebOS_style* getStyle() { return &style; }
 	
 	WebOS();
 	~WebOS();

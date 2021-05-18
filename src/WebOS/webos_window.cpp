@@ -187,7 +187,7 @@ static void ShowExampleAppWindowTitles(bool* p_open);
 static void ShowExampleAppCustomRendering(bool* p_open);
 static void ShowExampleMenuFile();
 
-static void ShowWebOSWelcomePopup(bool* p_open);
+static void ShowWebOSWelcomePopup(WebOS* interface, bool* p_open);
 static void ShowWebOSMainMenu(WebOS* interface, bool* show_webos_console_window);
 
 void ImGui::ShowWebOSInterface(void* _interface)
@@ -201,7 +201,7 @@ void ImGui::ShowWebOSInterface(void* _interface)
     static bool show_webos_main_menu = true;
 
     if(show_webos_app_dockspace)        ShowExampleAppDockSpace(interface);     // Process the Docking app first, as explicit DockSpace() nodes needs to be submitted early (read comments near the DockSpace function)
-    if(show_webos_welcome_popup)        ShowWebOSWelcomePopup(&show_webos_welcome_popup);
+    if(show_webos_welcome_popup)        ShowWebOSWelcomePopup(interface, &show_webos_welcome_popup);
     if(show_webos_inroduction_window)   ShowDemoWindow(&show_webos_inroduction_window);
     if(show_webos_console_window)       interface->console.Draw("WebOS Console", &show_webos_console_window);
     if(show_webos_main_menu)            ShowWebOSMainMenu(interface, &show_webos_console_window);
@@ -210,15 +210,20 @@ void ImGui::ShowWebOSInterface(void* _interface)
     if(interface->setup_docking)
     {
         ImGui::DockBuilderAddNode(interface->dockspaceID, ImGuiDockNodeFlags_DockSpace | ImGuiDockNodeFlags_NoWindowMenuButton); // Add empty node
-        ImGui::DockBuilderSetNodeSize(interface->dockspaceID, ImVec2(interface->getStyle()->iconSize.x, 695));
+        ImGui::DockBuilderSetNodeSize(interface->dockspaceID, ImGui::GetCurrentContext()->CurrentViewport->Size);
 
         ImGuiID dock_main_id = interface->dockspaceID; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-        ImGuiID dock_id_prop = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, (interface->getStyle()->iconSize.x / ImGui::GetCurrentContext()->CurrentViewport->Size.x), NULL, &dock_main_id);
+        ImGuiID dock_id_left_menu = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, (interface->getStyle()->iconSize.x / ImGui::GetCurrentContext()->CurrentViewport->Size.x), NULL, &dock_main_id);
+        ImGuiID dock_id_right_panel = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.25f, NULL, &dock_main_id);
 
-        ImGui::DockBuilderDockWindow("MainMenu", dock_id_prop);
+        ImGui::DockBuilderDockWindow("MainMenu", dock_id_left_menu);
+        ImGui::DockBuilderDockWindow("Introduction", dock_id_right_panel);
+
         ImGui::DockBuilderFinish(interface->dockspaceID); 
-        ImGuiDockNode* node = ImGui::DockBuilderGetNode(dock_id_prop);
+
+        ImGuiDockNode* node = ImGui::DockBuilderGetNode(dock_id_left_menu);
 	    node->LocalFlags |= ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResize;
+
         interface->setup_docking = false;
     }
 }
@@ -230,7 +235,7 @@ static void ShowWebOSMainMenu(WebOS* interface, bool* show_webos_console_window)
     ImGui::PushTextWrapPos(0.0f);
      for(int i=0; i<interface->icons.size(); i++)
     {
-        if (ImGui::ImageButton((void*)(intptr_t)(interface->icons[i]->getIconImage()), ImVec2(16,16), ImVec2(0,0), interface->getStyle()->iconSize, 3, ImVec4(0.0f,0.0f,0.0f,0.0f)))
+        if (ImGui::ImageButton(interface->icons[i]->getIconImage(), ImVec2(16,16), ImVec2(0,0), interface->getStyle()->iconSize, 3, ImVec4(0.0f,0.0f,0.0f,0.0f)))
         {
             *show_webos_console_window = !*show_webos_console_window; 
         }
@@ -239,20 +244,23 @@ static void ShowWebOSMainMenu(WebOS* interface, bool* show_webos_console_window)
     ImGui::End();
 }
 
-static void ShowWebOSWelcomePopup(bool* p_open)
+static void ShowWebOSWelcomePopup(WebOS* interface, bool* p_open)
 {
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
     const ImVec2 base_pos = viewport->Pos;
-    ImGui::SetNextWindowSize(ImVec2(365, 210), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(base_pos.x + 100, base_pos.y + 100), ImGuiCond_FirstUseEver);
-    if(!ImGui::Begin("Welcome to IoTeX console", p_open))
+    ImGui::SetNextWindowSize(ImVec2(530, 265), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(base_pos.x + 200, base_pos.y + 200), ImGuiCond_FirstUseEver);
+    if(!ImGui::Begin("Welcome to WebOS!", p_open))
     {
         ImGui::End();
     }
     else
     {
-        ImGui::TextWrapped("Please use the right mouse click to open Menu");
-        ImGui::TextWrapped("Click the JRPC token icon to open command console");
+        ImGui::TextWrapped("Please read this short guide to get started :)");
+        ImGui::Text("Click the JRPC token icon");
+        ImGui::SameLine(0,3); ImGui::Image(interface->icons[0]->getIconImage(), ImVec2(20,20));
+        ImGui::SameLine(0,3); ImGui::Text("on the left menu panel to open IoTeX Console");
+        ImGui::TextWrapped("Use the right configuration panel to learn more about WebOS");
         ImGui::Separator();
         ImGui::TextWrapped("Application average %.3f ms/frame (%.1f FPS)",
                     1000.0f / ImGui::GetIO().Framerate,
@@ -545,7 +553,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
 
     // Main body of the Demo window starts here.
-    if (!ImGui::Begin("Welcome to IoTeX Console for WebOS", p_open, window_flags))
+    if (!ImGui::Begin("Introduction", p_open, window_flags))
     {
         // Early out if the window is collapsed, as an optimization.
         ImGui::End();

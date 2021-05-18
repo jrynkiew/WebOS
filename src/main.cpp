@@ -126,7 +126,6 @@ int main(int, char**)
 
     // Setup WebOS interface
     WebOS* interface = new WebOS();
-    interface->setStyle();
     
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
