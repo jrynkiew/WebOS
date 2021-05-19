@@ -11,9 +11,20 @@
 	<!-- Create the canvas that the C++ code will draw into -->
 	<!-- The <canvas id="canvas"> must never be changed if the ID is different, WeOS will stop functioning in the browser -->
     <canvas id="canvas" class="WebOScanvas" oncontextmenu="event.preventDefault()"></canvas>
+    <textarea id="pasteTarget" style="display:none;"></textarea>
 	
     <!-- Allow the C++ to access the canvas element --> 
     <script type="text/javascript">
+    
+
+        document.addEventListener('paste', function (evt) {
+            evt.preventDefault();
+            clipdata = evt.clipboardData || window.clipboardData;
+            //console.log(clipdata.getData('text/plain'));
+            var textArea = document.getElementById('pasteTarget');
+            textArea.value = clipdata.getData('text/plain');
+            //console.log(textArea.value);
+        });
         var canv = document.getElementById('canvas');
         var Module = {
             canvas: canv
