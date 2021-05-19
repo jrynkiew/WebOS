@@ -3409,7 +3409,6 @@ void ImGui::SetClipboardText(const char* text)
     //Emscripten hack to enable copy/paste mechanism in C++ compiled ImGui code
     #if defined(__EMSCRIPTEN__)
     EM_ASM({
-        console.log(UTF8ToString($0));
         var tempInput = document.createElement("input");
         tempInput.value = UTF8ToString($0);
         document.body.appendChild(tempInput);
