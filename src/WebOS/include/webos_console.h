@@ -27,8 +27,9 @@ private:
     std::string           consoleBuffer;
     std::string           requestDataBuffer;
 
-    curl_slist*           curl_headers=NULL;                  //for binaries using curl natively
+    curl_slist*           curl_headers = NULL;                //for binaries using curl natively
     std::vector<const char*> emsc_headers;                    //for emscripten
+    std::vector<const char*> iotex_transfer_params;           //for iotex antenna transfer     
     
     int                   requestDataBufferSize;
     int                   HistoryPos;               // -1: new line, 0..History.Size-1 browsing history.
@@ -86,8 +87,13 @@ private:
     #endif
 
 public:
-    const void Draw(const char* title, bool* p_open);
+    // static bindings for showing windows for Console from webos_window
+    bool show_webos_transfer_window;
 
+    // public functions
+    const void Draw(const char* title, bool* p_open);
+    const void showTransferWindow(bool* p_open);
+    
     webos_console(/* args */);
     ~webos_console();
 };

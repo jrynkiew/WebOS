@@ -198,14 +198,14 @@ void ImGui::ShowWebOSInterface(void* _interface)
     static bool show_webos_welcome_popup = true;
     static bool show_webos_inroduction_window = true;
     static bool show_webos_console_window = false;
-    static bool show_webos_main_menu = true;
+    static bool show_webos_main_menu = true; 
 
-    if(show_webos_app_dockspace)        ShowExampleAppDockSpace(interface);     // Process the Docking app first, as explicit DockSpace() nodes needs to be submitted early (read comments near the DockSpace function)
-    if(show_webos_welcome_popup)        ShowWebOSWelcomePopup(interface, &show_webos_welcome_popup);
-    if(show_webos_inroduction_window)   ShowDemoWindow(&show_webos_inroduction_window);
-    if(show_webos_console_window)       interface->console.Draw("WebOS Console", &show_webos_console_window);
-    if(show_webos_main_menu)            ShowWebOSMainMenu(interface, &show_webos_console_window);
-
+    if(show_webos_app_dockspace)            ShowExampleAppDockSpace(interface);     // Process the Docking app first, as explicit DockSpace() nodes needs to be submitted early (read comments near the DockSpace function)
+    if(show_webos_welcome_popup)            ShowWebOSWelcomePopup(interface, &show_webos_welcome_popup);
+    if(show_webos_inroduction_window)       ShowDemoWindow(&show_webos_inroduction_window);
+    if(show_webos_console_window)           interface->console.Draw("WebOS Console", &show_webos_console_window);
+    if(show_webos_main_menu)                ShowWebOSMainMenu(interface, &show_webos_console_window);
+    if(interface->console.show_webos_transfer_window)   interface->console.showTransferWindow(&interface->console.show_webos_transfer_window);
 
     if(interface->setup_docking)
     {

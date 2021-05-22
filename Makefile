@@ -122,7 +122,7 @@ EMS += -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
 #enable fetching like curl from within emscripten
 EMS += -s FETCH=1
 #enable asyncify
-EMS += -s ASYNCIFY
+EMS += -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=["emscripten_asm_const_int", "emscripten_asm_const_async_on_main_thread"]'
 
 #enable BOOST library for 4096 ints
 EMS += -s USE_BOOST_HEADERS=1

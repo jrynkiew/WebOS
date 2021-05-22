@@ -2,92 +2,171 @@
 
 webos_console::webos_console(/* args */)
 {
+    show_webos_transfer_window = false;
+
     ClearLog();
     memset(InputBuf, 0, sizeof(InputBuf));
+
     HistoryPos = -1;
+
     Commands.push_back("HELP\n");
     Commands.push_back("HISTORY\n");
     Commands.push_back("CLEAR\n");
     Commands.push_back("FETCH [url]\n");
     Commands.push_back("IOCTL\n");
     Commands.push_back("CURL\n");
+
     AutoScroll = true;
     ScrollToBottom = false;
 
     consoleBuffer.append("[warning] This feature is still under development \n");
 }
 
-const void webos_console::Draw(const char* title, bool* p_open)
+// Helper to display a little (?) mark which shows a tooltip when hovered.
+// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.md)
+static void HelpMarker(const char* desc)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
     {
-        if (!ImGui::Begin(title, p_open))
-        {
-            ImGui::End();
-            return;
-        }
-        if (ImGui::BeginPopupContextItem())
-        {
-            if (ImGui::MenuItem("Close"))
-                *p_open = false;
-            ImGui::EndPopup();
-        }
-        ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
-           
-        if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-            consoleBuffer.append("Running command: ./ioctl bc info \n");
-            //fetch("https://89.70.221.154/");
-        } 
-
-        ImGui::SameLine();
-        if (ImGui::SmallButton("Commit Transaction")) { 
-            consoleBuffer.append("[error] Wallet not connected \n");
-        } ImGui::SameLine();
-        if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
-        bool copy_to_clipboard = ImGui::SmallButton("Copy");
-
-        const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, 1 input text
-        ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false, ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
-        if (ImGui::BeginPopupContextWindow())
-        {
-            if (ImGui::Selectable("Clear")) ClearLog();
-            ImGui::EndPopup();
-        }
-
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4,1)); // Tighten spacing
-        if (copy_to_clipboard)
-            ImGui::LogToClipboard();
-        
-        ImGui::InputTextMultiline("Console", (char*)consoleBuffer.c_str(), strlen(consoleBuffer.c_str()), ImVec2(ImGui::GetWindowContentRegionMax().x, ImGui::GetWindowContentRegionMax().y), ImGuiInputTextFlags_ReadOnly);
-    
-        if (copy_to_clipboard)
-            ImGui::LogFinish();
-
-        if ((AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
-        {
-            ImGui::GetID("Console");
-            ImGui::SetScrollHereY();
-        }
-
-        ImGui::PopStyleVar();
-        ImGui::EndChild();
-
-        bool reclaim_focus = false;
-        if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &InputCallback, (void*)this))
-        {
-            char* s = InputBuf;
-            Strtrim(s);
-            if (s[0])
-                ExecCommand(s);
-            strcpy(s, "");
-            reclaim_focus = true;
-        }
-
-        // Auto-focus on window apparition
-        ImGui::SetItemDefaultFocus();
-        if (reclaim_focus)
-            ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
-
-        ImGui::End();
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
     }
+}
+
+const void webos_console::showTransferWindow(bool* p_open) 
+{
+    ImGui::SetNextWindowSize(ImVec2(483, 334), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(439, 148), ImGuiCond_FirstUseEver);
+    
+    ImGui::Begin("Transfer Window", p_open);
+
+    ImGui::TextWrapped("Fill in all fields and click proceed to complete transaction");
+
+    static char to[64] = ""; ImGui::InputText("to",    to, 64, ImGuiInputTextFlags_CharsNoBlank);
+    ImGui::SameLine(); HelpMarker("to address");
+    static char value[64] = ""; ImGui::InputText("value",    value, 64, ImGuiInputTextFlags_CharsNoBlank);
+    ImGui::SameLine(); HelpMarker("amount of tokens to transfer");    
+    static char gasLimit[64] = ""; ImGui::InputText("gas limit",    gasLimit, 64, ImGuiInputTextFlags_CharsNoBlank);
+    ImGui::SameLine(); HelpMarker("To Do");    
+    static char gasPrice[64] = ""; ImGui::InputText("gas price",    gasPrice, 64, ImGuiInputTextFlags_CharsNoBlank);
+    ImGui::SameLine(); HelpMarker("To Do");   
+    
+    if (ImGui::SmallButton("Cancel"))  { }
+    ImGui::SameLine();
+    if (ImGui::SmallButton("Proceed"))  
+    {
+        #if defined(__EMSCRIPTEN__)
+        MAIN_THREAD_ASYNC_EM_ASM({
+            Asyncify.handleAsync(async () => {
+                let resp = await window.antenna.iotx.sendTransfer({
+                    to: UTF8ToString($0),
+                    from: window.antenna.iotx.accounts[0].address,
+                    value: toRau(UTF8ToString($1), "Iotx"),
+                    gasLimit: UTF8ToString($2),
+                    gasPrice: toRau(UTF8ToString($3), "Qev")
+                });
+            });
+        }, to, value, gasLimit, gasPrice);
+        #endif
+    }
+    ImGui::End();
+}
+
+const void webos_console::Draw(const char* title, bool* p_open)
+{
+    if (!ImGui::Begin(title, p_open))
+    {
+        ImGui::End();
+        return;
+    }
+    if (ImGui::BeginPopupContextItem())
+    {
+        if (ImGui::MenuItem("Close"))
+            *p_open = false;
+        ImGui::EndPopup();
+    }
+    ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
+        
+    if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
+        #if defined(__EMSCRIPTEN__)
+        EM_ASM({
+            window.antenna = new Antenna("https://api.iotex.one:443", {
+                signer: new WsSignerPlugin() 
+            });
+        });
+        #endif
+        consoleBuffer.append("connecting wallet... \n");
+    } 
+
+    ImGui::SameLine();
+    if (ImGui::SmallButton("Commit Transaction")) { 
+        show_webos_transfer_window = !show_webos_transfer_window;
+        /*#if defined(__EMSCRIPTEN__)
+        MAIN_THREAD_ASYNC_EM_ASM({
+            Asyncify.handleAsync(async () => {
+                let resp = await window.antenna.iotx.sendTransfer({
+                    to: "io1098h946aa5us8h4fql6zptv9kjqn7cu9x9uzm0",
+                    from: window.antenna.iotx.accounts[0].address,
+                    value: toRau("1", "Iotx"),
+                    gasLimit: "100000",
+                    gasPrice: toRau("1", "Qev")
+                });
+            });
+        });
+        #endif*/
+        consoleBuffer.append("Please confirm transaction in ioPay wallet\n");
+    } ImGui::SameLine();
+    if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
+    bool copy_to_clipboard = ImGui::SmallButton("Copy");
+
+    const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, 1 input text
+    ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false, ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
+    if (ImGui::BeginPopupContextWindow())
+    {
+        if (ImGui::Selectable("Clear")) ClearLog();
+        ImGui::EndPopup();
+    }
+
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4,1)); // Tighten spacing
+    if (copy_to_clipboard)
+        ImGui::LogToClipboard();
+    
+    ImGui::InputTextMultiline("Console", (char*)consoleBuffer.c_str(), strlen(consoleBuffer.c_str()), ImVec2(ImGui::GetWindowContentRegionMax().x, ImGui::GetWindowContentRegionMax().y), ImGuiInputTextFlags_ReadOnly);
+
+    if (copy_to_clipboard)
+        ImGui::LogFinish();
+
+    if ((AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
+    {
+        ImGui::GetID("Console");
+        ImGui::SetScrollHereY();
+    }
+
+    ImGui::PopStyleVar();
+    ImGui::EndChild();
+
+    bool reclaim_focus = false;
+    if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &InputCallback, (void*)this))
+    {
+        char* s = InputBuf;
+        Strtrim(s);
+        if (s[0])
+            ExecCommand(s);
+        strcpy(s, "");
+        reclaim_focus = true;
+    }
+
+    // Auto-focus on window apparition
+    ImGui::SetItemDefaultFocus();
+    if (reclaim_focus)
+        ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
+
+    ImGui::End();
+}
 
 void webos_console::ExecCommand(const char* command_line)
 {

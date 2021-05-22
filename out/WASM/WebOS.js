@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "d608578d-cd07-4855-9f55-df590399bd6f"
+  "package_uuid": "0d73ad84-e5c8-4c73-b55a-13e7b6ea1ae8"
  });
 })();
 
@@ -1626,7 +1626,23 @@ var ASM_CONSTS = {
  64513: function() {
   window.open("https://mimo.exchange", "_blank");
  },
- 116506: function($0) {
+ 113990: function($0, $1, $2, $3) {
+  Asyncify.handleAsync(async () => {
+   let resp = await window.antenna.iotx.sendTransfer({
+    to: UTF8ToString($0),
+    from: window.antenna.iotx.accounts[0].address,
+    value: toRau(UTF8ToString($1), "Iotx"),
+    gasLimit: UTF8ToString($2),
+    gasPrice: toRau(UTF8ToString($3), "Qev")
+   });
+  });
+ },
+ 114356: function() {
+  window.antenna = new Antenna("https://api.iotex.one:443", {
+   signer: new WsSignerPlugin()
+  });
+ },
+ 117050: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1634,7 +1650,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 152732: function($0, $1, $2) {
+ 153276: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1705,7 +1721,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 154211: function($0, $1, $2, $3, $4) {
+ 154755: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1742,36 +1758,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 155200: function($0) {
+ 155744: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 155293: function() {
+ 155837: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 156518: function() {
+ 157062: function() {
   return screen.width;
  },
- 156545: function() {
+ 157089: function() {
   return screen.height;
  },
- 156573: function() {
+ 157117: function() {
   return window.innerWidth;
  },
- 156605: function() {
+ 157149: function() {
   return window.innerHeight;
  },
- 156683: function($0) {
+ 157227: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 156817: function() {
+ 157361: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1779,7 +1795,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 156983: function() {
+ 157527: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1787,7 +1803,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 157209: function($0) {
+ 157753: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1809,11 +1825,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 157762: function() {
+ 158306: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 157832: function($0, $1, $2, $3) {
+ 158376: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1854,7 +1870,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 159484: function($0, $1, $2, $3) {
+ 160028: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1866,7 +1882,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 159894: function($0, $1) {
+ 160438: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1885,7 +1901,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 160499: function($0, $1) {
+ 161043: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1898,7 +1914,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 160979: function($0) {
+ 161523: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -6493,6 +6509,15 @@ function _eglWaitNative(nativeEngineId) {
  return 1;
 }
 
+function mainThreadEM_ASM(code, sigPtr, argbuf, sync) {
+ var args = readAsmConstArgs(sigPtr, argbuf);
+ return ASM_CONSTS[code].apply(null, args);
+}
+
+function _emscripten_asm_const_async_on_main_thread(code, sigPtr, argbuf) {
+ return mainThreadEM_ASM(code, sigPtr, argbuf, 0);
+}
+
 function _emscripten_asm_const_int(code, sigPtr, argbuf) {
  var args = readAsmConstArgs(sigPtr, argbuf);
  return ASM_CONSTS[code].apply(null, args);
@@ -10961,7 +10986,7 @@ var Asyncify = {
   return id;
  },
  instrumentWasmImports: function(imports) {
-  var ASYNCIFY_IMPORTS = [ "env.invoke_*", "env.emscripten_sleep", "env.emscripten_wget", "env.emscripten_wget_data", "env.emscripten_idb_load", "env.emscripten_idb_store", "env.emscripten_idb_delete", "env.emscripten_idb_exists", "env.emscripten_idb_load_blob", "env.emscripten_idb_store_blob", "env.SDL_Delay", "env.emscripten_scan_registers", "env.emscripten_lazy_load_code", "env.emscripten_fiber_swap", "wasi_snapshot_preview1.fd_sync", "env.__wasi_fd_sync", "env._emval_await" ].map(function(x) {
+  var ASYNCIFY_IMPORTS = [ "env.emscripten_asm_const_int", "env.emscripten_asm_const_async_on_main_thread", "env.invoke_*", "env.emscripten_sleep", "env.emscripten_wget", "env.emscripten_wget_data", "env.emscripten_idb_load", "env.emscripten_idb_store", "env.emscripten_idb_delete", "env.emscripten_idb_exists", "env.emscripten_idb_load_blob", "env.emscripten_idb_store_blob", "env.SDL_Delay", "env.emscripten_scan_registers", "env.emscripten_lazy_load_code", "env.emscripten_fiber_swap", "wasi_snapshot_preview1.fd_sync", "env.__wasi_fd_sync", "env._emval_await" ].map(function(x) {
    return x.split(".")[1];
   });
   for (var x in imports) {
@@ -11273,6 +11298,7 @@ var asmLibraryArg = {
  "eglTerminate": _eglTerminate,
  "eglWaitGL": _eglWaitGL,
  "eglWaitNative": _eglWaitNative,
+ "emscripten_asm_const_async_on_main_thread": _emscripten_asm_const_async_on_main_thread,
  "emscripten_asm_const_int": _emscripten_asm_const_int,
  "emscripten_exit_fullscreen": _emscripten_exit_fullscreen,
  "emscripten_exit_pointerlock": _emscripten_exit_pointerlock,
