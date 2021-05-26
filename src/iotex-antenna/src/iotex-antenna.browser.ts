@@ -7,4 +7,3 @@ import { toRau } from "./account/utils";
 window.WsSignerPlugin = WsSignerPlugin;
 window.Antenna = Antenna;
 window.toRau = toRau;
-

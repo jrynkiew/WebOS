@@ -90,37 +90,25 @@ const void webos_console::Draw(const char* title, bool* p_open)
         ImGui::EndPopup();
     }
     ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
-        
     if (ImGui::SmallButton("Connect ioPay Wallet"))  { 
-        #if defined(__EMSCRIPTEN__)
-        EM_ASM({
-            window.antenna = new Antenna("https://api.iotex.one:443", {
-                signer: new WsSignerPlugin() 
-            });
-        });
-        #endif
-        consoleBuffer.append("connecting wallet... \n");
-    } 
-
+    
+        wallet.init();
+        if(wallet.checkWalletStatus())
+        {
+            AddLog("Wallet Connected!");
+        }
+        else {
+            AddLog("Wallet not detected! Please open ioPay Desktop open unlock it!");
+        } 
+    }
     ImGui::SameLine();
     if (ImGui::SmallButton("Commit Transaction")) { 
         show_webos_transfer_window = !show_webos_transfer_window;
-        /*#if defined(__EMSCRIPTEN__)
-        MAIN_THREAD_ASYNC_EM_ASM({
-            Asyncify.handleAsync(async () => {
-                let resp = await window.antenna.iotx.sendTransfer({
-                    to: "io1098h946aa5us8h4fql6zptv9kjqn7cu9x9uzm0",
-                    from: window.antenna.iotx.accounts[0].address,
-                    value: toRau("1", "Iotx"),
-                    gasLimit: "100000",
-                    gasPrice: toRau("1", "Qev")
-                });
-            });
-        });
-        #endif*/
-        consoleBuffer.append("Please confirm transaction in ioPay wallet\n");
     } ImGui::SameLine();
-    if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
+    if (ImGui::SmallButton("Clear")) 
+    { 	
+    	ClearLog();
+    } ImGui::SameLine();
     bool copy_to_clipboard = ImGui::SmallButton("Copy");
 
     const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, 1 input text

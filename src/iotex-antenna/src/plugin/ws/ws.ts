@@ -38,9 +38,10 @@ export class WsSignerPlugin implements SignerPlugin {
   }
 
   private init(): void {
-    this.ws = new WebSocket(this.provider);
+    this.ws = new WebSocket(this.provider)
+
     this.ws.onopen = (): void => {
-      window.console.log("[antenna-ws] connected");
+      window.console.log("[antenna-ws] connected");      
     };
     this.ws.onclose = (): void => {
       window.console.log("[antenna-ws] disconnected");

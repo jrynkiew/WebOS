@@ -205,7 +205,10 @@ void ImGui::ShowWebOSInterface(void* _interface)
     if(show_webos_inroduction_window)       ShowDemoWindow(&show_webos_inroduction_window);
     if(show_webos_console_window)           interface->console.Draw("WebOS Console", &show_webos_console_window);
     if(show_webos_main_menu)                ShowWebOSMainMenu(interface, &show_webos_console_window);
-    if(interface->console.show_webos_transfer_window)   interface->console.showTransferWindow(&interface->console.show_webos_transfer_window);
+    if(interface->console.show_webos_transfer_window) {   
+        interface->console.showTransferWindow(&interface->console.show_webos_transfer_window);
+        interface->console.AddLog("Please confirm transaction in ioPay wallet");
+    }
 
     if(interface->setup_docking)
     {

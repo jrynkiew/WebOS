@@ -96987,21 +96987,18 @@ goog.object.extend(exports, proto.iotextypes);
 /*!********************************!*\
   !*** ./src/account/account.ts ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Account, RemoteAccount */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Account", function() { return Account; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RemoteAccount", function() { return RemoteAccount; });
+/* harmony import */ var _crypto_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../crypto/crypto */ "./src/crypto/crypto.ts");
+/* harmony import */ var _crypto_hash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/account/utils.ts");
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
-const crypto_1 = __webpack_require__(/*! ../crypto/crypto */ "./src/crypto/crypto.ts");
-
-const hash_1 = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
-
-const utils_1 = __webpack_require__(/*! ./utils */ "./src/account/utils.ts");
 
 class Account {
   static fromPrivateKey(privateKey) {
@@ -97009,7 +97006,7 @@ class Account {
       throw new Error("private key can not empty.");
     }
 
-    const obj = crypto_1.privateKeyToAccount(privateKey);
+    const obj = Object(_crypto_crypto__WEBPACK_IMPORTED_MODULE_0__["privateKeyToAccount"])(privateKey);
     const act = new Account();
     act.address = obj.address;
     act.privateKey = obj.privateKey;
@@ -97033,7 +97030,7 @@ class Account {
     }
 
     const h = this.hashMessage(data);
-    return Buffer.from(crypto_1.makeSigner(0)(h.toString("hex"), this.privateKey), "hex");
+    return Buffer.from(Object(_crypto_crypto__WEBPACK_IMPORTED_MODULE_0__["makeSigner"])(0)(h.toString("hex"), this.privateKey), "hex");
   }
 
   recover(message, signature, preFixed = false) {
@@ -97044,14 +97041,14 @@ class Account {
     } // @ts-ignore
 
 
-    return crypto_1.recover(bytes, signature);
+    return Object(_crypto_crypto__WEBPACK_IMPORTED_MODULE_0__["recover"])(bytes, signature);
   }
 
   hashMessage(data) {
     let bytes = data;
 
-    if (typeof data === "string" && utils_1.isHexStrict(data)) {
-      bytes = utils_1.hexToBytes(data);
+    if (typeof data === "string" && Object(_utils__WEBPACK_IMPORTED_MODULE_2__["isHexStrict"])(data)) {
+      bytes = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["hexToBytes"])(data);
     } // @ts-ignore
 
 
@@ -97059,13 +97056,10 @@ class Account {
     const preamble = `\x16IoTeX Signed Message:\n${bytes.length}`;
     const preambleBuffer = Buffer.from(preamble);
     const iotexMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return hash_1.hash256b(iotexMessage);
+    return Object(_crypto_hash__WEBPACK_IMPORTED_MODULE_1__["hash256b"])(iotexMessage);
   }
 
 }
-
-exports.Account = Account;
-
 class RemoteAccount extends Account {
   constructor(address, sp) {
     super();
@@ -97082,8 +97076,6 @@ class RemoteAccount extends Account {
   }
 
 }
-
-exports.RemoteAccount = RemoteAccount;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -97092,34 +97084,25 @@ exports.RemoteAccount = RemoteAccount;
 /*!*********************************!*\
   !*** ./src/account/accounts.ts ***!
   \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Accounts */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Accounts", function() { return Accounts; });
+/* harmony import */ var eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eth-lib/lib/account */ "./node_modules/eth-lib/lib/account.js");
+/* harmony import */ var eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _account__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./account */ "./src/account/account.ts");
+/* harmony import */ var _wallet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./wallet */ "./src/account/wallet.ts");
 /* tslint:disable:no-any */
 // @ts-ignore
 
-const account_1 = __importDefault(__webpack_require__(/*! eth-lib/lib/account */ "./node_modules/eth-lib/lib/account.js"));
 
-const account_2 = __webpack_require__(/*! ./account */ "./src/account/account.ts");
-
-const wallet_1 = __importDefault(__webpack_require__(/*! ./wallet */ "./src/account/wallet.ts"));
 
 class Accounts extends Array {
   constructor() {
     super();
-    this.wallet = new wallet_1.default();
+    this.wallet = new _wallet__WEBPACK_IMPORTED_MODULE_2__["default"]();
     return new Proxy(this, {
       get: (target, name) => {
         // @ts-ignore
@@ -97135,21 +97118,21 @@ class Accounts extends Array {
   }
 
   create(entropy) {
-    const acct = account_1.default.create(entropy);
+    const acct = eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_0___default.a.create(entropy);
     const privateKey = acct.privateKey.substr(2);
-    const realAccount = account_2.Account.fromPrivateKey(privateKey);
+    const realAccount = _account__WEBPACK_IMPORTED_MODULE_1__["Account"].fromPrivateKey(privateKey);
     this.wallet.add(realAccount);
     return realAccount;
   }
 
   privateKeyToAccount(privateKey) {
-    const account = account_2.Account.fromPrivateKey(privateKey);
+    const account = _account__WEBPACK_IMPORTED_MODULE_1__["Account"].fromPrivateKey(privateKey);
     this.wallet.add(account);
     return account;
   }
 
   addressToAccount(address) {
-    const account = account_2.Account.fromAddress(address);
+    const account = _account__WEBPACK_IMPORTED_MODULE_1__["Account"].fromAddress(address);
     this.wallet.add(account);
     return account;
   }
@@ -97169,12 +97152,10 @@ class Accounts extends Array {
   }
 
   async sign(data, privateKey) {
-    return account_2.Account.fromPrivateKey(privateKey).sign(data);
+    return _account__WEBPACK_IMPORTED_MODULE_1__["Account"].fromPrivateKey(privateKey).sign(data);
   }
 
 }
-
-exports.Accounts = Accounts;
 
 /***/ }),
 
@@ -97182,27 +97163,27 @@ exports.Accounts = Accounts;
 /*!******************************!*\
   !*** ./src/account/utils.ts ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: fromRau, toRau, fromUtf8, toUtf8, isHexStrict, hexToBytes, validateAddress */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromRau", function() { return fromRau; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toRau", function() { return toRau; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromUtf8", function() { return fromUtf8; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toUtf8", function() { return toUtf8; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isHexStrict", function() { return isHexStrict; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hexToBytes", function() { return hexToBytes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "validateAddress", function() { return validateAddress; });
+/* harmony import */ var bech32__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bech32 */ "./node_modules/bech32/index.js");
+/* harmony import */ var bech32__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bech32__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var bignumber_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bignumber.js */ "./node_modules/bignumber.js/bignumber.js");
+/* harmony import */ var bignumber_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bignumber_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utf8__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utf8 */ "./node_modules/utf8/utf8.js");
+/* harmony import */ var utf8__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(utf8__WEBPACK_IMPORTED_MODULE_2__);
 
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const bech32_1 = __importDefault(__webpack_require__(/*! bech32 */ "./node_modules/bech32/index.js"));
-
-const bignumber_js_1 = __webpack_require__(/*! bignumber.js */ "./node_modules/bignumber.js/bignumber.js");
-
-const utf8_1 = __webpack_require__(/*! utf8 */ "./node_modules/utf8/utf8.js");
 /**
  * fromRau is a function to convert Rau to Iotx.
  * @param rau number of Rau in string
@@ -97210,12 +97191,9 @@ const utf8_1 = __webpack_require__(/*! utf8 */ "./node_modules/utf8/utf8.js");
  * @returns number of unit
  */
 
-
 function fromRau(rau, unit) {
   return convert(rau, unit, "div");
 }
-
-exports.fromRau = fromRau;
 /**
  * toRau is a function to convert various units to Rau.
  * @param num is the number of unit
@@ -97227,10 +97205,8 @@ function toRau(num, unit) {
   return convert(num, unit, "multipliedBy");
 }
 
-exports.toRau = toRau;
-
 function convert(num, unit, operator) {
-  const rauBN = new bignumber_js_1.BigNumber(num);
+  const rauBN = new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"](num);
 
   switch (unit) {
     case "Rau":
@@ -97238,27 +97214,27 @@ function convert(num, unit, operator) {
 
     case "KRau":
       // @ts-ignore
-      return rauBN[operator](new bignumber_js_1.BigNumber("1000")).toString(10);
+      return rauBN[operator](new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"]("1000")).toString(10);
 
     case "MRau":
       // @ts-ignore
-      return rauBN[operator](new bignumber_js_1.BigNumber("1000000")).toString(10);
+      return rauBN[operator](new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"]("1000000")).toString(10);
 
     case "GRau":
       // @ts-ignore
-      return rauBN[operator](new bignumber_js_1.BigNumber("1000000000")).toString(10);
+      return rauBN[operator](new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"]("1000000000")).toString(10);
 
     case "Qev":
       // @ts-ignore
-      return rauBN[operator](new bignumber_js_1.BigNumber("1000000000000")).toString(10);
+      return rauBN[operator](new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"]("1000000000000")).toString(10);
 
     case "Jing":
       // @ts-ignore
-      return rauBN[operator](new bignumber_js_1.BigNumber("1000000000000000")).toString(10);
+      return rauBN[operator](new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"]("1000000000000000")).toString(10);
 
     default:
       // @ts-ignore
-      return rauBN[operator](new bignumber_js_1.BigNumber("1000000000000000000")).toString(10);
+      return rauBN[operator](new bignumber_js__WEBPACK_IMPORTED_MODULE_1__["BigNumber"]("1000000000000000000")).toString(10);
   }
 }
 /**
@@ -97270,7 +97246,7 @@ function convert(num, unit, operator) {
 
 
 function fromUtf8(value) {
-  let eValue = utf8_1.encode(value);
+  let eValue = Object(utf8__WEBPACK_IMPORTED_MODULE_2__["encode"])(value);
   let hex = ""; // remove \u0000 padding from either side
 
   eValue = eValue.replace(/^(?:\u0000)*/, "");
@@ -97286,8 +97262,6 @@ function fromUtf8(value) {
 
   return `${hex}`;
 }
-
-exports.fromUtf8 = fromUtf8;
 /**
  * Should be called to get utf8 from it's hex representation
  *
@@ -97316,10 +97290,8 @@ function toUtf8(hex) {
     result += String.fromCharCode(code);
   }
 
-  return utf8_1.decode(result);
+  return Object(utf8__WEBPACK_IMPORTED_MODULE_2__["decode"])(result);
 }
-
-exports.toUtf8 = toUtf8;
 /**
  * Check if string is HEX, requires a 0x in front
  *
@@ -97330,8 +97302,6 @@ exports.toUtf8 = toUtf8;
 function isHexStrict(hex) {
   return /^(-)?[0-9a-f]*$/i.test(hex);
 }
-
-exports.isHexStrict = isHexStrict;
 /**
  * Convert a hex string to a byte array
  *
@@ -97354,8 +97324,6 @@ function hexToBytes(hex) {
 
   return new Uint8Array(bytes);
 }
-
-exports.hexToBytes = hexToBytes;
 /**
  * validate address for iotex.
  *
@@ -97366,14 +97334,12 @@ exports.hexToBytes = hexToBytes;
 
 function validateAddress(address) {
   try {
-    const payload = bech32_1.default.decode(address);
+    const payload = bech32__WEBPACK_IMPORTED_MODULE_0___default.a.decode(address);
     return payload.prefix === "io";
   } catch (e) {
     return false;
   }
 }
-
-exports.validateAddress = validateAddress;
 
 /***/ }),
 
@@ -97381,37 +97347,34 @@ exports.validateAddress = validateAddress;
 /*!*******************************!*\
   !*** ./src/account/wallet.ts ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default, encrypt, decrypt */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Wallet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encrypt", function() { return encrypt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decrypt", function() { return decrypt; });
+/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! crypto */ "./node_modules/crypto-browserify/index.js");
+/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(crypto__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var randombytes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! randombytes */ "./node_modules/randombytes/browser.js");
+/* harmony import */ var randombytes__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(randombytes__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var scrypt_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! scrypt.js */ "./node_modules/scrypt.js/js.js");
+/* harmony import */ var scrypt_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scrypt_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var uuid_v4__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid/v4 */ "./node_modules/uuid/v4.js");
+/* harmony import */ var uuid_v4__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid_v4__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _crypto_address__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../crypto/address */ "./src/crypto/address.ts");
+/* harmony import */ var _crypto_crypto__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../crypto/crypto */ "./src/crypto/crypto.ts");
+/* harmony import */ var _crypto_hash__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
 /* tslint:disable:no-any */
 
-const crypto_1 = __importDefault(__webpack_require__(/*! crypto */ "./node_modules/crypto-browserify/index.js"));
-
-const randombytes_1 = __importDefault(__webpack_require__(/*! randombytes */ "./node_modules/randombytes/browser.js")); // @ts-ignore
+ // @ts-ignore
 
 
-const scrypt_js_1 = __importDefault(__webpack_require__(/*! scrypt.js */ "./node_modules/scrypt.js/js.js"));
 
-const v4_1 = __importDefault(__webpack_require__(/*! uuid/v4 */ "./node_modules/uuid/v4.js"));
 
-const address_1 = __webpack_require__(/*! ../crypto/address */ "./src/crypto/address.ts");
 
-const crypto_2 = __webpack_require__(/*! ../crypto/crypto */ "./src/crypto/crypto.ts");
 
-const hash_1 = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
 
 function runCipherBuffer(cipher, data) {
   return Buffer.concat([cipher.update(data), cipher.final()]);
@@ -97459,14 +97422,12 @@ class Wallet {
     }
   }
 
-}
-
-exports.default = Wallet; // ported from ethereumjs-wallet
+} // ported from ethereumjs-wallet
 
 function encrypt(privateKey, password, opts = {}) {
-  const account = crypto_2.privateKeyToAccount(privateKey);
-  const salt = opts.salt || randombytes_1.default(32);
-  const iv = opts.iv || randombytes_1.default(16);
+  const account = Object(_crypto_crypto__WEBPACK_IMPORTED_MODULE_5__["privateKeyToAccount"])(privateKey);
+  const salt = opts.salt || randombytes__WEBPACK_IMPORTED_MODULE_1___default()(32);
+  const iv = opts.iv || randombytes__WEBPACK_IMPORTED_MODULE_1___default()(16);
   let derivedKey;
   const kdf = opts.kdf || "scrypt";
   const kdfparams = {
@@ -97477,32 +97438,32 @@ function encrypt(privateKey, password, opts = {}) {
   if (kdf === "pbkdf2") {
     kdfparams.c = opts.c || 262144;
     kdfparams.prf = "hmac-sha256";
-    derivedKey = crypto_1.default.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256");
+    derivedKey = crypto__WEBPACK_IMPORTED_MODULE_0___default.a.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, "sha256");
   } else if (kdf === "scrypt") {
     // FIXME: support progress reporting callback
     kdfparams.n = opts.n || 262144;
     kdfparams.r = opts.r || 8;
     kdfparams.p = opts.p || 1;
-    derivedKey = scrypt_js_1.default(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+    derivedKey = scrypt_js__WEBPACK_IMPORTED_MODULE_2___default()(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
   } else {
     throw new Error("Unsupported kdf");
   }
 
-  const cipher = crypto_1.default.createCipheriv(opts.cipher || "aes-128-ctr", derivedKey.slice(0, 16), iv);
+  const cipher = crypto__WEBPACK_IMPORTED_MODULE_0___default.a.createCipheriv(opts.cipher || "aes-128-ctr", derivedKey.slice(0, 16), iv);
 
   if (!cipher) {
     throw new Error("Unsupported cipher");
   }
 
   const ciphertext = runCipherBuffer(cipher, Buffer.from(privateKey, "hex"));
-  const mac = hash_1.hash256b(Buffer.concat([derivedKey.slice(16, 32), ciphertext]));
+  const mac = Object(_crypto_hash__WEBPACK_IMPORTED_MODULE_6__["hash256b"])(Buffer.concat([derivedKey.slice(16, 32), ciphertext]));
   return {
     version: 3,
     // @ts-ignore
-    id: v4_1.default({
-      random: opts.uuid || randombytes_1.default(16)
+    id: uuid_v4__WEBPACK_IMPORTED_MODULE_3___default()({
+      random: opts.uuid || randombytes__WEBPACK_IMPORTED_MODULE_1___default()(16)
     }),
-    address: String(address_1.fromString(account.address).stringEth()).replace(/^0x/, ""),
+    address: String(Object(_crypto_address__WEBPACK_IMPORTED_MODULE_4__["fromString"])(account.address).stringEth()).replace(/^0x/, ""),
     crypto: {
       ciphertext: ciphertext.toString("hex"),
       cipherparams: {
@@ -97514,9 +97475,7 @@ function encrypt(privateKey, password, opts = {}) {
       mac: mac.toString("hex")
     }
   };
-}
-
-exports.encrypt = encrypt; // ported from ethereumjs-wallet
+} // ported from ethereumjs-wallet
 
 function decrypt(privateKey, password) {
   let derivedKey;
@@ -97525,7 +97484,7 @@ function decrypt(privateKey, password) {
   if (privateKey.crypto.kdf === "scrypt") {
     kdfparams = privateKey.crypto.kdfparams; // FIXME: support progress reporting callback
 
-    derivedKey = scrypt_js_1.default(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+    derivedKey = scrypt_js__WEBPACK_IMPORTED_MODULE_2___default()(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
   } else if (privateKey.crypto.kdf === "pbkdf2") {
     kdfparams = privateKey.crypto.kdfparams;
 
@@ -97533,24 +97492,22 @@ function decrypt(privateKey, password) {
       throw new Error("Unsupported parameters to PBKDF2");
     }
 
-    derivedKey = crypto_1.default.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c || 0, kdfparams.dklen, "sha256");
+    derivedKey = crypto__WEBPACK_IMPORTED_MODULE_0___default.a.pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.c || 0, kdfparams.dklen, "sha256");
   } else {
     throw new Error("Unsupported key derivation scheme");
   }
 
   const ciphertext = Buffer.from(privateKey.crypto.ciphertext, "hex");
-  const mac = hash_1.hash256b(Buffer.concat([derivedKey.slice(16, 32), ciphertext]));
+  const mac = Object(_crypto_hash__WEBPACK_IMPORTED_MODULE_6__["hash256b"])(Buffer.concat([derivedKey.slice(16, 32), ciphertext]));
 
   if (mac.toString("hex") !== privateKey.crypto.mac) {
     throw new Error("Key derivation failed - possibly wrong passphrase");
   }
 
-  const decipher = crypto_1.default.createDecipheriv(privateKey.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(privateKey.crypto.cipherparams.iv, "hex"));
+  const decipher = crypto__WEBPACK_IMPORTED_MODULE_0___default.a.createDecipheriv(privateKey.crypto.cipher, derivedKey.slice(0, 16), Buffer.from(privateKey.crypto.cipherparams.iv, "hex"));
   const seed = runCipherBuffer(decipher, ciphertext);
-  return crypto_2.privateKeyToAccount(seed.toString("hex"));
+  return Object(_crypto_crypto__WEBPACK_IMPORTED_MODULE_5__["privateKeyToAccount"])(seed.toString("hex"));
 }
-
-exports.decrypt = decrypt;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -97559,29 +97516,21 @@ exports.decrypt = decrypt;
 /*!*******************************!*\
   !*** ./src/action/envelop.ts ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Envelop, SealedEnvelop */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Envelop", function() { return Envelop; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SealedEnvelop", function() { return SealedEnvelop; });
+/* harmony import */ var _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../protogen/proto/types/action_pb */ "./protogen/proto/types/action_pb.js");
+/* harmony import */ var _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _crypto_crypto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../crypto/crypto */ "./src/crypto/crypto.ts");
+/* harmony import */ var _crypto_hash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
+/* harmony import */ var _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../rpc-method/types */ "./src/rpc-method/types.ts");
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
-const action_pb_1 = __importDefault(__webpack_require__(/*! ../../protogen/proto/types/action_pb */ "./protogen/proto/types/action_pb.js"));
-
-const crypto_1 = __webpack_require__(/*! ../crypto/crypto */ "./src/crypto/crypto.ts");
-
-const hash_1 = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
-
-const types_1 = __webpack_require__(/*! ../rpc-method/types */ "./src/rpc-method/types.ts");
 
 class Envelop {
   constructor(version, nonce, gasLimit, gasPrice) {
@@ -97595,70 +97544,70 @@ class Envelop {
   core() {
     const gasLimit = this.gasLimit || "0";
     const gasPrice = this.gasPrice || "0";
-    const pbActionCore = new action_pb_1.default.ActionCore();
+    const pbActionCore = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_0___default.a.ActionCore();
     pbActionCore.setVersion(this.version);
     pbActionCore.setNonce(Number(this.nonce));
     pbActionCore.setGaslimit(Number(gasLimit));
     pbActionCore.setGasprice(gasPrice); // oneof action
 
     if (this.transfer) {
-      pbActionCore.setTransfer(types_1.toActionTransfer(this.transfer));
+      pbActionCore.setTransfer(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionTransfer"])(this.transfer));
     } else if (this.execution) {
-      pbActionCore.setExecution(types_1.toActionExecution(this.execution));
+      pbActionCore.setExecution(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionExecution"])(this.execution));
     } else if (this.startSubChain) {
-      pbActionCore.setStartsubchain(types_1.toActionStartSubChain(this.startSubChain));
+      pbActionCore.setStartsubchain(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStartSubChain"])(this.startSubChain));
     } else if (this.stopSubChain) {
-      pbActionCore.setStopsubchain(types_1.toActionStopSubChain(this.stopSubChain));
+      pbActionCore.setStopsubchain(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStopSubChain"])(this.stopSubChain));
     } else if (this.putBlock) {
-      pbActionCore.setPutblock(types_1.toActionPutBlock(this.putBlock));
+      pbActionCore.setPutblock(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPutBlock"])(this.putBlock));
     } else if (this.createDeposit) {
-      pbActionCore.setCreatedeposit(types_1.toActionCreateDeposit(this.createDeposit));
+      pbActionCore.setCreatedeposit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionCreateDeposit"])(this.createDeposit));
     } else if (this.settleDeposit) {
-      pbActionCore.setSettledeposit(types_1.toActionSettleDeposit(this.settleDeposit));
+      pbActionCore.setSettledeposit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionSettleDeposit"])(this.settleDeposit));
     } else if (this.createPlumChain) {
-      pbActionCore.setCreateplumchain(types_1.toActionCreatePlumChain(this.createPlumChain));
+      pbActionCore.setCreateplumchain(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionCreatePlumChain"])(this.createPlumChain));
     } else if (this.terminatePlumChain) {
-      pbActionCore.setTerminateplumchain(types_1.toActionTerminatePlumChain(this.terminatePlumChain));
+      pbActionCore.setTerminateplumchain(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionTerminatePlumChain"])(this.terminatePlumChain));
     } else if (this.plumPutBlock) {
-      pbActionCore.setPlumputblock(types_1.toActionPlumPutBlock(this.plumPutBlock));
+      pbActionCore.setPlumputblock(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumPutBlock"])(this.plumPutBlock));
     } else if (this.plumCreateDeposit) {
-      pbActionCore.setPlumcreatedeposit(types_1.toActionPlumCreateDeposit(this.plumCreateDeposit));
+      pbActionCore.setPlumcreatedeposit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumCreateDeposit"])(this.plumCreateDeposit));
     } else if (this.plumStartExit) {
-      pbActionCore.setPlumstartexit(types_1.toActionPlumStartExit(this.plumStartExit));
+      pbActionCore.setPlumstartexit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumStartExit"])(this.plumStartExit));
     } else if (this.plumChallengeExit) {
-      pbActionCore.setPlumchallengeexit(types_1.toActionPlumChallengeExit(this.plumChallengeExit));
+      pbActionCore.setPlumchallengeexit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumChallengeExit"])(this.plumChallengeExit));
     } else if (this.plumResponseChallengeExit) {
-      pbActionCore.setPlumresponsechallengeexit(types_1.toActionPlumResponseChallengeExit(this.plumResponseChallengeExit));
+      pbActionCore.setPlumresponsechallengeexit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumResponseChallengeExit"])(this.plumResponseChallengeExit));
     } else if (this.plumFinalizeExit) {
-      pbActionCore.setPlumfinalizeexit(types_1.toActionPlumFinalizeExit(this.plumFinalizeExit));
+      pbActionCore.setPlumfinalizeexit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumFinalizeExit"])(this.plumFinalizeExit));
     } else if (this.plumSettleDeposit) {
-      pbActionCore.setPlumsettledeposit(types_1.toActionPlumSettleDeposit(this.plumSettleDeposit));
+      pbActionCore.setPlumsettledeposit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumSettleDeposit"])(this.plumSettleDeposit));
     } else if (this.plumTransfer) {
-      pbActionCore.setPlumtransfer(types_1.toActionPlumTransfer(this.plumTransfer));
+      pbActionCore.setPlumtransfer(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionPlumTransfer"])(this.plumTransfer));
     } else if (this.depositToRewardingFund) {
-      pbActionCore.setDeposittorewardingfund(types_1.toActionDepositToRewardingFund(this.depositToRewardingFund));
+      pbActionCore.setDeposittorewardingfund(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionDepositToRewardingFund"])(this.depositToRewardingFund));
     } else if (this.claimFromRewardingFund) {
-      pbActionCore.setClaimfromrewardingfund(types_1.toActionClaimFromRewardingFund(this.claimFromRewardingFund));
+      pbActionCore.setClaimfromrewardingfund(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionClaimFromRewardingFund"])(this.claimFromRewardingFund));
     } else if (this.grantReward) {
-      pbActionCore.setGrantreward(types_1.toActionGrantReward(this.grantReward));
+      pbActionCore.setGrantreward(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionGrantReward"])(this.grantReward));
     } else if (this.stakeCreate) {
-      pbActionCore.setStakecreate(types_1.toActionStakeCreate(this.stakeCreate));
+      pbActionCore.setStakecreate(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeCreate"])(this.stakeCreate));
     } else if (this.stakeUnstake) {
-      pbActionCore.setStakeunstake(types_1.toActionStakeReclaim(this.stakeUnstake));
+      pbActionCore.setStakeunstake(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeReclaim"])(this.stakeUnstake));
     } else if (this.stakeWithdraw) {
-      pbActionCore.setStakewithdraw(types_1.toActionStakeReclaim(this.stakeWithdraw));
+      pbActionCore.setStakewithdraw(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeReclaim"])(this.stakeWithdraw));
     } else if (this.stakeAddDeposit) {
-      pbActionCore.setStakeadddeposit(types_1.toActionStakeAddDeposit(this.stakeAddDeposit));
+      pbActionCore.setStakeadddeposit(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeAddDeposit"])(this.stakeAddDeposit));
     } else if (this.stakeRestake) {
-      pbActionCore.setStakerestake(types_1.toActionStakeRestake(this.stakeRestake));
+      pbActionCore.setStakerestake(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeRestake"])(this.stakeRestake));
     } else if (this.stakeChangeCandidate) {
-      pbActionCore.setStakechangecandidate(types_1.toActionStakeChangeCandidate(this.stakeChangeCandidate));
+      pbActionCore.setStakechangecandidate(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeChangeCandidate"])(this.stakeChangeCandidate));
     } else if (this.stakeTransferOwnership) {
-      pbActionCore.setStaketransferownership(types_1.toActionStakeTransferOwnership(this.stakeTransferOwnership));
+      pbActionCore.setStaketransferownership(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionStakeTransferOwnership"])(this.stakeTransferOwnership));
     } else if (this.candidateRegister) {
-      pbActionCore.setCandidateregister(types_1.toActionCandidateRegister(this.candidateRegister));
+      pbActionCore.setCandidateregister(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionCandidateRegister"])(this.candidateRegister));
     } else if (this.candidateUpdate) {
-      pbActionCore.setCandidateupdate(types_1.toActionCandidateBasicInfo(this.candidateUpdate));
+      pbActionCore.setCandidateupdate(Object(_rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["toActionCandidateBasicInfo"])(this.candidateUpdate));
     }
 
     return pbActionCore;
@@ -97669,28 +97618,25 @@ class Envelop {
   }
 
   static deserialize(bytes) {
-    const pbActionCore = action_pb_1.default.ActionCore.deserializeBinary(bytes);
+    const pbActionCore = _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_0___default.a.ActionCore.deserializeBinary(bytes);
     const envelop = new Envelop(pbActionCore.getVersion(), String(pbActionCore.getNonce()), String(pbActionCore.getGaslimit()), pbActionCore.getGasprice());
-    envelop.transfer = types_1.GetActionsRequest.fromTransfer(pbActionCore.getTransfer());
-    envelop.execution = types_1.GetActionsRequest.fromExecution(pbActionCore.getExecution());
-    envelop.claimFromRewardingFund = types_1.GetActionsRequest.fromClaimFromRewardingFund(pbActionCore.getClaimfromrewardingfund());
-    envelop.stakeCreate = types_1.GetActionsRequest.fromStakeCreate(pbActionCore.getStakecreate());
-    envelop.stakeUnstake = types_1.GetActionsRequest.fromStakeReclaim(pbActionCore.getStakeunstake());
-    envelop.stakeWithdraw = types_1.GetActionsRequest.fromStakeReclaim(pbActionCore.getStakewithdraw());
-    envelop.stakeAddDeposit = types_1.GetActionsRequest.fromStakeAddDeposit(pbActionCore.getStakeadddeposit());
-    envelop.stakeRestake = types_1.GetActionsRequest.fromStakeRestake(pbActionCore.getStakerestake());
-    envelop.stakeChangeCandidate = types_1.GetActionsRequest.fromStakeChangeCandidate(pbActionCore.getStakechangecandidate());
-    envelop.stakeTransferOwnership = types_1.GetActionsRequest.fromStakeTransferOwnership(pbActionCore.getStaketransferownership());
-    envelop.candidateRegister = types_1.GetActionsRequest.fromCandidateRegister(pbActionCore.getCandidateregister());
-    envelop.candidateUpdate = types_1.GetActionsRequest.fromCandidateUpdate(pbActionCore.getCandidateupdate()); // TODO(tian): add more fields
+    envelop.transfer = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromTransfer(pbActionCore.getTransfer());
+    envelop.execution = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromExecution(pbActionCore.getExecution());
+    envelop.claimFromRewardingFund = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromClaimFromRewardingFund(pbActionCore.getClaimfromrewardingfund());
+    envelop.stakeCreate = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeCreate(pbActionCore.getStakecreate());
+    envelop.stakeUnstake = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeReclaim(pbActionCore.getStakeunstake());
+    envelop.stakeWithdraw = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeReclaim(pbActionCore.getStakewithdraw());
+    envelop.stakeAddDeposit = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeAddDeposit(pbActionCore.getStakeadddeposit());
+    envelop.stakeRestake = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeRestake(pbActionCore.getStakerestake());
+    envelop.stakeChangeCandidate = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeChangeCandidate(pbActionCore.getStakechangecandidate());
+    envelop.stakeTransferOwnership = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromStakeTransferOwnership(pbActionCore.getStaketransferownership());
+    envelop.candidateRegister = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromCandidateRegister(pbActionCore.getCandidateregister());
+    envelop.candidateUpdate = _rpc_method_types__WEBPACK_IMPORTED_MODULE_3__["GetActionsRequest"].fromCandidateUpdate(pbActionCore.getCandidateupdate()); // TODO(tian): add more fields
 
     return envelop;
   }
 
 }
-
-exports.Envelop = Envelop;
-
 class SealedEnvelop {
   constructor(act, senderPubKey, signature) {
     this.act = act;
@@ -97700,7 +97646,7 @@ class SealedEnvelop {
 
   bytestream() {
     const pbActionCore = this.act.core();
-    const pbAction = new action_pb_1.default.Action();
+    const pbAction = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_0___default.a.Action();
     pbAction.setCore(pbActionCore);
     pbAction.setSenderpubkey(this.senderPubKey);
     pbAction.setSignature(this.signature);
@@ -97708,7 +97654,7 @@ class SealedEnvelop {
   }
 
   hash() {
-    return Buffer.from(hash_1.hash256b(this.bytestream())).toString("hex");
+    return Buffer.from(Object(_crypto_hash__WEBPACK_IMPORTED_MODULE_2__["hash256b"])(this.bytestream())).toString("hex");
   }
 
   action() {
@@ -97757,14 +97703,12 @@ class SealedEnvelop {
   }
 
   static sign(privateKey, publicKey, act) {
-    const h = hash_1.hash256b(act.bytestream());
-    const sign = Buffer.from(crypto_1.makeSigner(0)(h.toString("hex"), privateKey), "hex");
+    const h = Object(_crypto_hash__WEBPACK_IMPORTED_MODULE_2__["hash256b"])(act.bytestream());
+    const sign = Buffer.from(Object(_crypto_crypto__WEBPACK_IMPORTED_MODULE_1__["makeSigner"])(0)(h.toString("hex"), privateKey), "hex");
     return new SealedEnvelop(act, Buffer.from(publicKey, "hex"), sign);
   }
 
 }
-
-exports.SealedEnvelop = SealedEnvelop;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -97773,27 +97717,30 @@ exports.SealedEnvelop = SealedEnvelop;
 /*!******************************!*\
   !*** ./src/action/method.ts ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: AbstractMethod, TransferMethod, ExecutionMethod, ClaimFromRewardingFundMethod, StakeCreateMethod, StakeUnstakeMethod, StakeWithdrawMethod, StakeAddDepositMethod, StakeRestakeMethod, StakeChangeCandidateMethod, StakeTransferOwnershipMethod, CandidateRegisterMethod, CandidateUpdateMethod */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AbstractMethod", function() { return AbstractMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransferMethod", function() { return TransferMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExecutionMethod", function() { return ExecutionMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ClaimFromRewardingFundMethod", function() { return ClaimFromRewardingFundMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeCreateMethod", function() { return StakeCreateMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeUnstakeMethod", function() { return StakeUnstakeMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeWithdrawMethod", function() { return StakeWithdrawMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeAddDepositMethod", function() { return StakeAddDepositMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeRestakeMethod", function() { return StakeRestakeMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeChangeCandidateMethod", function() { return StakeChangeCandidateMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StakeTransferOwnershipMethod", function() { return StakeTransferOwnershipMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CandidateRegisterMethod", function() { return CandidateRegisterMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CandidateUpdateMethod", function() { return CandidateUpdateMethod; });
+/* harmony import */ var bignumber_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bignumber.js */ "./node_modules/bignumber.js/bignumber.js");
+/* harmony import */ var bignumber_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bignumber_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _envelop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./envelop */ "./src/action/envelop.ts");
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./types */ "./src/action/types.ts");
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const bignumber_js_1 = __importDefault(__webpack_require__(/*! bignumber.js */ "./node_modules/bignumber.js/bignumber.js"));
-
-const envelop_1 = __webpack_require__(/*! ./envelop */ "./src/action/envelop.ts");
-
-const types_1 = __webpack_require__(/*! ./types */ "./src/action/types.ts");
 
 class AbstractMethod {
   constructor(client, account, opts) {
@@ -97812,7 +97759,7 @@ class AbstractMethod {
       nonce = String(meta.accountMeta && meta.accountMeta.pendingNonce || "");
     }
 
-    return new envelop_1.Envelop(1, nonce, gasLimit, gasPrice);
+    return new _envelop__WEBPACK_IMPORTED_MODULE_1__["Envelop"](1, nonce, gasLimit, gasPrice);
   }
 
   async signAction(envelop) {
@@ -97836,29 +97783,29 @@ class AbstractMethod {
       });
 
       if (meta.accountMeta && meta.accountMeta.balance) {
-        const gasPrice = new bignumber_js_1.default(envelop.gasPrice);
-        const gasLimit = new bignumber_js_1.default(envelop.gasLimit);
-        const balance = new bignumber_js_1.default(meta.accountMeta.balance);
+        const gasPrice = new bignumber_js__WEBPACK_IMPORTED_MODULE_0___default.a(envelop.gasPrice);
+        const gasLimit = new bignumber_js__WEBPACK_IMPORTED_MODULE_0___default.a(envelop.gasLimit);
+        const balance = new bignumber_js__WEBPACK_IMPORTED_MODULE_0___default.a(meta.accountMeta.balance);
 
         if (envelop.transfer) {
-          const amount = new bignumber_js_1.default(envelop.transfer.amount);
+          const amount = new bignumber_js__WEBPACK_IMPORTED_MODULE_0___default.a(envelop.transfer.amount);
 
           if (balance.comparedTo(amount.plus(gasPrice.multipliedBy(gasLimit))) < 0) {
-            throw new types_1.ActionError(types_1.ActionErrorCode.ErrBalance, "Insufficient funds for gas * price + amount");
+            throw new _types__WEBPACK_IMPORTED_MODULE_2__["ActionError"](_types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrBalance, "Insufficient funds for gas * price + amount");
           }
         }
 
         if (envelop.execution) {
-          const amount = new bignumber_js_1.default(envelop.execution.amount);
+          const amount = new bignumber_js__WEBPACK_IMPORTED_MODULE_0___default.a(envelop.execution.amount);
 
           if (balance.comparedTo(amount.plus(gasPrice.multipliedBy(gasLimit))) < 0) {
-            throw new types_1.ActionError(types_1.ActionErrorCode.ErrBalance, "Insufficient funds for gas * price + amount");
+            throw new _types__WEBPACK_IMPORTED_MODULE_2__["ActionError"](_types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrBalance, "Insufficient funds for gas * price + amount");
           }
         }
       }
     }
 
-    return envelop_1.SealedEnvelop.sign(this.account.privateKey, this.account.publicKey, envelop);
+    return _envelop__WEBPACK_IMPORTED_MODULE_1__["SealedEnvelop"].sign(this.account.privateKey, this.account.publicKey, envelop);
   }
 
   async sendAction(envelop) {
@@ -97887,35 +97834,32 @@ class AbstractMethod {
         action: selp.action()
       });
     } catch (e) {
-      let code = types_1.ActionErrorCode.ErrUnknown;
+      let code = _types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrUnknown;
       let message = `send action error: ${JSON.stringify(e)}`;
 
       if (e.details) {
         message = e.details;
 
         if (e.details.match(/^reject existed action .*/)) {
-          code = types_1.ActionErrorCode.ErrExistedAction;
+          code = _types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrExistedAction;
         } else if (e.details.match(/^insufficient balance .*/)) {
-          code = types_1.ActionErrorCode.ErrBalance;
+          code = _types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrBalance;
         } else if (e.details.match(/.* lower than minimal gas price threshold$/)) {
-          code = types_1.ActionErrorCode.ErrGasPrice;
+          code = _types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrGasPrice;
         } else if (e.details === "action source address is blacklisted") {
-          code = types_1.ActionErrorCode.ErrAddress;
+          code = _types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrAddress;
         } else if (e.details.indexOf("nonce") >= 0) {
-          code = types_1.ActionErrorCode.ErrNonce;
+          code = _types__WEBPACK_IMPORTED_MODULE_2__["ActionErrorCode"].ErrNonce;
         }
       }
 
-      throw new types_1.ActionError(code, message);
+      throw new _types__WEBPACK_IMPORTED_MODULE_2__["ActionError"](code, message);
     }
 
     return selp.hash();
   }
 
 }
-
-exports.AbstractMethod = AbstractMethod;
-
 class TransferMethod extends AbstractMethod {
   constructor(client, account, transfer, opts) {
     super(client, account, opts);
@@ -97933,9 +97877,6 @@ class TransferMethod extends AbstractMethod {
   }
 
 }
-
-exports.TransferMethod = TransferMethod;
-
 class ExecutionMethod extends AbstractMethod {
   constructor(client, account, execution, opts) {
     super(client, account, opts);
@@ -97964,9 +97905,6 @@ class ExecutionMethod extends AbstractMethod {
   }
 
 }
-
-exports.ExecutionMethod = ExecutionMethod;
-
 class ClaimFromRewardingFundMethod extends AbstractMethod {
   constructor(client, account, claim, opts) {
     super(client, account, opts);
@@ -97993,9 +97931,6 @@ class ClaimFromRewardingFundMethod extends AbstractMethod {
   }
 
 }
-
-exports.ClaimFromRewardingFundMethod = ClaimFromRewardingFundMethod;
-
 class StakeCreateMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98028,9 +97963,6 @@ class StakeCreateMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeCreateMethod = StakeCreateMethod;
-
 class StakeUnstakeMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98057,9 +97989,6 @@ class StakeUnstakeMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeUnstakeMethod = StakeUnstakeMethod;
-
 class StakeWithdrawMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98086,9 +98015,6 @@ class StakeWithdrawMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeWithdrawMethod = StakeWithdrawMethod;
-
 class StakeAddDepositMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98117,9 +98043,6 @@ class StakeAddDepositMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeAddDepositMethod = StakeAddDepositMethod;
-
 class StakeRestakeMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98150,9 +98073,6 @@ class StakeRestakeMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeRestakeMethod = StakeRestakeMethod;
-
 class StakeChangeCandidateMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98181,9 +98101,6 @@ class StakeChangeCandidateMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeChangeCandidateMethod = StakeChangeCandidateMethod;
-
 class StakeTransferOwnershipMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98212,9 +98129,6 @@ class StakeTransferOwnershipMethod extends AbstractMethod {
   }
 
 }
-
-exports.StakeTransferOwnershipMethod = StakeTransferOwnershipMethod;
-
 class CandidateRegisterMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98257,9 +98171,6 @@ class CandidateRegisterMethod extends AbstractMethod {
   }
 
 }
-
-exports.CandidateRegisterMethod = CandidateRegisterMethod;
-
 class CandidateUpdateMethod extends AbstractMethod {
   constructor(client, account, target, opts) {
     super(client, account, opts);
@@ -98288,8 +98199,6 @@ class CandidateUpdateMethod extends AbstractMethod {
   }
 
 }
-
-exports.CandidateUpdateMethod = CandidateUpdateMethod;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -98298,15 +98207,13 @@ exports.CandidateUpdateMethod = CandidateUpdateMethod;
 /*!*****************************!*\
   !*** ./src/action/types.ts ***!
   \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: ActionErrorCode, ActionError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActionErrorCode", function() { return ActionErrorCode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActionError", function() { return ActionError; });
 var ActionErrorCode;
 
 (function (ActionErrorCode) {
@@ -98316,7 +98223,7 @@ var ActionErrorCode;
   ActionErrorCode[ActionErrorCode["ErrAddress"] = 3] = "ErrAddress";
   ActionErrorCode[ActionErrorCode["ErrGasPrice"] = 4] = "ErrGasPrice";
   ActionErrorCode[ActionErrorCode["ErrUnknown"] = 5] = "ErrUnknown";
-})(ActionErrorCode = exports.ActionErrorCode || (exports.ActionErrorCode = {}));
+})(ActionErrorCode || (ActionErrorCode = {}));
 
 class ActionError extends Error {
   constructor(code, message) {
@@ -98327,33 +98234,27 @@ class ActionError extends Error {
 
 }
 
-exports.ActionError = ActionError;
-
 /***/ }),
 
 /***/ "./src/antenna.ts":
 /*!************************!*\
   !*** ./src/antenna.ts ***!
   \************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Antenna; });
+/* harmony import */ var _contract_contract__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contract/contract */ "./src/contract/contract.ts");
+/* harmony import */ var _iotx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iotx */ "./src/iotx.ts");
+/* harmony import */ var _plugin_ws__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./plugin/ws */ "./src/plugin/ws/index.ts");
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const contract_1 = __webpack_require__(/*! ./contract/contract */ "./src/contract/contract.ts");
-
-const iotx_1 = __webpack_require__(/*! ./iotx */ "./src/iotx.ts");
-
-const ws_1 = __webpack_require__(/*! ./plugin/ws */ "./src/plugin/ws/index.ts");
 
 class Antenna {
   constructor(provider, opts) {
-    this.iotx = new iotx_1.Iotx(provider, {
+    this.iotx = new _iotx__WEBPACK_IMPORTED_MODULE_1__["Iotx"](provider, {
       signer: opts && opts.signer,
       timeout: opts && opts.timeout,
       apiToken: opts && opts.apiToken
@@ -98375,12 +98276,10 @@ class Antenna {
   }
 
 }
-
-exports.default = Antenna;
 Antenna.modules = {
-  Iotx: iotx_1.Iotx,
-  WsSignerPlugin: ws_1.WsSignerPlugin,
-  Contract: contract_1.Contract
+  Iotx: _iotx__WEBPACK_IMPORTED_MODULE_1__["Iotx"],
+  WsSignerPlugin: _plugin_ws__WEBPACK_IMPORTED_MODULE_2__["WsSignerPlugin"],
+  Contract: _contract_contract__WEBPACK_IMPORTED_MODULE_0__["Contract"]
 };
 
 /***/ }),
@@ -98389,39 +98288,26 @@ Antenna.modules = {
 /*!*************************************!*\
   !*** ./src/contract/abi-to-byte.ts ***!
   \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: getAbiFunctions, getArgTypes, getHeaderHash, encodeArguments, Constructor, encodeInputData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-var __importStar = this && this.__importStar || function (mod) {
-  if (mod && mod.__esModule) return mod;
-  var result = {};
-  if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-  result["default"] = mod;
-  return result;
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAbiFunctions", function() { return getAbiFunctions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getArgTypes", function() { return getArgTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getHeaderHash", function() { return getHeaderHash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encodeArguments", function() { return encodeArguments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Constructor", function() { return Constructor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encodeInputData", function() { return encodeInputData; });
+/* harmony import */ var web3_eth_abi__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! web3-eth-abi */ "./node_modules/web3-eth-abi/lib/index.js");
+/* harmony import */ var web3_eth_abi__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(web3_eth_abi__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _crypto_address__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../crypto/address */ "./src/crypto/address.ts");
+/* harmony import */ var _crypto_hash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
 /* tslint:disable:no-any */
 
-const web3_eth_abi_1 = __importDefault(__webpack_require__(/*! web3-eth-abi */ "./node_modules/web3-eth-abi/lib/index.js"));
 
-const address = __importStar(__webpack_require__(/*! ../crypto/address */ "./src/crypto/address.ts"));
 
-const hash_1 = __webpack_require__(/*! ../crypto/hash */ "./src/crypto/hash.ts");
-
-const Abi = web3_eth_abi_1.default;
-
+const Abi = web3_eth_abi__WEBPACK_IMPORTED_MODULE_0___default.a;
 function getAbiFunctions(abi) {
   const abiFunctions = {};
   abi.forEach(f => {
@@ -98430,14 +98316,11 @@ function getAbiFunctions(abi) {
     }
 
     if (f.type === "constructor") {
-      abiFunctions[exports.Constructor] = f;
+      abiFunctions[Constructor] = f;
     }
   });
   return abiFunctions;
 }
-
-exports.getAbiFunctions = getAbiFunctions;
-
 function getArgTypes(fnAbi) {
   const args = [];
   fnAbi.inputs.forEach(field => {
@@ -98448,20 +98331,14 @@ function getArgTypes(fnAbi) {
   });
   return args;
 }
-
-exports.getArgTypes = getArgTypes;
-
 function getHeaderHash(fnAbi, args) {
   const inputs = args.map(i => {
     return i.type;
   });
   const signature = `${fnAbi.name}(${inputs.join(",")})`;
-  const keccak256 = hash_1.hash256b(signature).toString("hex");
+  const keccak256 = Object(_crypto_hash__WEBPACK_IMPORTED_MODULE_2__["hash256b"])(signature).toString("hex");
   return keccak256.slice(0, 8);
 }
-
-exports.getHeaderHash = getHeaderHash;
-
 function encodeArguments(args, userInput) {
   const types = [];
   const values = [];
@@ -98482,12 +98359,12 @@ function encodeArguments(args, userInput) {
       let value = userInput[name];
 
       if (arg.type === "address") {
-        value = address.fromString(value).stringEth();
+        value = _crypto_address__WEBPACK_IMPORTED_MODULE_1__["fromString"](value).stringEth();
       }
 
       if (arg.type === "address[]") {
         for (let i = 0; i < value.length; i++) {
-          value[i] = address.fromString(value[i]).stringEth();
+          value[i] = _crypto_address__WEBPACK_IMPORTED_MODULE_1__["fromString"](value[i]).stringEth();
         }
       }
 
@@ -98504,10 +98381,7 @@ function encodeArguments(args, userInput) {
     throw new Error(`failed to rawEncode: ${e.stack}, types: ${types}, values: ${values}`);
   }
 }
-
-exports.encodeArguments = encodeArguments;
-exports.Constructor = "constructor";
-
+const Constructor = "constructor";
 function encodeInputData(abiByFunc, fnName, userInput) {
   const fnAbi = abiByFunc[fnName];
   const args = getArgTypes(fnAbi);
@@ -98516,48 +98390,36 @@ function encodeInputData(abiByFunc, fnName, userInput) {
   return `${header}${encodedArgs}`;
 }
 
-exports.encodeInputData = encodeInputData;
-
 /***/ }),
 
 /***/ "./src/contract/contract.ts":
 /*!**********************************!*\
   !*** ./src/contract/contract.ts ***!
   \**********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Contract */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Contract", function() { return Contract; });
+/* harmony import */ var web3_eth_abi__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! web3-eth-abi */ "./node_modules/web3-eth-abi/lib/index.js");
+/* harmony import */ var web3_eth_abi__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(web3_eth_abi__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _action_method__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../action/method */ "./src/action/method.ts");
+/* harmony import */ var _crypto_address__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../crypto/address */ "./src/crypto/address.ts");
+/* harmony import */ var _abi_to_byte__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./abi-to-byte */ "./src/contract/abi-to-byte.ts");
 /* tslint:disable:no-any */
 
-const web3_eth_abi_1 = __importDefault(__webpack_require__(/*! web3-eth-abi */ "./node_modules/web3-eth-abi/lib/index.js"));
 
-const method_1 = __webpack_require__(/*! ../action/method */ "./src/action/method.ts");
 
-const address_1 = __webpack_require__(/*! ../crypto/address */ "./src/crypto/address.ts");
 
-const abi_to_byte_1 = __webpack_require__(/*! ./abi-to-byte */ "./src/contract/abi-to-byte.ts");
-
-const Abi = web3_eth_abi_1.default;
-
+const Abi = web3_eth_abi__WEBPACK_IMPORTED_MODULE_0___default.a;
 class Contract {
   constructor( // tslint:disable-next-line: no-any
   jsonInterface, address, options) {
     this.provider = options && options.provider;
 
     if (jsonInterface) {
-      this.abi = abi_to_byte_1.getAbiFunctions(jsonInterface);
+      this.abi = Object(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["getAbiFunctions"])(jsonInterface);
       const methods = {}; // @ts-ignore
 
       for (const fnName of Object.keys(this.abi)) {
@@ -98568,8 +98430,8 @@ class Contract {
           continue;
         }
 
-        const args = abi_to_byte_1.getArgTypes(fnAbi);
-        const header = abi_to_byte_1.getHeaderHash(fnAbi, args); // @ts-ignore
+        const args = Object(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["getArgTypes"])(fnAbi);
+        const header = Object(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["getHeaderHash"])(fnAbi, args); // @ts-ignore
 
         methods[header] = {
           name: fnName,
@@ -98632,7 +98494,7 @@ class Contract {
         }
 
         const methodEnvelop = this.encodeMethod(executeParameter.amount || "0", func, userInput, executeParameter.gasLimit, executeParameter.gasPrice);
-        const method = new method_1.ExecutionMethod(this.provider, executeParameter.account, methodEnvelop, {
+        const method = new _action_method__WEBPACK_IMPORTED_MODULE_1__["ExecutionMethod"](this.provider, executeParameter.account, methodEnvelop, {
           signer: this.options && this.options.signer
         });
         return method.execute();
@@ -98665,8 +98527,8 @@ class Contract {
 
     let data = this.options.data || Buffer.from([]);
 
-    if (this.abi && this.abi.hasOwnProperty(abi_to_byte_1.Constructor)) {
-      const abiFunc = this.abi[abi_to_byte_1.Constructor];
+    if (this.abi && this.abi.hasOwnProperty(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["Constructor"])) {
+      const abiFunc = this.abi[_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["Constructor"]];
       const userInput = {}; // @ts-ignore
 
       if (!abiFunc.inputs || !Array.isArray(abiFunc.inputs)) {
@@ -98680,7 +98542,7 @@ class Contract {
         userInput[val.name] = inputs[i];
       });
       data = Buffer.concat([data, // @ts-ignore
-      Buffer.from(abi_to_byte_1.encodeArguments(abi_to_byte_1.getArgTypes(abiFunc), userInput), "hex")]);
+      Buffer.from(Object(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["encodeArguments"])(Object(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["getArgTypes"])(abiFunc), userInput), "hex")]);
     }
 
     const contractEnvelop = {
@@ -98690,7 +98552,7 @@ class Contract {
       amount: amount || "0",
       data: data
     };
-    return new method_1.ExecutionMethod(this.provider, account, contractEnvelop, {
+    return new _action_method__WEBPACK_IMPORTED_MODULE_1__["ExecutionMethod"](this.provider, account, contractEnvelop, {
       signer: this.options && this.options.signer
     }).execute();
   }
@@ -98735,7 +98597,7 @@ class Contract {
       gasPrice: gasPrice,
       contract: this.address,
       amount: amount,
-      data: Buffer.from(abi_to_byte_1.encodeInputData(this.abi, method, input), "hex")
+      data: Buffer.from(Object(_abi_to_byte__WEBPACK_IMPORTED_MODULE_3__["encodeInputData"])(this.abi, method, input), "hex")
     };
   }
 
@@ -98754,12 +98616,12 @@ class Contract {
 
     for (let i = 0; i < outTypes.length; i++) {
       if (outTypes[i] === "address") {
-        results[i] = address_1.fromBytes(Buffer.from(results[i].substring(2), "hex")).string();
+        results[i] = Object(_crypto_address__WEBPACK_IMPORTED_MODULE_2__["fromBytes"])(Buffer.from(results[i].substring(2), "hex")).string();
       }
 
       if (outTypes[i] === "address[]") {
         for (let j = 0; j < results[i].length; j++) {
-          results[i][j] = address_1.fromBytes(Buffer.from(results[i][j].substring(2), "hex")).string();
+          results[i][j] = Object(_crypto_address__WEBPACK_IMPORTED_MODULE_2__["fromBytes"])(Buffer.from(results[i][j].substring(2), "hex")).string();
         }
       }
     }
@@ -98788,7 +98650,7 @@ class Contract {
 
     for (let i = 0; i < method.inputsTypes.length; i++) {
       if (method.inputsTypes[i] === "address") {
-        params[i] = address_1.fromBytes(Buffer.from(params[i].substring(2), "hex")).string();
+        params[i] = Object(_crypto_address__WEBPACK_IMPORTED_MODULE_2__["fromBytes"])(Buffer.from(params[i].substring(2), "hex")).string();
       } // @ts-ignore
 
 
@@ -98802,8 +98664,6 @@ class Contract {
   }
 
 }
-
-exports.Contract = Contract;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -98812,23 +98672,16 @@ exports.Contract = Contract;
 /*!*******************************!*\
   !*** ./src/crypto/address.ts ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: fromBytes, fromString */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromBytes", function() { return fromBytes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromString", function() { return fromString; });
+/* harmony import */ var bech32__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bech32 */ "./node_modules/bech32/index.js");
+/* harmony import */ var bech32__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bech32__WEBPACK_IMPORTED_MODULE_0__);
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const bech32_1 = __importDefault(__webpack_require__(/*! bech32 */ "./node_modules/bech32/index.js"));
 
 class AddressV1 {
   static prefix() {
@@ -98838,8 +98691,8 @@ class AddressV1 {
 
   string() {
     // @ts-ignore
-    const grouped = bech32_1.default.toWords(this.payload);
-    return bech32_1.default.encode(AddressV1.prefix(), grouped);
+    const grouped = bech32__WEBPACK_IMPORTED_MODULE_0___default.a.toWords(this.payload);
+    return bech32__WEBPACK_IMPORTED_MODULE_0___default.a.encode(AddressV1.prefix(), grouped);
   }
 
   stringEth() {
@@ -98855,7 +98708,6 @@ class AddressV1 {
 AddressV1.ADDRESS_LENGTH = 20;
 AddressV1.MAINNET_PREFIX = "io";
 AddressV1.TESTNET_PREFIX = "it";
-
 function fromBytes(bytes) {
   if (bytes.length !== AddressV1.ADDRESS_LENGTH) {
     throw new Error(`invalid address length in bytes: ${bytes.length}`);
@@ -98865,25 +98717,20 @@ function fromBytes(bytes) {
   addr.payload = bytes;
   return addr;
 }
-
-exports.fromBytes = fromBytes;
-
 function fromString(addrStr) {
   const {
     prefix,
     words
-  } = bech32_1.default.decode(addrStr);
+  } = bech32__WEBPACK_IMPORTED_MODULE_0___default.a.decode(addrStr);
 
   if (prefix !== AddressV1.prefix()) {
     throw new Error(`hrp ${prefix} and address prefix ${AddressV1.prefix()} don't match`);
   }
 
   const addr = new AddressV1();
-  addr.payload = bech32_1.default.fromWords(words);
+  addr.payload = bech32__WEBPACK_IMPORTED_MODULE_0___default.a.fromWords(words);
   return addr;
 }
-
-exports.fromString = fromString;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -98892,74 +98739,63 @@ exports.fromString = fromString;
 /*!******************************!*\
   !*** ./src/crypto/crypto.ts ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: publicKeyToAddress, privateKeyToAccount, makeSigner, recover */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publicKeyToAddress", function() { return publicKeyToAddress; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "privateKeyToAccount", function() { return privateKeyToAccount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeSigner", function() { return makeSigner; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recover", function() { return recover; });
+/* harmony import */ var elliptic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! elliptic */ "./node_modules/elliptic/lib/elliptic.js");
+/* harmony import */ var elliptic__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(elliptic__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! eth-lib/lib/account */ "./node_modules/eth-lib/lib/account.js");
+/* harmony import */ var eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! eth-lib/lib/bytes */ "./node_modules/eth-lib/lib/bytes.js");
+/* harmony import */ var eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _address__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./address */ "./src/crypto/address.ts");
+/* harmony import */ var _hash__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hash */ "./src/crypto/hash.ts");
+ // @ts-ignore
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const elliptic_1 = __importDefault(__webpack_require__(/*! elliptic */ "./node_modules/elliptic/lib/elliptic.js")); // @ts-ignore
+ // @ts-ignore
 
 
-const account_1 = __webpack_require__(/*! eth-lib/lib/account */ "./node_modules/eth-lib/lib/account.js"); // @ts-ignore
 
 
-const bytes_1 = __importDefault(__webpack_require__(/*! eth-lib/lib/bytes */ "./node_modules/eth-lib/lib/bytes.js"));
-
-const address_1 = __webpack_require__(/*! ./address */ "./src/crypto/address.ts");
-
-const hash_1 = __webpack_require__(/*! ./hash */ "./src/crypto/hash.ts");
-
-const secp256k1 = new elliptic_1.default.ec("secp256k1"); // eslint-disable-line
+const secp256k1 = new elliptic__WEBPACK_IMPORTED_MODULE_0___default.a.ec("secp256k1"); // eslint-disable-line
 
 function publicKeyToAddress(publicKey) {
   const key = secp256k1.keyFromPublic(publicKey, "hex");
   const publicKeyBytes = key.getPublic(false, "ByteArray");
-  const hashBytes = hash_1.hash160b(publicKeyBytes.slice(1));
-  return address_1.fromBytes(hashBytes).string();
+  const hashBytes = Object(_hash__WEBPACK_IMPORTED_MODULE_4__["hash160b"])(publicKeyBytes.slice(1));
+  return Object(_address__WEBPACK_IMPORTED_MODULE_3__["fromBytes"])(hashBytes).string();
 }
-
-exports.publicKeyToAddress = publicKeyToAddress;
-
 function privateKeyToAccount(privateKey) {
   const buffer = Buffer.from(privateKey, "hex");
   const ecKey = secp256k1.keyFromPrivate(buffer);
   const publicKey = ecKey.getPublic(false, "hex");
   const publicKeyBytes = ecKey.getPublic(false, "ByteArray");
-  const hashBytes = hash_1.hash160b(publicKeyBytes.slice(1));
-  const adObj = address_1.fromBytes(hashBytes);
+  const hashBytes = Object(_hash__WEBPACK_IMPORTED_MODULE_4__["hash160b"])(publicKeyBytes.slice(1));
+  const adObj = Object(_address__WEBPACK_IMPORTED_MODULE_3__["fromBytes"])(hashBytes);
   return {
     address: adObj.string(),
     publicKey,
     privateKey
   };
 }
-
-exports.privateKeyToAccount = privateKeyToAccount;
-
-exports.makeSigner = addToV => (hash, privateKey) => {
+const makeSigner = addToV => (hash, privateKey) => {
   const signature = secp256k1.keyFromPrivate(Buffer.from(privateKey, "hex")).sign(Buffer.from(hash, "hex"), {
     canonical: true,
     pers: undefined
   });
-  const signed = account_1.encodeSignature([bytes_1.default.fromNumber(addToV + (signature.recoveryParam || 0)), bytes_1.default.pad(32, bytes_1.default.fromNat(`0x${signature.r.toString(16)}`)), bytes_1.default.pad(32, bytes_1.default.fromNat(`0x${signature.s.toString(16)}`))]);
+  const signed = Object(eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_1__["encodeSignature"])([eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default.a.fromNumber(addToV + (signature.recoveryParam || 0)), eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default.a.pad(32, eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default.a.fromNat(`0x${signature.r.toString(16)}`)), eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default.a.pad(32, eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default.a.fromNat(`0x${signature.s.toString(16)}`))]);
   return signed.slice(2);
 };
-
-exports.recover = (hash, signature) => {
-  const vals = account_1.decodeSignature(`0x${signature.toString("hex")}`);
+const recover = (hash, signature) => {
+  const vals = Object(eth_lib_lib_account__WEBPACK_IMPORTED_MODULE_1__["decodeSignature"])(`0x${signature.toString("hex")}`);
   const vrs = {
-    v: bytes_1.default.toNumber(vals[0]),
+    v: eth_lib_lib_bytes__WEBPACK_IMPORTED_MODULE_2___default.a.toNumber(vals[0]),
     r: vals[1].slice(2),
     s: vals[2].slice(2)
   };
@@ -98975,17 +98811,17 @@ exports.recover = (hash, signature) => {
 /*!****************************!*\
   !*** ./src/crypto/hash.ts ***!
   \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: hash160b, hash256b */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-}); // @ts-ignore
-
-const sha3_1 = __webpack_require__(/*! sha3 */ "./node_modules/sha3/index.js"); // Computes the BLAKE2B hash of a string or byte array, and returns a Uint8Array
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hash160b", function() { return hash160b; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hash256b", function() { return hash256b; });
+/* harmony import */ var sha3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sha3 */ "./node_modules/sha3/index.js");
+/* harmony import */ var sha3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sha3__WEBPACK_IMPORTED_MODULE_0__);
+// @ts-ignore
+ // Computes the BLAKE2B hash of a string or byte array, and returns a Uint8Array
 //
 // Returns a n-byte Uint8Array
 //
@@ -98994,22 +98830,16 @@ const sha3_1 = __webpack_require__(/*! sha3 */ "./node_modules/sha3/index.js"); 
 // - key - optional key Uint8Array, up to 64 bytes
 // - outlen - optional output length in bytes, default 64
 
-
 function hash160b(input) {
   const digest = hash256b(input);
   return digest.slice(12);
 }
-
-exports.hash160b = hash160b;
-
 function hash256b(input) {
-  const k = new sha3_1.Keccak(256); // @ts-ignore
+  const k = new sha3__WEBPACK_IMPORTED_MODULE_0__["Keccak"](256); // @ts-ignore
 
   k.update(Buffer.from(input));
   return k.digest();
 }
-
-exports.hash256b = hash256b;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -99018,25 +98848,14 @@ exports.hash256b = hash256b;
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _antenna__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./antenna */ "./src/antenna.ts");
 
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const antenna_1 = __importDefault(__webpack_require__(/*! ./antenna */ "./src/antenna.ts"));
-
-exports.default = antenna_1.default;
+/* harmony default export */ __webpack_exports__["default"] = (_antenna__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
@@ -99052,18 +98871,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var global_window__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! global/window */ "./node_modules/global/window.js");
 /* harmony import */ var global_window__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(global_window__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index */ "./src/index.ts");
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_index__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _plugin_ws_ws__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./plugin/ws/ws */ "./src/plugin/ws/ws.ts");
-/* harmony import */ var _plugin_ws_ws__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_plugin_ws_ws__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _account_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./account/utils */ "./src/account/utils.ts");
-/* harmony import */ var _account_utils__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_account_utils__WEBPACK_IMPORTED_MODULE_3__);
 // @ts-ignore
 
 
 
 
 global_window__WEBPACK_IMPORTED_MODULE_0___default.a.WsSignerPlugin = _plugin_ws_ws__WEBPACK_IMPORTED_MODULE_2__["WsSignerPlugin"];
-global_window__WEBPACK_IMPORTED_MODULE_0___default.a.Antenna = _index__WEBPACK_IMPORTED_MODULE_1___default.a;
+global_window__WEBPACK_IMPORTED_MODULE_0___default.a.Antenna = _index__WEBPACK_IMPORTED_MODULE_1__["default"];
 global_window__WEBPACK_IMPORTED_MODULE_0___default.a.toRau = _account_utils__WEBPACK_IMPORTED_MODULE_3__["toRau"];
 
 /***/ }),
@@ -99072,40 +98888,30 @@ global_window__WEBPACK_IMPORTED_MODULE_0___default.a.toRau = _account_utils__WEB
 /*!*********************!*\
   !*** ./src/iotx.ts ***!
   \*********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Iotx */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Iotx", function() { return Iotx; });
+/* harmony import */ var _account_account__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./account/account */ "./src/account/account.ts");
+/* harmony import */ var _account_accounts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./account/accounts */ "./src/account/accounts.ts");
+/* harmony import */ var _action_method__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./action/method */ "./src/action/method.ts");
+/* harmony import */ var _contract_contract__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contract/contract */ "./src/contract/contract.ts");
+/* harmony import */ var _rpc_method__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./rpc-method */ "./src/rpc-method/browser-rpc-method.ts");
 /* tslint:disable:no-any */
 
-const account_1 = __webpack_require__(/*! ./account/account */ "./src/account/account.ts");
 
-const accounts_1 = __webpack_require__(/*! ./account/accounts */ "./src/account/accounts.ts");
 
-const method_1 = __webpack_require__(/*! ./action/method */ "./src/action/method.ts");
 
-const contract_1 = __webpack_require__(/*! ./contract/contract */ "./src/contract/contract.ts");
 
-const rpc_method_1 = __importDefault(__webpack_require__(/*! ./rpc-method */ "./src/rpc-method/browser-rpc-method.ts"));
-
-class Iotx extends rpc_method_1.default {
+class Iotx extends _rpc_method__WEBPACK_IMPORTED_MODULE_4__["default"] {
   constructor(hostname, opts) {
     super(hostname, {
       timeout: opts && opts.timeout,
       apiToken: opts && opts.apiToken
     });
-    this.accounts = new accounts_1.Accounts();
+    this.accounts = new _account_accounts__WEBPACK_IMPORTED_MODULE_1__["Accounts"]();
     this.signer = opts && opts.signer;
     setTimeout(async () => {
       const signer = this.signer;
@@ -99114,7 +98920,7 @@ class Iotx extends rpc_method_1.default {
         try {
           const accounts = await signer.getAccounts();
           accounts.forEach(account => {
-            this.accounts.addAccount(new account_1.RemoteAccount(account.address, signer));
+            this.accounts.addAccount(new _account_account__WEBPACK_IMPORTED_MODULE_0__["RemoteAccount"](account.address, signer));
           });
         } catch (err) {
           throw new Error(`fetch remote accounts address error: ${err}`);
@@ -99140,7 +98946,7 @@ class Iotx extends rpc_method_1.default {
   async sendTransfer(req) {
     const sender = await this.tryGetAccount(req.from);
     const payload = req.payload || "";
-    return new method_1.TransferMethod(this, sender, {
+    return new _action_method__WEBPACK_IMPORTED_MODULE_2__["TransferMethod"](this, sender, {
       gasLimit: req.gasLimit,
       gasPrice: req.gasPrice,
       amount: req.value,
@@ -99163,7 +98969,7 @@ class Iotx extends rpc_method_1.default {
 
     const sender = await this.tryGetAccount(req.from); // @ts-ignore
 
-    return new contract_1.Contract(req.abi, undefined, {
+    return new _contract_contract__WEBPACK_IMPORTED_MODULE_3__["Contract"](req.abi, undefined, {
       data: req.data,
       provider: this,
       signer: this.signer
@@ -99182,7 +98988,7 @@ class Iotx extends rpc_method_1.default {
 
     const sender = await this.tryGetAccount(req.from); // @ts-ignore
 
-    const contract = new contract_1.Contract(req.abi, req.contractAddress, {
+    const contract = new _contract_contract__WEBPACK_IMPORTED_MODULE_3__["Contract"](req.abi, req.contractAddress, {
       provider: this,
       signer: this.signer
     });
@@ -99204,7 +99010,7 @@ class Iotx extends rpc_method_1.default {
     } // @ts-ignore
 
 
-    const contract = new contract_1.Contract(req.abi, req.contractAddress, {
+    const contract = new _contract_contract__WEBPACK_IMPORTED_MODULE_3__["Contract"](req.abi, req.contractAddress, {
       provider: this,
       signer: this.signer
     });
@@ -99217,7 +99023,7 @@ class Iotx extends rpc_method_1.default {
 
   async claimFromRewardingFund(req) {
     const sender = await this.tryGetAccount(req.from);
-    return new method_1.ClaimFromRewardingFundMethod(this, sender, {
+    return new _action_method__WEBPACK_IMPORTED_MODULE_2__["ClaimFromRewardingFundMethod"](this, sender, {
       gasLimit: req.gasLimit,
       gasPrice: req.gasPrice,
       amount: req.amount,
@@ -99229,29 +99035,21 @@ class Iotx extends rpc_method_1.default {
 
 }
 
-exports.Iotx = Iotx;
-
 /***/ }),
 
 /***/ "./src/plugin/ws/index.ts":
 /*!********************************!*\
   !*** ./src/plugin/ws/index.ts ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: WsSignerPlugin */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ws__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ws */ "./src/plugin/ws/ws.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WsSignerPlugin", function() { return _ws__WEBPACK_IMPORTED_MODULE_0__["WsSignerPlugin"]; });
 
 
-function __export(m) {
-  for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-__export(__webpack_require__(/*! ./ws */ "./src/plugin/ws/ws.ts"));
 
 /***/ }),
 
@@ -99259,31 +99057,23 @@ __export(__webpack_require__(/*! ./ws */ "./src/plugin/ws/ws.ts"));
 /*!*****************************!*\
   !*** ./src/plugin/ws/ws.ts ***!
   \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: WsSignerPlugin */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WsSignerPlugin", function() { return WsSignerPlugin; });
+/* harmony import */ var global_window__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! global/window */ "./node_modules/global/window.js");
+/* harmony import */ var global_window__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(global_window__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var isomorphic_ws__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! isomorphic-ws */ "./node_modules/isomorphic-ws/browser.js");
+/* harmony import */ var isomorphic_ws__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(isomorphic_ws__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _account_account__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../account/account */ "./src/account/account.ts");
+// @ts-ignore
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-}); // @ts-ignore
-
-const window_1 = __importDefault(__webpack_require__(/*! global/window */ "./node_modules/global/window.js"));
-
-const isomorphic_ws_1 = __importDefault(__webpack_require__(/*! isomorphic-ws */ "./node_modules/isomorphic-ws/browser.js"));
-
-const account_1 = __webpack_require__(/*! ../../account/account */ "./src/account/account.ts"); // tslint:disable-next-line:insecure-random
-
+ // tslint:disable-next-line:insecure-random
 
 let reqId = Math.round(Math.random() * 10000);
-
 class WsSignerPlugin {
   constructor(provider = "wss://local.iotex.io:64102", options = {
     retryCount: 3,
@@ -99295,14 +99085,14 @@ class WsSignerPlugin {
   }
 
   init() {
-    this.ws = new isomorphic_ws_1.default(this.provider);
+    this.ws = new isomorphic_ws__WEBPACK_IMPORTED_MODULE_1___default.a(this.provider);
 
     this.ws.onopen = () => {
-      window_1.default.console.log("[antenna-ws] connected");
+      global_window__WEBPACK_IMPORTED_MODULE_0___default.a.console.log("[antenna-ws] connected");
     };
 
     this.ws.onclose = () => {
-      window_1.default.console.log("[antenna-ws] disconnected");
+      global_window__WEBPACK_IMPORTED_MODULE_0___default.a.console.log("[antenna-ws] disconnected");
     };
   }
 
@@ -99324,21 +99114,21 @@ class WsSignerPlugin {
     const readyState = this.ws.readyState;
 
     if (timeoutId) {
-      window_1.default.clearTimeout(timeoutId);
+      global_window__WEBPACK_IMPORTED_MODULE_0___default.a.clearTimeout(timeoutId);
     }
 
     if (retryCount > 0) {
-      const id = window_1.default.setTimeout(() => {
+      const id = global_window__WEBPACK_IMPORTED_MODULE_0___default.a.setTimeout(() => {
         if (readyState === 1) {
           this.ws.send(JSON.stringify(req));
-          window_1.default.clearTimeout(id);
+          global_window__WEBPACK_IMPORTED_MODULE_0___default.a.clearTimeout(id);
         } else {
           const count = retryCount - 1;
           this.reconnectAndSend(count, req, id);
         }
       }, this.options.retryDuration);
     } else {
-      window_1.default.console.error("ws plugin connect error, please retry again later.");
+      global_window__WEBPACK_IMPORTED_MODULE_0___default.a.console.error("ws plugin connect error, please retry again later.");
     }
   }
 
@@ -99375,7 +99165,7 @@ class WsSignerPlugin {
   }
 
   async getAccount(address) {
-    const acct = new account_1.Account();
+    const acct = new _account_account__WEBPACK_IMPORTED_MODULE_2__["Account"]();
     acct.address = address;
     return acct;
   }
@@ -99458,8 +99248,6 @@ class WsSignerPlugin {
   }
 
 }
-
-exports.WsSignerPlugin = WsSignerPlugin;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/node-libs-browser/node_modules/buffer/index.js */ "./node_modules/node-libs-browser/node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -99468,38 +99256,28 @@ exports.WsSignerPlugin = WsSignerPlugin;
 /*!**********************************************!*\
   !*** ./src/rpc-method/browser-rpc-method.ts ***!
   \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RpcMethod; });
+/* harmony import */ var _protogen_proto_api_api_grpc_web_pb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../protogen/proto/api/api_grpc_web_pb */ "./protogen/proto/api/api_grpc_web_pb.js");
+/* harmony import */ var _protogen_proto_api_api_grpc_web_pb__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_protogen_proto_api_api_grpc_web_pb__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./types */ "./src/rpc-method/types.ts");
 
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-const api_grpc_web_pb_1 = __importDefault(__webpack_require__(/*! ../../protogen/proto/api/api_grpc_web_pb */ "./protogen/proto/api/api_grpc_web_pb.js"));
-
-const types_1 = __webpack_require__(/*! ./types */ "./src/rpc-method/types.ts");
-
-const types_2 = __webpack_require__(/*! ./types */ "./src/rpc-method/types.ts");
 
 class RpcMethod {
   constructor(hostname, options = {}) {
-    this.client = new api_grpc_web_pb_1.default.APIServicePromiseClient(hostname, null, null);
+    this.client = new _protogen_proto_api_api_grpc_web_pb__WEBPACK_IMPORTED_MODULE_0___default.a.APIServicePromiseClient(hostname, null, null);
     this.timeout = options.timeout || 300000;
     this.apiToken = options.apiToken;
   }
 
   setProvider(provider) {
     if (typeof provider === "string") {
-      this.client = new api_grpc_web_pb_1.default.APIServicePromiseClient(provider, null, null);
+      this.client = new _protogen_proto_api_api_grpc_web_pb__WEBPACK_IMPORTED_MODULE_0___default.a.APIServicePromiseClient(provider, null, null);
     } else {
       const origin = provider;
       this.client = origin.client;
@@ -99524,106 +99302,104 @@ class RpcMethod {
   }
 
   async getAccount(req) {
-    const pbReq = types_2.GetAccountRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetAccountRequest"].to(req);
     const pbResp = await this.client.getAccount(pbReq, this.getMetadata());
-    return types_2.GetAccountRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetAccountRequest"].from(pbResp);
   }
 
   async getBlockMetas(req) {
-    const pbReq = types_2.GetBlockMetasRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetBlockMetasRequest"].to(req);
     const pbResp = await this.client.getBlockMetas(pbReq, this.getMetadata());
-    return types_2.GetBlockMetasRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetBlockMetasRequest"].from(pbResp);
   }
 
   async getChainMeta(req) {
-    const pbReq = types_2.GetChainMetaRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetChainMetaRequest"].to(req);
     const pbResp = await this.client.getChainMeta(pbReq, this.getMetadata());
-    return types_2.GetChainMetaRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetChainMetaRequest"].from(pbResp);
   }
 
   async getServerMeta(req) {
-    const pbReq = types_1.GetServerMetaRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetServerMetaRequest"].to(req);
     const pbResp = await this.client.getServerMeta(pbReq, this.getMetadata());
-    return types_1.GetServerMetaRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetServerMetaRequest"].from(pbResp);
   }
 
   async getActions(req) {
-    const pbReq = types_2.GetActionsRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetActionsRequest"].to(req);
     const pbResp = await this.client.getActions(pbReq, this.getMetadata());
-    return types_2.GetActionsRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetActionsRequest"].from(pbResp);
   }
 
   async suggestGasPrice(req) {
-    const pbReq = types_2.SuggestGasPriceRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["SuggestGasPriceRequest"].to(req);
     const pbResp = await this.client.suggestGasPrice(pbReq, this.getMetadata());
-    return types_2.SuggestGasPriceRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["SuggestGasPriceRequest"].from(pbResp);
   }
 
   async estimateGasForAction(req) {
-    const pbReq = types_2.EstimateGasForActionRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["EstimateGasForActionRequest"].to(req);
     const pbResp = await this.client.estimateGasForAction(pbReq, this.getMetadata());
-    return types_2.EstimateGasForActionRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["EstimateGasForActionRequest"].from(pbResp);
   }
 
   async readState(req) {
-    const pbReq = types_1.ReadStateRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["ReadStateRequest"].to(req);
     const pbResp = await this.client.readState(pbReq, this.getMetadata());
-    return types_1.ReadStateRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["ReadStateRequest"].from(pbResp);
   }
 
   async readContract(req) {
-    const pbReq = types_2.ReadContractRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["ReadContractRequest"].to(req);
     const pbResp = await this.client.readContract(pbReq, this.getMetadata());
-    return types_2.ReadContractRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["ReadContractRequest"].from(pbResp);
   }
 
   async sendAction(req) {
-    const pbReq = types_2.SendActionRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["SendActionRequest"].to(req);
     const pbResp = await this.client.sendAction(pbReq, this.getMetadata());
-    return types_1.SendActionResponse.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["SendActionResponse"].from(pbResp);
   }
 
   async getReceiptByAction(req) {
-    const pbReq = types_2.GetReceiptByActionRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetReceiptByActionRequest"].to(req);
     const pbResp = await this.client.getReceiptByAction(pbReq, this.getMetadata());
-    return types_2.GetReceiptByActionRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetReceiptByActionRequest"].from(pbResp);
   }
 
   async getEpochMeta(req) {
-    const pbReq = types_2.GetEpochMetaRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetEpochMetaRequest"].to(req);
     const pbResp = await this.client.getEpochMeta(pbReq, this.getMetadata());
-    return types_2.GetEpochMetaRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetEpochMetaRequest"].from(pbResp);
   }
 
   async getLogs(req) {
-    const pbReq = types_1.GetLogsRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["GetLogsRequest"].to(req);
     const pbResp = await this.client.getLogs(pbReq, this.getMetadata());
-    return types_1.GetLogsRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["GetLogsRequest"].from(pbResp);
   }
 
   async estimateActionGasConsumption(req) {
-    const pbReq = types_1.EstimateActionGasConsumptionRequest.to(req);
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["EstimateActionGasConsumptionRequest"].to(req);
     const pbResp = await this.client.estimateActionGasConsumption(pbReq, this.getMetadata());
-    return types_1.EstimateActionGasConsumptionRequest.from(pbResp);
+    return _types__WEBPACK_IMPORTED_MODULE_1__["EstimateActionGasConsumptionRequest"].from(pbResp);
   }
 
   streamBlocks(req) {
-    const pbReq = types_2.StreamBlocksRequest.to(req); // @ts-ignore
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["StreamBlocksRequest"].to(req); // @ts-ignore
 
     const origin = this.client.streamBlocks(pbReq, this.getMetadata());
-    return new types_1.ClientReadableStream(origin, "StreamBlocks");
+    return new _types__WEBPACK_IMPORTED_MODULE_1__["ClientReadableStream"](origin, "StreamBlocks");
   }
 
   streamLogs(req) {
-    const pbReq = types_2.StreamLogsRequest.to(req); // @ts-ignore
+    const pbReq = _types__WEBPACK_IMPORTED_MODULE_1__["StreamLogsRequest"].to(req); // @ts-ignore
 
     const origin = this.client.streamLogs(pbReq, this.getMetadata());
-    return new types_1.ClientReadableStream(origin, "StreamLogs");
+    return new _types__WEBPACK_IMPORTED_MODULE_1__["ClientReadableStream"](origin, "StreamLogs");
   }
 
 }
-
-exports.default = RpcMethod;
 
 /***/ }),
 
@@ -99631,36 +99407,83 @@ exports.default = RpcMethod;
 /*!*********************************!*\
   !*** ./src/rpc-method/types.ts ***!
   \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: GetAccountRequest, GetChainMetaRequest, GetServerMetaRequest, GetBlockMetasRequest, IReadStakingDataMethodName, toActionTransfer, toTimestamp, toActionExecution, toActionStartSubChain, toActionStopSubChain, toActionPutBlock, toActionCreateDeposit, toActionSettleDeposit, toActionCreatePlumChain, toActionTerminatePlumChain, toActionPlumPutBlock, toActionPlumCreateDeposit, toActionPlumStartExit, toActionPlumChallengeExit, toActionPlumResponseChallengeExit, toActionPlumFinalizeExit, toActionPlumSettleDeposit, toActionPlumTransfer, toActionDepositToRewardingFund, toActionClaimFromRewardingFund, toActionGrantReward, toActionStakeCreate, toActionStakeReclaim, toActionStakeAddDeposit, toActionStakeRestake, toActionStakeChangeCandidate, toActionStakeTransferOwnership, toActionCandidateRegister, toActionCandidateBasicInfo, toAction, GetActionsRequest, SuggestGasPriceRequest, ReceiptStatus, GetReceiptByActionRequest, fromPbReceipt, ReadContractRequest, SendActionRequest, SendActionResponse, EstimateGasForActionRequest, ReadStateRequest, GetEpochMetaRequest, GetLogsRequest, EstimateActionGasConsumptionRequest, StreamBlocksRequest, StreamLogsRequest, ClientReadableStream, IReadStakingDataMethodToBuffer, IReadStakingDataRequestToBuffer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(Buffer) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetAccountRequest", function() { return GetAccountRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetChainMetaRequest", function() { return GetChainMetaRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetServerMetaRequest", function() { return GetServerMetaRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetBlockMetasRequest", function() { return GetBlockMetasRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IReadStakingDataMethodName", function() { return IReadStakingDataMethodName; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionTransfer", function() { return toActionTransfer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toTimestamp", function() { return toTimestamp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionExecution", function() { return toActionExecution; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStartSubChain", function() { return toActionStartSubChain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStopSubChain", function() { return toActionStopSubChain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPutBlock", function() { return toActionPutBlock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionCreateDeposit", function() { return toActionCreateDeposit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionSettleDeposit", function() { return toActionSettleDeposit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionCreatePlumChain", function() { return toActionCreatePlumChain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionTerminatePlumChain", function() { return toActionTerminatePlumChain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumPutBlock", function() { return toActionPlumPutBlock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumCreateDeposit", function() { return toActionPlumCreateDeposit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumStartExit", function() { return toActionPlumStartExit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumChallengeExit", function() { return toActionPlumChallengeExit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumResponseChallengeExit", function() { return toActionPlumResponseChallengeExit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumFinalizeExit", function() { return toActionPlumFinalizeExit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumSettleDeposit", function() { return toActionPlumSettleDeposit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionPlumTransfer", function() { return toActionPlumTransfer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionDepositToRewardingFund", function() { return toActionDepositToRewardingFund; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionClaimFromRewardingFund", function() { return toActionClaimFromRewardingFund; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionGrantReward", function() { return toActionGrantReward; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStakeCreate", function() { return toActionStakeCreate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStakeReclaim", function() { return toActionStakeReclaim; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStakeAddDeposit", function() { return toActionStakeAddDeposit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStakeRestake", function() { return toActionStakeRestake; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStakeChangeCandidate", function() { return toActionStakeChangeCandidate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionStakeTransferOwnership", function() { return toActionStakeTransferOwnership; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionCandidateRegister", function() { return toActionCandidateRegister; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toActionCandidateBasicInfo", function() { return toActionCandidateBasicInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toAction", function() { return toAction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetActionsRequest", function() { return GetActionsRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SuggestGasPriceRequest", function() { return SuggestGasPriceRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReceiptStatus", function() { return ReceiptStatus; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetReceiptByActionRequest", function() { return GetReceiptByActionRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromPbReceipt", function() { return fromPbReceipt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReadContractRequest", function() { return ReadContractRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendActionRequest", function() { return SendActionRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendActionResponse", function() { return SendActionResponse; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EstimateGasForActionRequest", function() { return EstimateGasForActionRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReadStateRequest", function() { return ReadStateRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetEpochMetaRequest", function() { return GetEpochMetaRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetLogsRequest", function() { return GetLogsRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EstimateActionGasConsumptionRequest", function() { return EstimateActionGasConsumptionRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StreamBlocksRequest", function() { return StreamBlocksRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StreamLogsRequest", function() { return StreamLogsRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ClientReadableStream", function() { return ClientReadableStream; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IReadStakingDataMethodToBuffer", function() { return IReadStakingDataMethodToBuffer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IReadStakingDataRequestToBuffer", function() { return IReadStakingDataRequestToBuffer; });
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var google_protobuf_google_protobuf_timestamp_pb__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-protobuf/google/protobuf/timestamp_pb */ "./node_modules/google-protobuf/google/protobuf/timestamp_pb.js");
+/* harmony import */ var google_protobuf_google_protobuf_timestamp_pb__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_protobuf_google_protobuf_timestamp_pb__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../protogen/proto/api/api_pb */ "./protogen/proto/api/api_pb.js");
+/* harmony import */ var _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../protogen/proto/api/read_state_pb */ "./protogen/proto/api/read_state_pb.js");
+/* harmony import */ var _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../protogen/proto/types/action_pb */ "./protogen/proto/types/action_pb.js");
+/* harmony import */ var _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4__);
 /* tslint:disable:no-any */
 
-const events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 
-const timestamp_pb_1 = __webpack_require__(/*! google-protobuf/google/protobuf/timestamp_pb */ "./node_modules/google-protobuf/google/protobuf/timestamp_pb.js");
 
-const api_pb_1 = __importDefault(__webpack_require__(/*! ../../protogen/proto/api/api_pb */ "./protogen/proto/api/api_pb.js"));
 
-const read_state_pb_1 = __webpack_require__(/*! ../../protogen/proto/api/read_state_pb */ "./protogen/proto/api/read_state_pb.js");
 
-const action_pb_1 = __importDefault(__webpack_require__(/*! ../../protogen/proto/types/action_pb */ "./protogen/proto/types/action_pb.js"));
-
-exports.GetAccountRequest = {
+const GetAccountRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.GetAccountRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetAccountRequest();
     pbReq.setAddress(req.address);
     return pbReq;
   },
@@ -99686,10 +99509,10 @@ exports.GetAccountRequest = {
   }
 
 };
-exports.GetChainMetaRequest = {
+const GetChainMetaRequest = {
   // @ts-ignore
   to(req) {
-    return new api_pb_1.default.GetChainMetaRequest();
+    return new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetChainMetaRequest();
   },
 
   from(pbRes) {
@@ -99717,10 +99540,10 @@ exports.GetChainMetaRequest = {
 
 }; // @ts-ignore
 
-exports.GetServerMetaRequest = {
+const GetServerMetaRequest = {
   // @ts-ignore
   to(req) {
-    return new api_pb_1.default.GetServerMetaRequest();
+    return new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetServerMetaRequest();
   },
 
   from(pbRes) {
@@ -99744,12 +99567,12 @@ exports.GetServerMetaRequest = {
   }
 
 };
-exports.GetBlockMetasRequest = {
+const GetBlockMetasRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.GetBlockMetasRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetBlockMetasRequest();
 
     if (req.byIndex) {
-      const pbReqByIndex = new api_pb_1.default.GetBlockMetasByIndexRequest();
+      const pbReqByIndex = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetBlockMetasByIndexRequest();
 
       if (req.byIndex.start) {
         pbReqByIndex.setStart(req.byIndex.start);
@@ -99761,7 +99584,7 @@ exports.GetBlockMetasRequest = {
 
       pbReq.setByindex(pbReqByIndex);
     } else if (req.byHash) {
-      const pbReqByHash = new api_pb_1.default.GetBlockMetaByHashRequest();
+      const pbReqByHash = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetBlockMetaByHashRequest();
       pbReqByHash.setBlkhash(req.byHash.blkHash);
       pbReq.setByhash(pbReqByHash);
     }
@@ -99813,24 +99636,21 @@ var IReadStakingDataMethodName;
   IReadStakingDataMethodName[IReadStakingDataMethodName["CANDIDATE_BY_ADDRESS"] = 7] = "CANDIDATE_BY_ADDRESS";
   IReadStakingDataMethodName[IReadStakingDataMethodName["TOTAL_STAKING_AMOUNT"] = 8] = "TOTAL_STAKING_AMOUNT";
   IReadStakingDataMethodName[IReadStakingDataMethodName["BUCKETS_COUNT"] = 9] = "BUCKETS_COUNT";
-})(IReadStakingDataMethodName = exports.IReadStakingDataMethodName || (exports.IReadStakingDataMethodName = {}));
+})(IReadStakingDataMethodName || (IReadStakingDataMethodName = {}));
 
 function toActionTransfer(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbTransfer = new action_pb_1.default.Transfer();
+  const pbTransfer = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.Transfer();
   pbTransfer.setAmount(req.amount);
   pbTransfer.setRecipient(req.recipient);
   pbTransfer.setPayload(req.payload);
   return pbTransfer;
 }
-
-exports.toActionTransfer = toActionTransfer;
-
 function toTimestamp(timestamp) {
-  const ts = new timestamp_pb_1.Timestamp();
+  const ts = new google_protobuf_google_protobuf_timestamp_pb__WEBPACK_IMPORTED_MODULE_1__["Timestamp"]();
 
   if (timestamp) {
     ts.setSeconds(timestamp.seconds);
@@ -99839,29 +99659,23 @@ function toTimestamp(timestamp) {
 
   return ts;
 }
-
-exports.toTimestamp = toTimestamp;
-
 function toActionExecution(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbExecution = new action_pb_1.default.Execution();
+  const pbExecution = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.Execution();
   pbExecution.setAmount(req.amount);
   pbExecution.setContract(req.contract);
   pbExecution.setData(req.data);
   return pbExecution;
 }
-
-exports.toActionExecution = toActionExecution;
-
 function toActionStartSubChain(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStartSubChain = new action_pb_1.default.StartSubChain();
+  const pbStartSubChain = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StartSubChain();
   pbStartSubChain.setChainid(req.chainID);
   pbStartSubChain.setSecuritydeposit(req.securityDeposit);
   pbStartSubChain.setOperationdeposit(req.operationDeposit);
@@ -99869,15 +99683,12 @@ function toActionStartSubChain(req) {
   pbStartSubChain.setParentheightoffset(req.parentHeightOffset);
   return pbStartSubChain;
 }
-
-exports.toActionStartSubChain = toActionStartSubChain;
-
 function toActionStopSubChain(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStopSubChain = new action_pb_1.default.StopSubChain(); // @ts-ignore
+  const pbStopSubChain = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StopSubChain(); // @ts-ignore
 
   pbStopSubChain.setChainid(req.chainID); // @ts-ignore
 
@@ -99886,9 +99697,6 @@ function toActionStopSubChain(req) {
   pbStopSubChain.setSubchainaddress(req.subChainAddress);
   return pbStopSubChain;
 }
-
-exports.toActionStopSubChain = toActionStopSubChain;
-
 function toActionPutBlock(req) {
   if (!req) {
     return undefined;
@@ -99900,91 +99708,73 @@ function toActionPutBlock(req) {
   if (req.roots && roots) {
     for (let i = 0; i < req.roots.length; i++) {
       const rootItem = req.roots && req.roots[i];
-      const mkroot = new action_pb_1.default.MerkleRoot();
+      const mkroot = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.MerkleRoot();
       mkroot.setName(rootItem.name);
       mkroot.setValue(rootItem.value);
       rootList[i] = mkroot;
     }
   }
 
-  const pbPutBlock = new action_pb_1.default.PutBlock();
+  const pbPutBlock = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PutBlock();
   pbPutBlock.setSubchainaddress(req.subChainAddress);
   pbPutBlock.setHeight(req.height);
   pbPutBlock.setRootsList(rootList);
   return pbPutBlock;
 }
-
-exports.toActionPutBlock = toActionPutBlock;
-
 function toActionCreateDeposit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbCreateDeposit = new action_pb_1.default.CreateDeposit();
+  const pbCreateDeposit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.CreateDeposit();
   pbCreateDeposit.setChainid(req.chainID);
   pbCreateDeposit.setAmount(req.amount);
   pbCreateDeposit.setRecipient(req.recipient);
   return pbCreateDeposit;
 }
-
-exports.toActionCreateDeposit = toActionCreateDeposit;
-
 function toActionSettleDeposit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbSettleDeposit = new action_pb_1.default.SettleDeposit();
+  const pbSettleDeposit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.SettleDeposit();
   pbSettleDeposit.setAmount(req.amount);
   pbSettleDeposit.setRecipient(req.recipient);
   pbSettleDeposit.setIndex(req.index);
   return pbSettleDeposit;
 }
-
-exports.toActionSettleDeposit = toActionSettleDeposit;
-
 function toActionCreatePlumChain(req) {
   if (!req) {
     return undefined;
   }
 
-  return new action_pb_1.default.CreatePlumChain();
+  return new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.CreatePlumChain();
 }
-
-exports.toActionCreatePlumChain = toActionCreatePlumChain;
-
 function toActionTerminatePlumChain(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbTerminatePlumChain = new action_pb_1.default.TerminatePlumChain();
+  const pbTerminatePlumChain = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.TerminatePlumChain();
   pbTerminatePlumChain.setSubchainaddress(req.subChainAddress);
   return pbTerminatePlumChain;
 }
-
-exports.toActionTerminatePlumChain = toActionTerminatePlumChain;
-
 function toActionPlumPutBlock(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumPutBlock = new action_pb_1.default.PlumPutBlock();
+  const pbPlumPutBlock = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumPutBlock();
   pbPlumPutBlock.setSubchainaddress(req.subChainAddress);
   pbPlumPutBlock.setHeight(req.height);
   return pbPlumPutBlock;
 }
-
-exports.toActionPlumPutBlock = toActionPlumPutBlock;
-
 function toActionPlumCreateDeposit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumCreateDeposit = new action_pb_1.default.PlumCreateDeposit(); // @ts-ignore
+  const pbPlumCreateDeposit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumCreateDeposit(); // @ts-ignore
 
   pbPlumCreateDeposit.setSubchainaddress(req.subChainAddress); // @ts-ignore
 
@@ -99993,15 +99783,12 @@ function toActionPlumCreateDeposit(req) {
   pbPlumCreateDeposit.setRecipient(req.recipient);
   return pbPlumCreateDeposit;
 }
-
-exports.toActionPlumCreateDeposit = toActionPlumCreateDeposit;
-
 function toActionPlumStartExit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumStartExit = new action_pb_1.default.PlumStartExit();
+  const pbPlumStartExit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumStartExit();
   pbPlumStartExit.setSubchainaddress(req.subChainAddress);
   pbPlumStartExit.setPrevioustransfer(req.previousTransfer);
   pbPlumStartExit.setPrevioustransferblockproof(req.previousTransferBlockProof);
@@ -100011,15 +99798,12 @@ function toActionPlumStartExit(req) {
   pbPlumStartExit.setExittransferblockheight(req.exitTransferBlockHeight);
   return pbPlumStartExit;
 }
-
-exports.toActionPlumStartExit = toActionPlumStartExit;
-
 function toActionPlumChallengeExit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumChallengeExit = new action_pb_1.default.PlumChallengeExit();
+  const pbPlumChallengeExit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumChallengeExit();
   pbPlumChallengeExit.setSubchainaddress(req.subChainAddress);
   pbPlumChallengeExit.setCoinid(req.coinID);
   pbPlumChallengeExit.setChallengetransfer(req.challengeTransfer);
@@ -100027,15 +99811,12 @@ function toActionPlumChallengeExit(req) {
   pbPlumChallengeExit.setChallengetransferblockheight(req.challengeTransferBlockHeight);
   return pbPlumChallengeExit;
 }
-
-exports.toActionPlumChallengeExit = toActionPlumChallengeExit;
-
 function toActionPlumResponseChallengeExit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumResponseChallengeExit = new action_pb_1.default.PlumResponseChallengeExit();
+  const pbPlumResponseChallengeExit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumResponseChallengeExit();
   pbPlumResponseChallengeExit.setSubchainaddress(req.subChainAddress);
   pbPlumResponseChallengeExit.setCoinid(req.coinID);
   pbPlumResponseChallengeExit.setChallengetransfer(req.challengeTransfer);
@@ -100043,95 +99824,74 @@ function toActionPlumResponseChallengeExit(req) {
   pbPlumResponseChallengeExit.setResponsetransferblockproof(req.responseTransferBlockProof);
   return pbPlumResponseChallengeExit;
 }
-
-exports.toActionPlumResponseChallengeExit = toActionPlumResponseChallengeExit;
-
 function toActionPlumFinalizeExit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumFinalizeExit = new action_pb_1.default.PlumFinalizeExit();
+  const pbPlumFinalizeExit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumFinalizeExit();
   pbPlumFinalizeExit.setSubchainaddress(req.subChainAddress);
   pbPlumFinalizeExit.setCoinid(req.coinID);
   return pbPlumFinalizeExit;
 }
-
-exports.toActionPlumFinalizeExit = toActionPlumFinalizeExit;
-
 function toActionPlumSettleDeposit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumSettleDeposit = new action_pb_1.default.PlumSettleDeposit();
+  const pbPlumSettleDeposit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumSettleDeposit();
   pbPlumSettleDeposit.setCoinid(req.coinID);
   return pbPlumSettleDeposit;
 }
-
-exports.toActionPlumSettleDeposit = toActionPlumSettleDeposit;
-
 function toActionPlumTransfer(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbPlumTransfer = new action_pb_1.default.PlumTransfer();
+  const pbPlumTransfer = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.PlumTransfer();
   pbPlumTransfer.setCoinid(req.coinID);
   pbPlumTransfer.setDenomination(req.denomination);
   pbPlumTransfer.setOwner(req.owner);
   pbPlumTransfer.setRecipient(req.recipient);
   return pbPlumTransfer;
 }
-
-exports.toActionPlumTransfer = toActionPlumTransfer;
-
 function toActionDepositToRewardingFund(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbDepositToRewardingFund = new action_pb_1.default.DepositToRewardingFund();
+  const pbDepositToRewardingFund = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.DepositToRewardingFund();
   pbDepositToRewardingFund.setAmount(req.amount);
   pbDepositToRewardingFund.setData(req.data);
   return pbDepositToRewardingFund;
 }
-
-exports.toActionDepositToRewardingFund = toActionDepositToRewardingFund;
-
 function toActionClaimFromRewardingFund(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbClaimFromRewardingFund = new action_pb_1.default.ClaimFromRewardingFund(); // @ts-ignore
+  const pbClaimFromRewardingFund = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.ClaimFromRewardingFund(); // @ts-ignore
 
   pbClaimFromRewardingFund.setAmount(req.amount); // @ts-ignore
 
   pbClaimFromRewardingFund.setData(req.data);
   return pbClaimFromRewardingFund;
 }
-
-exports.toActionClaimFromRewardingFund = toActionClaimFromRewardingFund;
-
 function toActionGrantReward(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbGrantReward = new action_pb_1.default.GrantReward();
+  const pbGrantReward = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.GrantReward();
   pbGrantReward.setType(req.type);
   return pbGrantReward;
 }
-
-exports.toActionGrantReward = toActionGrantReward;
-
 function toActionStakeCreate(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStakeCreate = new action_pb_1.default.StakeCreate();
+  const pbStakeCreate = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StakeCreate();
   pbStakeCreate.setCandidatename(req.candidateName);
   pbStakeCreate.setStakedamount(req.stakedAmount);
   pbStakeCreate.setStakedduration(req.stakedDuration);
@@ -100139,86 +99899,68 @@ function toActionStakeCreate(req) {
   pbStakeCreate.setPayload(req.payload);
   return pbStakeCreate;
 }
-
-exports.toActionStakeCreate = toActionStakeCreate;
-
 function toActionStakeReclaim(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStakeReclaim = new action_pb_1.default.StakeReclaim();
+  const pbStakeReclaim = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StakeReclaim();
   pbStakeReclaim.setBucketindex(req.bucketIndex);
   pbStakeReclaim.setPayload(req.payload);
   return pbStakeReclaim;
 }
-
-exports.toActionStakeReclaim = toActionStakeReclaim;
-
 function toActionStakeAddDeposit(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStakeAddDeposit = new action_pb_1.default.StakeAddDeposit();
+  const pbStakeAddDeposit = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StakeAddDeposit();
   pbStakeAddDeposit.setBucketindex(req.bucketIndex);
   pbStakeAddDeposit.setAmount(req.amount);
   pbStakeAddDeposit.setPayload(req.payload);
   return pbStakeAddDeposit;
 }
-
-exports.toActionStakeAddDeposit = toActionStakeAddDeposit;
-
 function toActionStakeRestake(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStakeRestake = new action_pb_1.default.StakeRestake();
+  const pbStakeRestake = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StakeRestake();
   pbStakeRestake.setBucketindex(req.bucketIndex);
   pbStakeRestake.setStakedduration(req.stakedDuration);
   pbStakeRestake.setAutostake(req.autoStake);
   pbStakeRestake.setPayload(req.payload);
   return pbStakeRestake;
 }
-
-exports.toActionStakeRestake = toActionStakeRestake;
-
 function toActionStakeChangeCandidate(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStakeChangeCandidate = new action_pb_1.default.StakeChangeCandidate();
+  const pbStakeChangeCandidate = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StakeChangeCandidate();
   pbStakeChangeCandidate.setBucketindex(req.bucketIndex);
   pbStakeChangeCandidate.setCandidatename(req.candidateName);
   pbStakeChangeCandidate.setPayload(req.payload);
   return pbStakeChangeCandidate;
 }
-
-exports.toActionStakeChangeCandidate = toActionStakeChangeCandidate;
-
 function toActionStakeTransferOwnership(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbStakeTransferOwnership = new action_pb_1.default.StakeTransferOwnership();
+  const pbStakeTransferOwnership = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.StakeTransferOwnership();
   pbStakeTransferOwnership.setBucketindex(req.bucketIndex);
   pbStakeTransferOwnership.setVoteraddress(req.voterAddress);
   pbStakeTransferOwnership.setPayload(req.payload);
   return pbStakeTransferOwnership;
 }
-
-exports.toActionStakeTransferOwnership = toActionStakeTransferOwnership;
-
 function toActionCandidateRegister(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbCandidateRegister = new action_pb_1.default.CandidateRegister();
-  const pbCandidateBasicInfo = new action_pb_1.default.CandidateBasicInfo();
+  const pbCandidateRegister = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.CandidateRegister();
+  const pbCandidateBasicInfo = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.CandidateBasicInfo();
   pbCandidateBasicInfo.setName(req.candidate.name);
   pbCandidateBasicInfo.setOperatoraddress(req.candidate.operatorAddress);
   pbCandidateBasicInfo.setRewardaddress(req.candidate.rewardAddress);
@@ -100230,25 +99972,19 @@ function toActionCandidateRegister(req) {
   pbCandidateRegister.setPayload(req.payload);
   return pbCandidateRegister;
 }
-
-exports.toActionCandidateRegister = toActionCandidateRegister;
-
 function toActionCandidateBasicInfo(req) {
   if (!req) {
     return undefined;
   }
 
-  const pbCandidateBasicInfo = new action_pb_1.default.CandidateBasicInfo();
+  const pbCandidateBasicInfo = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.CandidateBasicInfo();
   pbCandidateBasicInfo.setName(req.name);
   pbCandidateBasicInfo.setOperatoraddress(req.operatorAddress);
   pbCandidateBasicInfo.setRewardaddress(req.rewardAddress);
   return pbCandidateBasicInfo;
 }
-
-exports.toActionCandidateBasicInfo = toActionCandidateBasicInfo;
-
 function toAction(req) {
-  const pbActionCore = new action_pb_1.default.ActionCore();
+  const pbActionCore = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.ActionCore();
   const core = req && req.core;
 
   if (core) {
@@ -100287,7 +100023,7 @@ function toAction(req) {
     pbActionCore.setCandidateupdate(toActionCandidateBasicInfo(core.candidateUpdate));
   }
 
-  const pbAction = new action_pb_1.default.Action();
+  const pbAction = new _protogen_proto_types_action_pb__WEBPACK_IMPORTED_MODULE_4___default.a.Action();
   pbAction.setCore(pbActionCore);
 
   if (req.senderPubKey) {
@@ -100300,11 +100036,9 @@ function toAction(req) {
 
   return pbAction;
 }
-
-exports.toAction = toAction;
-exports.GetActionsRequest = {
+const GetActionsRequest = {
   byAddrTo(byAddr) {
-    const pbReqByAddr = new api_pb_1.default.GetActionsByAddressRequest();
+    const pbReqByAddr = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetActionsByAddressRequest();
 
     if (byAddr.address) {
       pbReqByAddr.setAddress(byAddr.address);
@@ -100322,7 +100056,7 @@ exports.GetActionsRequest = {
   },
 
   byBlkTo(byBlk) {
-    const pbReqByBlk = new api_pb_1.default.GetActionsByBlockRequest();
+    const pbReqByBlk = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetActionsByBlockRequest();
 
     if (byBlk.blkHash) {
       pbReqByBlk.setBlkhash(byBlk.blkHash);
@@ -100340,7 +100074,7 @@ exports.GetActionsRequest = {
   },
 
   byHashTo(byHash) {
-    const pbReqByHash = new api_pb_1.default.GetActionByHashRequest();
+    const pbReqByHash = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetActionByHashRequest();
 
     if (byHash.actionHash) {
       pbReqByHash.setActionhash(byHash.actionHash);
@@ -100354,7 +100088,7 @@ exports.GetActionsRequest = {
   },
 
   byIndexTo(byIndex) {
-    const pbReqByIndex = new api_pb_1.default.GetActionsByIndexRequest();
+    const pbReqByIndex = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetActionsByIndexRequest();
 
     if (byIndex.start) {
       pbReqByIndex.setStart(byIndex.start);
@@ -100368,7 +100102,7 @@ exports.GetActionsRequest = {
   },
 
   unconfirmedByAddrTo(unconfirmedByAddr) {
-    const pbReqUnconfirmedByAddr = new api_pb_1.default.GetUnconfirmedActionsByAddressRequest();
+    const pbReqUnconfirmedByAddr = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetUnconfirmedActionsByAddressRequest();
 
     if (unconfirmedByAddr.start) {
       pbReqUnconfirmedByAddr.setStart(unconfirmedByAddr.start);
@@ -100386,26 +100120,26 @@ exports.GetActionsRequest = {
   },
 
   to(req) {
-    const pbReq = new api_pb_1.default.GetActionsRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetActionsRequest();
 
     if (req.byAddr) {
-      pbReq.setByaddr(exports.GetActionsRequest.byAddrTo(req.byAddr));
+      pbReq.setByaddr(GetActionsRequest.byAddrTo(req.byAddr));
     }
 
     if (req.byBlk) {
-      pbReq.setByblk(exports.GetActionsRequest.byBlkTo(req.byBlk));
+      pbReq.setByblk(GetActionsRequest.byBlkTo(req.byBlk));
     }
 
     if (req.byHash) {
-      pbReq.setByhash(exports.GetActionsRequest.byHashTo(req.byHash));
+      pbReq.setByhash(GetActionsRequest.byHashTo(req.byHash));
     }
 
     if (req.byIndex) {
-      pbReq.setByindex(exports.GetActionsRequest.byIndexTo(req.byIndex));
+      pbReq.setByindex(GetActionsRequest.byIndexTo(req.byIndex));
     }
 
     if (req.unconfirmedByAddr) {
-      pbReq.setUnconfirmedbyaddr(exports.GetActionsRequest.unconfirmedByAddrTo(req.unconfirmedByAddr));
+      pbReq.setUnconfirmedbyaddr(GetActionsRequest.unconfirmedByAddrTo(req.unconfirmedByAddr));
     }
 
     return pbReq;
@@ -100902,36 +100636,36 @@ exports.GetActionsRequest = {
             nonce: String(rawActionCore.getNonce()),
             gasLimit: String(rawActionCore.getGaslimit()),
             gasPrice: rawActionCore.getGasprice(),
-            transfer: exports.GetActionsRequest.fromTransfer(rawActionCore.getTransfer()),
-            execution: exports.GetActionsRequest.fromExecution(rawActionCore.getExecution()),
-            startSubChain: exports.GetActionsRequest.fromStartSubChain(rawActionCore.getStartsubchain()),
-            stopSubChain: exports.GetActionsRequest.fromStopSubChain(rawActionCore.getStopsubchain()),
-            putBlock: exports.GetActionsRequest.fromPutBlock(rawActionCore.getPutblock()),
-            createDeposit: exports.GetActionsRequest.fromCreateDeposit(rawActionCore.getCreatedeposit()),
-            settleDeposit: exports.GetActionsRequest.fromSettleDeposit(rawActionCore.getSettledeposit()),
-            createPlumChain: exports.GetActionsRequest.fromCreatePlumChain(rawActionCore.getCreateplumchain()),
-            terminatePlumChain: exports.GetActionsRequest.fromTerminatePlumChain(rawActionCore.getTerminateplumchain()),
-            plumPutBlock: exports.GetActionsRequest.fromPlumPutBlock(rawActionCore.getPlumputblock()),
-            plumCreateDeposit: exports.GetActionsRequest.fromPlumCreateDeposit(rawActionCore.getPlumcreatedeposit()),
-            plumStartExit: exports.GetActionsRequest.fromPlumStartExit(rawActionCore.getPlumstartexit()),
-            plumChallengeExit: exports.GetActionsRequest.fromPlumChallengeExit(rawActionCore.getPlumchallengeexit()),
-            plumResponseChallengeExit: exports.GetActionsRequest.fromPlumResponseChallengeExit(rawActionCore.getPlumresponsechallengeexit()),
-            plumFinalizeExit: exports.GetActionsRequest.fromPlumFinalizeExit(rawActionCore.getPlumfinalizeexit()),
-            plumSettleDeposit: exports.GetActionsRequest.fromPlumSettleDeposit(rawActionCore.getPlumsettledeposit()),
-            plumTransfer: exports.GetActionsRequest.fromPlumTransfer(rawActionCore.getPlumtransfer()),
-            depositToRewardingFund: exports.GetActionsRequest.fromDepositToRewardingFund(rawActionCore.getDeposittorewardingfund()),
-            claimFromRewardingFund: exports.GetActionsRequest.fromClaimFromRewardingFund(rawActionCore.getClaimfromrewardingfund()),
-            grantReward: exports.GetActionsRequest.fromGrantReward(rawActionCore.getGrantreward()),
-            stakeCreate: exports.GetActionsRequest.fromStakeCreate(rawActionCore.getStakecreate()),
-            stakeUnstake: exports.GetActionsRequest.fromStakeReclaim(rawActionCore.getStakeunstake()),
-            stakeWithdraw: exports.GetActionsRequest.fromStakeReclaim(rawActionCore.getStakewithdraw()),
-            stakeAddDeposit: exports.GetActionsRequest.fromStakeAddDeposit(rawActionCore.getStakeadddeposit()),
-            stakeRestake: exports.GetActionsRequest.fromStakeRestake(rawActionCore.getStakerestake()),
-            stakeChangeCandidate: exports.GetActionsRequest.fromStakeChangeCandidate(rawActionCore.getStakechangecandidate()),
-            stakeTransferOwnership: exports.GetActionsRequest.fromStakeTransferOwnership(rawActionCore.getStaketransferownership()),
-            candidateRegister: exports.GetActionsRequest.fromCandidateRegister(rawActionCore.getCandidateregister()),
-            candidateUpdate: exports.GetActionsRequest.fromCandidateUpdate(rawActionCore.getCandidateupdate()),
-            putPollResult: exports.GetActionsRequest.getPutPollResult(rawActionCore.getPutpollresult())
+            transfer: GetActionsRequest.fromTransfer(rawActionCore.getTransfer()),
+            execution: GetActionsRequest.fromExecution(rawActionCore.getExecution()),
+            startSubChain: GetActionsRequest.fromStartSubChain(rawActionCore.getStartsubchain()),
+            stopSubChain: GetActionsRequest.fromStopSubChain(rawActionCore.getStopsubchain()),
+            putBlock: GetActionsRequest.fromPutBlock(rawActionCore.getPutblock()),
+            createDeposit: GetActionsRequest.fromCreateDeposit(rawActionCore.getCreatedeposit()),
+            settleDeposit: GetActionsRequest.fromSettleDeposit(rawActionCore.getSettledeposit()),
+            createPlumChain: GetActionsRequest.fromCreatePlumChain(rawActionCore.getCreateplumchain()),
+            terminatePlumChain: GetActionsRequest.fromTerminatePlumChain(rawActionCore.getTerminateplumchain()),
+            plumPutBlock: GetActionsRequest.fromPlumPutBlock(rawActionCore.getPlumputblock()),
+            plumCreateDeposit: GetActionsRequest.fromPlumCreateDeposit(rawActionCore.getPlumcreatedeposit()),
+            plumStartExit: GetActionsRequest.fromPlumStartExit(rawActionCore.getPlumstartexit()),
+            plumChallengeExit: GetActionsRequest.fromPlumChallengeExit(rawActionCore.getPlumchallengeexit()),
+            plumResponseChallengeExit: GetActionsRequest.fromPlumResponseChallengeExit(rawActionCore.getPlumresponsechallengeexit()),
+            plumFinalizeExit: GetActionsRequest.fromPlumFinalizeExit(rawActionCore.getPlumfinalizeexit()),
+            plumSettleDeposit: GetActionsRequest.fromPlumSettleDeposit(rawActionCore.getPlumsettledeposit()),
+            plumTransfer: GetActionsRequest.fromPlumTransfer(rawActionCore.getPlumtransfer()),
+            depositToRewardingFund: GetActionsRequest.fromDepositToRewardingFund(rawActionCore.getDeposittorewardingfund()),
+            claimFromRewardingFund: GetActionsRequest.fromClaimFromRewardingFund(rawActionCore.getClaimfromrewardingfund()),
+            grantReward: GetActionsRequest.fromGrantReward(rawActionCore.getGrantreward()),
+            stakeCreate: GetActionsRequest.fromStakeCreate(rawActionCore.getStakecreate()),
+            stakeUnstake: GetActionsRequest.fromStakeReclaim(rawActionCore.getStakeunstake()),
+            stakeWithdraw: GetActionsRequest.fromStakeReclaim(rawActionCore.getStakewithdraw()),
+            stakeAddDeposit: GetActionsRequest.fromStakeAddDeposit(rawActionCore.getStakeadddeposit()),
+            stakeRestake: GetActionsRequest.fromStakeRestake(rawActionCore.getStakerestake()),
+            stakeChangeCandidate: GetActionsRequest.fromStakeChangeCandidate(rawActionCore.getStakechangecandidate()),
+            stakeTransferOwnership: GetActionsRequest.fromStakeTransferOwnership(rawActionCore.getStaketransferownership()),
+            candidateRegister: GetActionsRequest.fromCandidateRegister(rawActionCore.getCandidateregister()),
+            candidateUpdate: GetActionsRequest.fromCandidateUpdate(rawActionCore.getCandidateupdate()),
+            putPollResult: GetActionsRequest.getPutPollResult(rawActionCore.getPutpollresult())
           };
         }
 
@@ -100949,10 +100683,10 @@ exports.GetActionsRequest = {
   }
 
 };
-exports.SuggestGasPriceRequest = {
+const SuggestGasPriceRequest = {
   // @ts-ignore
   to(req) {
-    return new api_pb_1.default.SuggestGasPriceRequest();
+    return new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.SuggestGasPriceRequest();
   },
 
   from(pbRes) {
@@ -100991,7 +100725,7 @@ var ReceiptStatus;
   ReceiptStatus[ReceiptStatus["ErrWithdrawBeforeMaturity"] = 209] = "ErrWithdrawBeforeMaturity";
   ReceiptStatus[ReceiptStatus["ErrCandidateAlreadyExist"] = 210] = "ErrCandidateAlreadyExist";
   ReceiptStatus[ReceiptStatus["ErrCandidateConflict"] = 211] = "ErrCandidateConflict";
-})(ReceiptStatus = exports.ReceiptStatus || (exports.ReceiptStatus = {}));
+})(ReceiptStatus || (ReceiptStatus = {}));
 
 function fromPbReceiptInfo(pbReceiptInfo) {
   if (!pbReceiptInfo) {
@@ -101004,9 +100738,9 @@ function fromPbReceiptInfo(pbReceiptInfo) {
   };
 }
 
-exports.GetReceiptByActionRequest = {
+const GetReceiptByActionRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.GetReceiptByActionRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetReceiptByActionRequest();
 
     if (req.actionHash) {
       pbReq.setActionhash(req.actionHash);
@@ -101022,7 +100756,6 @@ exports.GetReceiptByActionRequest = {
   }
 
 };
-
 function fromPbReceipt(pbReceipt) {
   if (!pbReceipt) {
     return undefined;
@@ -101037,8 +100770,6 @@ function fromPbReceipt(pbReceipt) {
     logs: fromPbLogList(pbReceipt.getLogsList())
   };
 }
-
-exports.fromPbReceipt = fromPbReceipt;
 
 function fromPbLogList(pbLogList) {
   if (!pbLogList) {
@@ -101061,9 +100792,9 @@ function fromPbLogList(pbLogList) {
   return res;
 }
 
-exports.ReadContractRequest = {
+const ReadContractRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.ReadContractRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.ReadContractRequest();
     pbReq.setCalleraddress(req.callerAddress);
 
     if (req.execution) {
@@ -101081,9 +100812,9 @@ exports.ReadContractRequest = {
   }
 
 };
-exports.SendActionRequest = {
+const SendActionRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.SendActionRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.SendActionRequest();
 
     if (req.action) {
       pbReq.setAction(toAction(req.action));
@@ -101093,7 +100824,7 @@ exports.SendActionRequest = {
   }
 
 };
-exports.SendActionResponse = {
+const SendActionResponse = {
   from(resp) {
     return {
       actionHash: resp.getActionhash()
@@ -101101,9 +100832,9 @@ exports.SendActionResponse = {
   }
 
 };
-exports.EstimateGasForActionRequest = {
+const EstimateGasForActionRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.EstimateGasForActionRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.EstimateGasForActionRequest();
 
     if (req.action) {
       pbReq.setAction(toAction(req.action));
@@ -101119,9 +100850,9 @@ exports.EstimateGasForActionRequest = {
   }
 
 };
-exports.ReadStateRequest = {
+const ReadStateRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.ReadStateRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.ReadStateRequest();
     pbReq.setProtocolid(req.protocolID);
     pbReq.setMethodname(req.methodName);
     pbReq.setArgumentsList(req.arguments);
@@ -101135,9 +100866,9 @@ exports.ReadStateRequest = {
   }
 
 };
-exports.GetEpochMetaRequest = {
+const GetEpochMetaRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.GetEpochMetaRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetEpochMetaRequest();
 
     if (req.epochNumber) {
       pbReq.setEpochnumber(req.epochNumber);
@@ -101178,17 +100909,17 @@ exports.GetEpochMetaRequest = {
   }
 
 };
-exports.GetLogsRequest = {
+const GetLogsRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.GetLogsRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetLogsRequest();
 
     if (req.filter) {
-      const filter = new api_pb_1.default.LogsFilter();
+      const filter = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.LogsFilter();
       filter.setAddressList(req.filter.address);
       const topics = [];
 
       for (let i = 0; i < req.filter.topics.length; i++) {
-        const topic = new api_pb_1.default.Topics();
+        const topic = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.Topics();
         topic.setTopicList(req.filter.topics[i].topic);
         topics.push(topic);
       }
@@ -101198,13 +100929,13 @@ exports.GetLogsRequest = {
     }
 
     if (req.byBlock) {
-      const byBlock = new api_pb_1.default.GetLogsByBlock();
+      const byBlock = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetLogsByBlock();
       byBlock.setBlockhash(req.byBlock.blockHash);
       pbReq.setByblock(byBlock);
     }
 
     if (req.byRange) {
-      const byRange = new api_pb_1.default.GetLogsByRange();
+      const byRange = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.GetLogsByRange();
       byRange.setFromblock(req.byRange.fromBlock);
       byRange.setToblock(req.byRange.toBlock);
       byRange.setPaginationsize(req.byRange.paginationSize);
@@ -101221,9 +100952,9 @@ exports.GetLogsRequest = {
   }
 
 };
-exports.EstimateActionGasConsumptionRequest = {
+const EstimateActionGasConsumptionRequest = {
   to(req) {
-    const pbReq = new api_pb_1.default.EstimateActionGasConsumptionRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.EstimateActionGasConsumptionRequest();
 
     if (req.transfer) {
       pbReq.setTransfer(toActionTransfer(req.transfer));
@@ -101299,27 +101030,27 @@ function fromPbBlockBody(blockBody) {
           nonce: String(rawActionCore.getNonce()),
           gasLimit: String(rawActionCore.getGaslimit()),
           gasPrice: rawActionCore.getGasprice(),
-          transfer: exports.GetActionsRequest.fromTransfer(rawActionCore.getTransfer()),
-          execution: exports.GetActionsRequest.fromExecution(rawActionCore.getExecution()),
-          startSubChain: exports.GetActionsRequest.fromStartSubChain(rawActionCore.getStartsubchain()),
-          stopSubChain: exports.GetActionsRequest.fromStopSubChain(rawActionCore.getStopsubchain()),
-          putBlock: exports.GetActionsRequest.fromPutBlock(rawActionCore.getPutblock()),
-          createDeposit: exports.GetActionsRequest.fromCreateDeposit(rawActionCore.getCreatedeposit()),
-          settleDeposit: exports.GetActionsRequest.fromSettleDeposit(rawActionCore.getSettledeposit()),
-          createPlumChain: exports.GetActionsRequest.fromCreatePlumChain(rawActionCore.getCreateplumchain()),
-          terminatePlumChain: exports.GetActionsRequest.fromTerminatePlumChain(rawActionCore.getTerminateplumchain()),
-          plumPutBlock: exports.GetActionsRequest.fromPlumPutBlock(rawActionCore.getPlumputblock()),
-          plumCreateDeposit: exports.GetActionsRequest.fromPlumCreateDeposit(rawActionCore.getPlumcreatedeposit()),
-          plumStartExit: exports.GetActionsRequest.fromPlumStartExit(rawActionCore.getPlumstartexit()),
-          plumChallengeExit: exports.GetActionsRequest.fromPlumChallengeExit(rawActionCore.getPlumchallengeexit()),
-          plumResponseChallengeExit: exports.GetActionsRequest.fromPlumResponseChallengeExit(rawActionCore.getPlumresponsechallengeexit()),
-          plumFinalizeExit: exports.GetActionsRequest.fromPlumFinalizeExit(rawActionCore.getPlumfinalizeexit()),
-          plumSettleDeposit: exports.GetActionsRequest.fromPlumSettleDeposit(rawActionCore.getPlumsettledeposit()),
-          plumTransfer: exports.GetActionsRequest.fromPlumTransfer(rawActionCore.getPlumtransfer()),
-          depositToRewardingFund: exports.GetActionsRequest.fromDepositToRewardingFund(rawActionCore.getDeposittorewardingfund()),
-          claimFromRewardingFund: exports.GetActionsRequest.fromClaimFromRewardingFund(rawActionCore.getClaimfromrewardingfund()),
-          grantReward: exports.GetActionsRequest.fromGrantReward(rawActionCore.getGrantreward()),
-          putPollResult: exports.GetActionsRequest.getPutPollResult(rawActionCore.getPutpollresult())
+          transfer: GetActionsRequest.fromTransfer(rawActionCore.getTransfer()),
+          execution: GetActionsRequest.fromExecution(rawActionCore.getExecution()),
+          startSubChain: GetActionsRequest.fromStartSubChain(rawActionCore.getStartsubchain()),
+          stopSubChain: GetActionsRequest.fromStopSubChain(rawActionCore.getStopsubchain()),
+          putBlock: GetActionsRequest.fromPutBlock(rawActionCore.getPutblock()),
+          createDeposit: GetActionsRequest.fromCreateDeposit(rawActionCore.getCreatedeposit()),
+          settleDeposit: GetActionsRequest.fromSettleDeposit(rawActionCore.getSettledeposit()),
+          createPlumChain: GetActionsRequest.fromCreatePlumChain(rawActionCore.getCreateplumchain()),
+          terminatePlumChain: GetActionsRequest.fromTerminatePlumChain(rawActionCore.getTerminateplumchain()),
+          plumPutBlock: GetActionsRequest.fromPlumPutBlock(rawActionCore.getPlumputblock()),
+          plumCreateDeposit: GetActionsRequest.fromPlumCreateDeposit(rawActionCore.getPlumcreatedeposit()),
+          plumStartExit: GetActionsRequest.fromPlumStartExit(rawActionCore.getPlumstartexit()),
+          plumChallengeExit: GetActionsRequest.fromPlumChallengeExit(rawActionCore.getPlumchallengeexit()),
+          plumResponseChallengeExit: GetActionsRequest.fromPlumResponseChallengeExit(rawActionCore.getPlumresponsechallengeexit()),
+          plumFinalizeExit: GetActionsRequest.fromPlumFinalizeExit(rawActionCore.getPlumfinalizeexit()),
+          plumSettleDeposit: GetActionsRequest.fromPlumSettleDeposit(rawActionCore.getPlumsettledeposit()),
+          plumTransfer: GetActionsRequest.fromPlumTransfer(rawActionCore.getPlumtransfer()),
+          depositToRewardingFund: GetActionsRequest.fromDepositToRewardingFund(rawActionCore.getDeposittorewardingfund()),
+          claimFromRewardingFund: GetActionsRequest.fromClaimFromRewardingFund(rawActionCore.getClaimfromrewardingfund()),
+          grantReward: GetActionsRequest.fromGrantReward(rawActionCore.getGrantreward()),
+          putPollResult: GetActionsRequest.getPutPollResult(rawActionCore.getPutpollresult())
         };
       }
 
@@ -101404,10 +101135,10 @@ function fromPbBlockInfo(blockInfo) {
   return undefined;
 }
 
-exports.StreamBlocksRequest = {
+const StreamBlocksRequest = {
   // @ts-ignore
   to(req) {
-    return new api_pb_1.default.StreamBlocksRequest();
+    return new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.StreamBlocksRequest();
   },
 
   from(pbRes) {
@@ -101417,18 +101148,18 @@ exports.StreamBlocksRequest = {
   }
 
 };
-exports.StreamLogsRequest = {
+const StreamLogsRequest = {
   // @ts-ignore
   to(req) {
-    const pbReq = new api_pb_1.default.StreamLogsRequest();
+    const pbReq = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.StreamLogsRequest();
 
     if (req.filter) {
-      const filter = new api_pb_1.default.LogsFilter();
+      const filter = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.LogsFilter();
       filter.setAddressList(req.filter.address);
       const topics = [];
 
       for (let i = 0; i < req.filter.topics.length; i++) {
-        const topic = new api_pb_1.default.Topics();
+        const topic = new _protogen_proto_api_api_pb__WEBPACK_IMPORTED_MODULE_2___default.a.Topics();
         topic.setTopicList(req.filter.topics[i].topic);
         topics.push(topic);
       }
@@ -101457,13 +101188,13 @@ exports.StreamLogsRequest = {
 
   from(pbRes) {
     return {
-      log: exports.StreamLogsRequest.fromPbLog(pbRes.getLog())
+      log: StreamLogsRequest.fromPbLog(pbRes.getLog())
     };
   }
 
 }; // @ts-ignore
 
-class ClientReadableStream extends events_1.EventEmitter {
+class ClientReadableStream extends events__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"] {
   constructor(origin, type) {
     super();
     this.origin = origin;
@@ -101476,12 +101207,12 @@ class ClientReadableStream extends events_1.EventEmitter {
     origin.on("data", response => {
       if (type === "StreamBlocks") {
         // @ts-ignore
-        this.emit("data", exports.StreamBlocksRequest.from(response));
+        this.emit("data", StreamBlocksRequest.from(response));
       }
 
       if (type === "StreamLogs") {
         // @ts-ignore
-        this.emit("data", exports.StreamLogsRequest.from(response));
+        this.emit("data", StreamLogsRequest.from(response));
       }
     });
     origin.on("end", () => {
@@ -101494,51 +101225,48 @@ class ClientReadableStream extends events_1.EventEmitter {
   }
 
 }
-
-exports.ClientReadableStream = ClientReadableStream;
-
-exports.IReadStakingDataMethodToBuffer = req => {
-  const pbObj = new read_state_pb_1.ReadStakingDataMethod();
+const IReadStakingDataMethodToBuffer = req => {
+  const pbObj = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"]();
 
   switch (req.method.valueOf()) {
-    case read_state_pb_1.ReadStakingDataMethod.Name.INVALID.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.INVALID);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.INVALID.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.INVALID);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_BY_VOTER.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_BY_VOTER);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_BY_VOTER.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_BY_VOTER);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_BY_CANDIDATE.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_BY_CANDIDATE);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_BY_CANDIDATE.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_BY_CANDIDATE);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.CANDIDATES.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.CANDIDATES);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.CANDIDATES.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.CANDIDATES);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.CANDIDATE_BY_NAME.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.CANDIDATE_BY_NAME);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.CANDIDATE_BY_NAME.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.CANDIDATE_BY_NAME);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_BY_INDEXES.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_BY_INDEXES);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_BY_INDEXES.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_BY_INDEXES);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.CANDIDATE_BY_ADDRESS.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.CANDIDATE_BY_ADDRESS);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.CANDIDATE_BY_ADDRESS.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.CANDIDATE_BY_ADDRESS);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.TOTAL_STAKING_AMOUNT.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.TOTAL_STAKING_AMOUNT);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.TOTAL_STAKING_AMOUNT.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.TOTAL_STAKING_AMOUNT);
       break;
 
-    case read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_COUNT.valueOf():
-      pbObj.setMethod(read_state_pb_1.ReadStakingDataMethod.Name.BUCKETS_COUNT);
+    case _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_COUNT.valueOf():
+      pbObj.setMethod(_protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataMethod"].Name.BUCKETS_COUNT);
       break;
 
     default:
@@ -101547,13 +101275,12 @@ exports.IReadStakingDataMethodToBuffer = req => {
 
   return Buffer.from(pbObj.serializeBinary());
 };
-
-exports.IReadStakingDataRequestToBuffer = req => {
-  const pbObj = new read_state_pb_1.ReadStakingDataRequest();
+const IReadStakingDataRequestToBuffer = req => {
+  const pbObj = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"]();
 
   if (req.buckets) {
-    const buckets = new read_state_pb_1.ReadStakingDataRequest.VoteBuckets();
-    const pagination = new read_state_pb_1.PaginationParam();
+    const buckets = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].VoteBuckets();
+    const pagination = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["PaginationParam"]();
     pagination.setOffset(req.buckets.pagination.offset);
     pagination.setLimit(req.buckets.pagination.limit);
     buckets.setPagination(pagination);
@@ -101561,8 +101288,8 @@ exports.IReadStakingDataRequestToBuffer = req => {
   }
 
   if (req.bucketsByVoter) {
-    const bucketsByVoter = new read_state_pb_1.ReadStakingDataRequest.VoteBucketsByVoter();
-    const pagination = new read_state_pb_1.PaginationParam();
+    const bucketsByVoter = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].VoteBucketsByVoter();
+    const pagination = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["PaginationParam"]();
     pagination.setOffset(req.bucketsByVoter.pagination.offset);
     pagination.setLimit(req.bucketsByVoter.pagination.limit);
     bucketsByVoter.setPagination(pagination);
@@ -101571,8 +101298,8 @@ exports.IReadStakingDataRequestToBuffer = req => {
   }
 
   if (req.bucketsByCandidate) {
-    const bucketsByCandidate = new read_state_pb_1.ReadStakingDataRequest.VoteBucketsByCandidate();
-    const pagination = new read_state_pb_1.PaginationParam();
+    const bucketsByCandidate = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].VoteBucketsByCandidate();
+    const pagination = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["PaginationParam"]();
     pagination.setOffset(req.bucketsByCandidate.pagination.offset);
     pagination.setLimit(req.bucketsByCandidate.pagination.limit);
     bucketsByCandidate.setPagination(pagination);
@@ -101581,8 +101308,8 @@ exports.IReadStakingDataRequestToBuffer = req => {
   }
 
   if (req.candidates) {
-    const candidates = new read_state_pb_1.ReadStakingDataRequest.Candidates();
-    const pagination = new read_state_pb_1.PaginationParam();
+    const candidates = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].Candidates();
+    const pagination = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["PaginationParam"]();
     pagination.setOffset(req.candidates.pagination.offset);
     pagination.setLimit(req.candidates.pagination.limit);
     candidates.setPagination(pagination);
@@ -101590,30 +101317,30 @@ exports.IReadStakingDataRequestToBuffer = req => {
   }
 
   if (req.candidateByName) {
-    const candidateByName = new read_state_pb_1.ReadStakingDataRequest.CandidateByName();
+    const candidateByName = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].CandidateByName();
     candidateByName.setCandname(req.candidateByName.candName);
     pbObj.setCandidatebyname(candidateByName);
   }
 
   if (req.bucketsByIndexes) {
-    const bucketsByIndexes = new read_state_pb_1.ReadStakingDataRequest.VoteBucketsByIndexes();
+    const bucketsByIndexes = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].VoteBucketsByIndexes();
     bucketsByIndexes.setIndexList(req.bucketsByIndexes.index);
     pbObj.setBucketsbyindexes(bucketsByIndexes);
   }
 
   if (req.candidateByAddress) {
-    const candidateByAddress = new read_state_pb_1.ReadStakingDataRequest.CandidateByAddress();
+    const candidateByAddress = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].CandidateByAddress();
     candidateByAddress.setOwneraddr(req.candidateByAddress.ownerAddr);
     pbObj.setCandidatebyaddress(candidateByAddress);
   }
 
   if (req.totalStakingAmount) {
-    const totalStakingAmount = new read_state_pb_1.ReadStakingDataRequest.TotalStakingAmount();
+    const totalStakingAmount = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].TotalStakingAmount();
     pbObj.setTotalstakingamount(totalStakingAmount);
   }
 
   if (req.bucketsCount) {
-    const bucketsCount = new read_state_pb_1.ReadStakingDataRequest.BucketsCount();
+    const bucketsCount = new _protogen_proto_api_read_state_pb__WEBPACK_IMPORTED_MODULE_3__["ReadStakingDataRequest"].BucketsCount();
     pbObj.setBucketscount(bucketsCount);
   }
 

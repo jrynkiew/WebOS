@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "0d73ad84-e5c8-4c73-b55a-13e7b6ea1ae8"
+  "package_uuid": "ab26afe6-2c5f-4506-90fa-22e8df66774a"
  });
 })();
 
@@ -1617,16 +1617,16 @@ var ASM_CONSTS = {
   document.execCommand("copy");
   document.body.removeChild(tempInput);
  },
- 64084: function() {
+ 64127: function() {
   window.open("https://emscripten.org", "_blank");
  },
- 64304: function() {
+ 64347: function() {
   window.open("https://t.me/JRPC_Official", "_blank");
  },
- 64513: function() {
+ 64556: function() {
   window.open("https://mimo.exchange", "_blank");
  },
- 113990: function($0, $1, $2, $3) {
+ 114022: function($0, $1, $2, $3) {
   Asyncify.handleAsync(async () => {
    let resp = await window.antenna.iotx.sendTransfer({
     to: UTF8ToString($0),
@@ -1637,12 +1637,26 @@ var ASM_CONSTS = {
    });
   });
  },
- 114356: function() {
-  window.antenna = new Antenna("https://api.iotex.one:443", {
-   signer: new WsSignerPlugin()
+ 116202: function() {
+  if (window.antenna) {
+   if (window.antenna.iotx.signer.ws.readyState === 1) {
+    return true;
+   } else {
+    return false;
+   }
+  } else {
+   return false;
+  }
+ },
+ 116343: function() {
+  Asyncify.handleAsync(async () => {
+   window.antenna = await new Antenna("https://api.iotex.one:443", {
+    signer: await new WsSignerPlugin()
+   });
+   await new Promise(resolve => setTimeout(resolve, 1500));
   });
  },
- 117050: function($0) {
+ 117338: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1650,7 +1664,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 153276: function($0, $1, $2) {
+ 153564: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1721,7 +1735,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 154755: function($0, $1, $2, $3, $4) {
+ 155043: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1758,36 +1772,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 155744: function($0) {
+ 156032: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 155837: function() {
+ 156125: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 157062: function() {
+ 157350: function() {
   return screen.width;
  },
- 157089: function() {
+ 157377: function() {
   return screen.height;
  },
- 157117: function() {
+ 157405: function() {
   return window.innerWidth;
  },
- 157149: function() {
+ 157437: function() {
   return window.innerHeight;
  },
- 157227: function($0) {
+ 157515: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 157361: function() {
+ 157649: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1795,7 +1809,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 157527: function() {
+ 157815: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1803,7 +1817,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 157753: function($0) {
+ 158041: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1825,11 +1839,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 158306: function() {
+ 158594: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 158376: function($0, $1, $2, $3) {
+ 158664: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1870,7 +1884,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 160028: function($0, $1, $2, $3) {
+ 160316: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1882,7 +1896,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 160438: function($0, $1) {
+ 160726: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1901,7 +1915,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 161043: function($0, $1) {
+ 161331: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1914,7 +1928,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 161523: function($0) {
+ 161811: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -6521,6 +6535,10 @@ function _emscripten_asm_const_async_on_main_thread(code, sigPtr, argbuf) {
 function _emscripten_asm_const_int(code, sigPtr, argbuf) {
  var args = readAsmConstArgs(sigPtr, argbuf);
  return ASM_CONSTS[code].apply(null, args);
+}
+
+function _emscripten_asm_const_int_sync_on_main_thread(code, sigPtr, argbuf) {
+ return mainThreadEM_ASM(code, sigPtr, argbuf, 1);
 }
 
 var JSEvents = {
@@ -11300,6 +11318,7 @@ var asmLibraryArg = {
  "eglWaitNative": _eglWaitNative,
  "emscripten_asm_const_async_on_main_thread": _emscripten_asm_const_async_on_main_thread,
  "emscripten_asm_const_int": _emscripten_asm_const_int,
+ "emscripten_asm_const_int_sync_on_main_thread": _emscripten_asm_const_int_sync_on_main_thread,
  "emscripten_exit_fullscreen": _emscripten_exit_fullscreen,
  "emscripten_exit_pointerlock": _emscripten_exit_pointerlock,
  "emscripten_get_device_pixel_ratio": _emscripten_get_device_pixel_ratio,

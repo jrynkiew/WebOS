@@ -1,11 +1,15 @@
 #pragma once
 
+// WebOS headers
+#include "webos_wallet.h"
+
 // ImGui headers
 #include "imgui.h"
 #include "imgui_internal.h"
 
 // Standard headers
 #include <string>
+#include <unistd.h>
 
 // Vector headers
 #include <vector>
@@ -20,6 +24,8 @@
 class webos_console
 {
 private:
+    webos_wallet          wallet;
+
     std::string           method;
     std::string           data;
     std::string           url;
@@ -72,11 +78,9 @@ private:
     std::string wrapSingleQuotes(const char * _str)             { std::string result; if(*_str != '\'') { result = "'"; result += _str; result += "'";}  return result; }
     
     void execute_curl_command(const char* command_line);
-    
 
     void post(const char * method, void * userp, const char * data, const char * URL);
 
-    void AddLog(const char* str, ...) IM_FMTARGS(2);
     void ClearLog();
 
     void printCurlHelp();
@@ -87,6 +91,8 @@ private:
     #endif
 
 public:
+
+    void AddLog(const char* str, ...) IM_FMTARGS(2);
     // static bindings for showing windows for Console from webos_window
     bool show_webos_transfer_window;
 

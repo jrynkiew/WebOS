@@ -72,6 +72,7 @@
         "ios": "cpp",
         "locale": "cpp",
         "queue": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "__functional_03": "cpp"
     }
 }

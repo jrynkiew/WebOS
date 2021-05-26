@@ -30,7 +30,7 @@ export default class Antenna {
     WsSignerPlugin,
     Contract
   };
-
+  
   public setProvider(provider: string | IRpcMethod): void {
     if (typeof provider === "object") {
       if (provider === this.iotx.currentProvider()) {
