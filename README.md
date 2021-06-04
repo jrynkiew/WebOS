@@ -2,6 +2,8 @@
 
 Test the resulting project here: https://www.jrpc.pl/
 
+For detailed installation instructions, check the [INSTALL](INSTALL) file
+
 # 1. Install emscripten
 
 Install packaged emscripten if it is available on your distribution. On Solus it is confirmed working
