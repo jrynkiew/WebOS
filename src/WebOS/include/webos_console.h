@@ -15,7 +15,7 @@
 #include <vector>
 
 // Curl related headers
-#include "/usr/include/curl/curl.h"
+#include "/usr/local/include/curl/curl.h"
 #if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
 #include <emscripten/fetch.h>

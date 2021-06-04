@@ -175,7 +175,7 @@ Module.expectedDataFileDownloads++;
    "audio": 0
   } ],
   "remote_package_size": 718609,
-  "package_uuid": "ab26afe6-2c5f-4506-90fa-22e8df66774a"
+  "package_uuid": "f149484b-1049-4bc0-9386-f94b03f4bc60"
  });
 })();
 
@@ -372,30 +372,36 @@ moduleOverrides = null;
 
 if (Module["arguments"]) arguments_ = Module["arguments"];
 
-if (!Object.getOwnPropertyDescriptor(Module, "arguments")) Object.defineProperty(Module, "arguments", {
- configurable: true,
- get: function() {
-  abort("Module.arguments has been replaced with plain arguments_ (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "arguments")) {
+ Object.defineProperty(Module, "arguments", {
+  configurable: true,
+  get: function() {
+   abort("Module.arguments has been replaced with plain arguments_ (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
 if (Module["thisProgram"]) thisProgram = Module["thisProgram"];
 
-if (!Object.getOwnPropertyDescriptor(Module, "thisProgram")) Object.defineProperty(Module, "thisProgram", {
- configurable: true,
- get: function() {
-  abort("Module.thisProgram has been replaced with plain thisProgram (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "thisProgram")) {
+ Object.defineProperty(Module, "thisProgram", {
+  configurable: true,
+  get: function() {
+   abort("Module.thisProgram has been replaced with plain thisProgram (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
 if (Module["quit"]) quit_ = Module["quit"];
 
-if (!Object.getOwnPropertyDescriptor(Module, "quit")) Object.defineProperty(Module, "quit", {
- configurable: true,
- get: function() {
-  abort("Module.quit has been replaced with plain quit_ (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "quit")) {
+ Object.defineProperty(Module, "quit", {
+  configurable: true,
+  get: function() {
+   abort("Module.quit has been replaced with plain quit_ (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
 assert(typeof Module["memoryInitializerPrefixURL"] === "undefined", "Module.memoryInitializerPrefixURL option was removed, use Module.locateFile instead");
 
@@ -415,33 +421,41 @@ assert(typeof Module["setWindowTitle"] === "undefined", "Module.setWindowTitle o
 
 assert(typeof Module["TOTAL_MEMORY"] === "undefined", "Module.TOTAL_MEMORY has been renamed Module.INITIAL_MEMORY");
 
-if (!Object.getOwnPropertyDescriptor(Module, "read")) Object.defineProperty(Module, "read", {
- configurable: true,
- get: function() {
-  abort("Module.read has been replaced with plain read_ (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "read")) {
+ Object.defineProperty(Module, "read", {
+  configurable: true,
+  get: function() {
+   abort("Module.read has been replaced with plain read_ (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
-if (!Object.getOwnPropertyDescriptor(Module, "readAsync")) Object.defineProperty(Module, "readAsync", {
- configurable: true,
- get: function() {
-  abort("Module.readAsync has been replaced with plain readAsync (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "readAsync")) {
+ Object.defineProperty(Module, "readAsync", {
+  configurable: true,
+  get: function() {
+   abort("Module.readAsync has been replaced with plain readAsync (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
-if (!Object.getOwnPropertyDescriptor(Module, "readBinary")) Object.defineProperty(Module, "readBinary", {
- configurable: true,
- get: function() {
-  abort("Module.readBinary has been replaced with plain readBinary (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "readBinary")) {
+ Object.defineProperty(Module, "readBinary", {
+  configurable: true,
+  get: function() {
+   abort("Module.readBinary has been replaced with plain readBinary (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
-if (!Object.getOwnPropertyDescriptor(Module, "setWindowTitle")) Object.defineProperty(Module, "setWindowTitle", {
- configurable: true,
- get: function() {
-  abort("Module.setWindowTitle has been replaced with plain setWindowTitle (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "setWindowTitle")) {
+ Object.defineProperty(Module, "setWindowTitle", {
+  configurable: true,
+  get: function() {
+   abort("Module.setWindowTitle has been replaced with plain setWindowTitle (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
 var IDBFS = "IDBFS is no longer included by default; build with -lidbfs.js";
 
@@ -606,10 +620,6 @@ function addFunction(func, sig) {
  return addFunctionWasm(func, sig);
 }
 
-function makeBigInt(low, high, unsigned) {
- return unsigned ? +(low >>> 0) + +(high >>> 0) * 4294967296 : +(low >>> 0) + +(high | 0) * 4294967296;
-}
-
 var tempRet0 = 0;
 
 var setTempRet0 = function(value) {
@@ -620,31 +630,29 @@ var getTempRet0 = function() {
  return tempRet0;
 };
 
-function getCompilerSetting(name) {
- throw "You must build with -s RETAIN_COMPILER_SETTINGS=1 for getCompilerSetting or emscripten_get_compiler_setting to work";
-}
-
 var wasmBinary;
 
 if (Module["wasmBinary"]) wasmBinary = Module["wasmBinary"];
 
-if (!Object.getOwnPropertyDescriptor(Module, "wasmBinary")) Object.defineProperty(Module, "wasmBinary", {
- configurable: true,
- get: function() {
-  abort("Module.wasmBinary has been replaced with plain wasmBinary (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "wasmBinary")) {
+ Object.defineProperty(Module, "wasmBinary", {
+  configurable: true,
+  get: function() {
+   abort("Module.wasmBinary has been replaced with plain wasmBinary (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
-var noExitRuntime;
+var noExitRuntime = Module["noExitRuntime"] || false;
 
-if (Module["noExitRuntime"]) noExitRuntime = Module["noExitRuntime"];
-
-if (!Object.getOwnPropertyDescriptor(Module, "noExitRuntime")) Object.defineProperty(Module, "noExitRuntime", {
- configurable: true,
- get: function() {
-  abort("Module.noExitRuntime has been replaced with plain noExitRuntime (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "noExitRuntime")) {
+ Object.defineProperty(Module, "noExitRuntime", {
+  configurable: true,
+  get: function() {
+   abort("Module.noExitRuntime has been replaced with plain noExitRuntime (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
 if (typeof WebAssembly !== "object") {
  abort("no native wasm support detected");
@@ -985,7 +993,7 @@ function UTF8ArrayToString(heap, idx, maxBytesToRead) {
    if ((u0 & 240) == 224) {
     u0 = (u0 & 15) << 12 | u1 << 6 | u2;
    } else {
-    if ((u0 & 248) != 240) warnOnce("Invalid UTF-8 leading byte 0x" + u0.toString(16) + " encountered when deserializing a UTF-8 string on the asm.js/wasm heap to a JS string!");
+    if ((u0 & 248) != 240) warnOnce("Invalid UTF-8 leading byte 0x" + u0.toString(16) + " encountered when deserializing a UTF-8 string in wasm memory to a JS string!");
     u0 = (u0 & 7) << 18 | u1 << 12 | u2 << 6 | heap[idx++] & 63;
    }
    if (u0 < 65536) {
@@ -1027,7 +1035,7 @@ function stringToUTF8Array(str, heap, outIdx, maxBytesToWrite) {
    heap[outIdx++] = 128 | u & 63;
   } else {
    if (outIdx + 3 >= endIdx) break;
-   if (u >= 2097152) warnOnce("Invalid Unicode code point 0x" + u.toString(16) + " encountered when serializing a JS string to an UTF-8 string on the asm.js/wasm heap! (Valid unicode code points should be in range 0-0x1FFFFF).");
+   if (u >= 2097152) warnOnce("Invalid Unicode code point 0x" + u.toString(16) + " encountered when serializing a JS string to a UTF-8 string in wasm memory! (Valid unicode code points should be in range 0-0x1FFFFF).");
    heap[outIdx++] = 240 | u >> 18;
    heap[outIdx++] = 128 | u >> 12 & 63;
    heap[outIdx++] = 128 | u >> 6 & 63;
@@ -1227,12 +1235,14 @@ if (Module["TOTAL_STACK"]) assert(TOTAL_STACK === Module["TOTAL_STACK"], "the st
 
 var INITIAL_MEMORY = Module["INITIAL_MEMORY"] || 16777216;
 
-if (!Object.getOwnPropertyDescriptor(Module, "INITIAL_MEMORY")) Object.defineProperty(Module, "INITIAL_MEMORY", {
- configurable: true,
- get: function() {
-  abort("Module.INITIAL_MEMORY has been replaced with plain INITIAL_MEMORY (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
- }
-});
+if (!Object.getOwnPropertyDescriptor(Module, "INITIAL_MEMORY")) {
+ Object.defineProperty(Module, "INITIAL_MEMORY", {
+  configurable: true,
+  get: function() {
+   abort("Module.INITIAL_MEMORY has been replaced with plain INITIAL_MEMORY (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)");
+  }
+ });
+}
 
 assert(INITIAL_MEMORY >= TOTAL_STACK, "INITIAL_MEMORY should be larger than TOTAL_STACK, was " + INITIAL_MEMORY + "! (TOTAL_STACK=" + TOTAL_STACK + ")");
 
@@ -1265,12 +1275,8 @@ function checkStackCookie() {
  var h16 = new Int16Array(1);
  var h8 = new Int8Array(h16.buffer);
  h16[0] = 25459;
- if (h8[0] !== 115 || h8[1] !== 99) throw "Runtime error: expected the system to be little-endian!";
+ if (h8[0] !== 115 || h8[1] !== 99) throw "Runtime error: expected the system to be little-endian! (Run with -s SUPPORT_BIG_ENDIAN=1 to bypass)";
 })();
-
-function abortFnPtrError(ptr, sig) {
- abort("Invalid function pointer " + ptr + " called with signature '" + sig + "'. Perhaps this is an invalid value (e.g. caused by calling a virtual method on a NULL pointer)? Or calling a function with an incorrect type, which will fail? (it is worth building your source files with -Werror (warnings are errors), as warnings can indicate undefined behavior which can cause this). Build with ASSERTIONS=2 for more info.");
-}
 
 var __ATPRERUN__ = [];
 
@@ -1285,12 +1291,6 @@ var __ATPOSTRUN__ = [];
 var runtimeInitialized = false;
 
 var runtimeExited = false;
-
-__ATINIT__.push({
- func: function() {
-  ___wasm_call_ctors();
- }
-});
 
 function preRun() {
  if (Module["preRun"]) {
@@ -1322,6 +1322,7 @@ function exitRuntime() {
  callRuntimeCallbacks(__ATEXIT__);
  FS.quit();
  TTY.shutdown();
+ Asyncify.checkStateAfterExitRuntime();
  runtimeExited = true;
 }
 
@@ -1455,20 +1456,14 @@ function abort(what) {
  throw e;
 }
 
-function hasPrefix(str, prefix) {
- return String.prototype.startsWith ? str.startsWith(prefix) : str.indexOf(prefix) === 0;
-}
-
 var dataURIPrefix = "data:application/octet-stream;base64,";
 
 function isDataURI(filename) {
- return hasPrefix(filename, dataURIPrefix);
+ return filename.startsWith(dataURIPrefix);
 }
 
-var fileURIPrefix = "file://";
-
 function isFileURI(filename) {
- return hasPrefix(filename, fileURIPrefix);
+ return filename.startsWith("file://");
 }
 
 function createExportWrapper(name, fixedasm) {
@@ -1550,20 +1545,25 @@ function createWasm() {
   updateGlobalBufferAndViews(wasmMemory.buffer);
   wasmTable = Module["asm"]["__indirect_function_table"];
   assert(wasmTable, "table not found in wasm exports");
+  addOnInit(Module["asm"]["__wasm_call_ctors"]);
   removeRunDependency("wasm-instantiate");
  }
  addRunDependency("wasm-instantiate");
  var trueModule = Module;
- function receiveInstantiatedSource(output) {
+ function receiveInstantiationResult(result) {
   assert(Module === trueModule, "the Module object should not be replaced during async compilation - perhaps the order of HTML elements is wrong?");
   trueModule = null;
-  receiveInstance(output["instance"]);
+  receiveInstance(result["instance"]);
  }
  function instantiateArrayBuffer(receiver) {
   return getBinaryPromise().then(function(binary) {
-   return WebAssembly.instantiate(binary, info);
+   var result = WebAssembly.instantiate(binary, info);
+   return result;
   }).then(receiver, function(reason) {
    err("failed to asynchronously prepare wasm: " + reason);
+   if (isFileURI(wasmBinaryFile)) {
+    err("warning: Loading from a file URI (" + wasmBinaryFile + ") is not supported in most browsers. See https://emscripten.org/docs/getting_started/FAQ.html#how-do-i-run-a-local-webserver-for-testing-why-does-my-program-stall-in-downloading-or-preparing");
+   }
    abort(reason);
   });
  }
@@ -1573,14 +1573,14 @@ function createWasm() {
     credentials: "same-origin"
    }).then(function(response) {
     var result = WebAssembly.instantiateStreaming(response, info);
-    return result.then(receiveInstantiatedSource, function(reason) {
+    return result.then(receiveInstantiationResult, function(reason) {
      err("wasm streaming compile failed: " + reason);
      err("falling back to ArrayBuffer instantiation");
-     return instantiateArrayBuffer(receiveInstantiatedSource);
+     return instantiateArrayBuffer(receiveInstantiationResult);
     });
    });
   } else {
-   return instantiateArrayBuffer(receiveInstantiatedSource);
+   return instantiateArrayBuffer(receiveInstantiationResult);
   }
  }
  if (Module["instantiateWasm"]) {
@@ -1602,14 +1602,14 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {
- 6812: function() {
+ 180704: function() {
   textArea = document.getElementById("pasteTarget");
   var lengthBytes = lengthBytesUTF8(textArea.value) + 1;
   var stringOnWasmHeap = _malloc(lengthBytes);
   stringToUTF8(textArea.value, stringOnWasmHeap, lengthBytes);
   return stringOnWasmHeap;
  },
- 7052: function($0) {
+ 180943: function($0) {
   var tempInput = document.createElement("input");
   tempInput.value = UTF8ToString($0);
   document.body.appendChild(tempInput);
@@ -1617,16 +1617,16 @@ var ASM_CONSTS = {
   document.execCommand("copy");
   document.body.removeChild(tempInput);
  },
- 64127: function() {
+ 181158: function() {
   window.open("https://emscripten.org", "_blank");
  },
- 64347: function() {
+ 181207: function() {
   window.open("https://t.me/JRPC_Official", "_blank");
  },
- 64556: function() {
+ 181260: function() {
   window.open("https://mimo.exchange", "_blank");
  },
- 114022: function($0, $1, $2, $3) {
+ 181308: function($0, $1, $2, $3) {
   Asyncify.handleAsync(async () => {
    let resp = await window.antenna.iotx.sendTransfer({
     to: UTF8ToString($0),
@@ -1637,7 +1637,7 @@ var ASM_CONSTS = {
    });
   });
  },
- 116202: function() {
+ 181585: function() {
   if (window.antenna) {
    if (window.antenna.iotx.signer.ws.readyState === 1) {
     return true;
@@ -1648,7 +1648,7 @@ var ASM_CONSTS = {
    return false;
   }
  },
- 116343: function() {
+ 181726: function() {
   Asyncify.handleAsync(async () => {
    window.antenna = await new Antenna("https://api.iotex.one:443", {
     signer: await new WsSignerPlugin()
@@ -1656,7 +1656,7 @@ var ASM_CONSTS = {
    await new Promise(resolve => setTimeout(resolve, 1500));
   });
  },
- 117338: function($0) {
+ 181928: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1664,7 +1664,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 153564: function($0, $1, $2) {
+ 182153: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1735,7 +1735,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 155043: function($0, $1, $2, $3, $4) {
+ 183608: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1772,36 +1772,36 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 156032: function($0) {
+ 184597: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 156125: function() {
+ 184690: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 157350: function() {
+ 184759: function() {
   return screen.width;
  },
- 157377: function() {
+ 184784: function() {
   return screen.height;
  },
- 157405: function() {
+ 184810: function() {
   return window.innerWidth;
  },
- 157437: function() {
+ 184840: function() {
   return window.innerHeight;
  },
- 157515: function($0) {
+ 184871: function($0) {
   if (typeof setWindowTitle !== "undefined") {
    setWindowTitle(UTF8ToString($0));
   }
   return 0;
  },
- 157649: function() {
+ 184966: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1809,7 +1809,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 157815: function() {
+ 185103: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1817,7 +1817,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 158041: function($0) {
+ 185327: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1839,11 +1839,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 158594: function() {
+ 185820: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 158664: function($0, $1, $2, $3) {
+ 185888: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1884,7 +1884,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 160316: function($0, $1, $2, $3) {
+ 187540: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1896,7 +1896,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 160726: function($0, $1) {
+ 187950: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1915,7 +1915,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 161331: function($0, $1) {
+ 188555: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1928,7 +1928,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 161811: function($0) {
+ 189035: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1974,6 +1974,10 @@ function _emscripten_set_main_loop_timing(mode, value) {
  if (!Browser.mainLoop.func) {
   console.error("emscripten_set_main_loop_timing: Cannot set timing mode for main loop since a main loop does not exist! Call emscripten_set_main_loop first to set one up.");
   return 1;
+ }
+ if (!Browser.mainLoop.running) {
+  runtimeKeepalivePush();
+  Browser.mainLoop.running = true;
  }
  if (mode == 0) {
   Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler_setTimeout() {
@@ -2029,12 +2033,43 @@ if (ENVIRONMENT_IS_NODE) {
  return performance.now();
 };
 
+var runtimeKeepaliveCounter = 0;
+
+function runtimeKeepalivePush() {
+ runtimeKeepaliveCounter += 1;
+}
+
+function _exit(status) {
+ exit(status);
+}
+
+function maybeExit() {
+ if (!keepRuntimeAlive()) {
+  try {
+   _exit(EXITSTATUS);
+  } catch (e) {
+   if (e instanceof ExitStatus) {
+    return;
+   }
+   throw e;
+  }
+ }
+}
+
 function setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSetTiming) {
- noExitRuntime = true;
  assert(!Browser.mainLoop.func, "emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.");
  Browser.mainLoop.func = browserIterationFunc;
  Browser.mainLoop.arg = arg;
  var thisMainLoopId = Browser.mainLoop.currentlyRunningMainloop;
+ function checkIsRunning() {
+  if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) {
+   runtimeKeepalivePop();
+   maybeExit();
+   return false;
+  }
+  return true;
+ }
+ Browser.mainLoop.running = false;
  Browser.mainLoop.runner = function Browser_mainLoop_runner() {
   if (ABORT) return;
   if (Browser.mainLoop.queue.length > 0) {
@@ -2053,11 +2088,11 @@ function setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSet
    }
    console.log('main loop blocker "' + blocker.name + '" took ' + (Date.now() - start) + " ms");
    Browser.mainLoop.updateStatus();
-   if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
+   if (!checkIsRunning()) return;
    setTimeout(Browser.mainLoop.runner, 0);
    return;
   }
-  if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
+  if (!checkIsRunning()) return;
   Browser.mainLoop.currentFrameNumber = Browser.mainLoop.currentFrameNumber + 1 | 0;
   if (Browser.mainLoop.timingMode == 1 && Browser.mainLoop.timingValue > 1 && Browser.mainLoop.currentFrameNumber % Browser.mainLoop.timingValue != 0) {
    Browser.mainLoop.scheduler();
@@ -2072,7 +2107,7 @@ function setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSet
   }
   Browser.mainLoop.runIter(browserIterationFunc);
   checkStackCookie();
-  if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) return;
+  if (!checkIsRunning()) return;
   if (typeof SDL === "object" && SDL.audio && SDL.audio.queueNewAudioData) SDL.audio.queueNewAudioData();
   Browser.mainLoop.scheduler();
  };
@@ -2085,8 +2120,36 @@ function setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSet
  }
 }
 
+function callUserCallback(func, synchronous) {
+ if (ABORT) {
+  err("user callback triggered after application aborted.  Ignoring.");
+  return;
+ }
+ if (synchronous) {
+  func();
+  return;
+ }
+ try {
+  func();
+ } catch (e) {
+  if (e instanceof ExitStatus) {
+   return;
+  } else if (e !== "unwind") {
+   if (e && typeof e === "object" && e.stack) err("exception thrown: " + [ e, e.stack ]);
+   throw e;
+  }
+ }
+ maybeExit();
+}
+
+function runtimeKeepalivePop() {
+ assert(runtimeKeepaliveCounter > 0);
+ runtimeKeepaliveCounter -= 1;
+}
+
 var Browser = {
  mainLoop: {
+  running: false,
   scheduler: null,
   method: "",
   currentlyRunningMainloop: 0,
@@ -2134,18 +2197,7 @@ var Browser = {
      return;
     }
    }
-   try {
-    func();
-   } catch (e) {
-    if (e instanceof ExitStatus) {
-     return;
-    } else if (e == "unwind") {
-     return;
-    } else {
-     if (e && typeof e === "object" && e.stack) err("exception thrown: " + [ e, e.stack ]);
-     throw e;
-    }
-   }
+   callUserCallback(func);
    if (Module["postMainLoop"]) Module["postMainLoop"]();
   }
  },
@@ -2433,54 +2485,18 @@ var Browser = {
   var RAF = Browser.fakeRequestAnimationFrame;
   RAF(func);
  },
- safeCallback: function(func) {
-  return function() {
-   if (!ABORT) return func.apply(null, arguments);
-  };
- },
- allowAsyncCallbacks: true,
- queuedAsyncCallbacks: [],
- pauseAsyncCallbacks: function() {
-  Browser.allowAsyncCallbacks = false;
- },
- resumeAsyncCallbacks: function() {
-  Browser.allowAsyncCallbacks = true;
-  if (Browser.queuedAsyncCallbacks.length > 0) {
-   var callbacks = Browser.queuedAsyncCallbacks;
-   Browser.queuedAsyncCallbacks = [];
-   callbacks.forEach(function(func) {
-    func();
-   });
-  }
- },
  safeRequestAnimationFrame: function(func) {
+  runtimeKeepalivePush();
   return Browser.requestAnimationFrame(function() {
-   if (ABORT) return;
-   if (Browser.allowAsyncCallbacks) {
-    func();
-   } else {
-    Browser.queuedAsyncCallbacks.push(func);
-   }
+   runtimeKeepalivePop();
+   callUserCallback(func);
   });
  },
  safeSetTimeout: function(func, timeout) {
-  noExitRuntime = true;
+  runtimeKeepalivePush();
   return setTimeout(function() {
-   if (ABORT) return;
-   if (Browser.allowAsyncCallbacks) {
-    func();
-   } else {
-    Browser.queuedAsyncCallbacks.push(func);
-   }
-  }, timeout);
- },
- safeSetInterval: function(func, timeout) {
-  noExitRuntime = true;
-  return setInterval(function() {
-   if (ABORT) return;
-   if (Browser.allowAsyncCallbacks) {
-    func();
-   }
+   runtimeKeepalivePop();
+   callUserCallback(func);
   }, timeout);
  },
  getMimetype: function(name) {
@@ -2703,10 +2719,6 @@ var Browser = {
  }
 };
 
-function abortStackOverflow(allocSize) {
- abort("Stack overflow! Attempted to allocate " + allocSize + " bytes on the stack, but stack has only " + (_emscripten_stack_get_free() + allocSize) + " bytes available!");
-}
-
 function listenOnce(object, event, func) {
  object.addEventListener(event, func, {
   "once": true
@@ -2772,10 +2784,8 @@ function dynCallLegacy(sig, ptr, args) {
  } else {
   assert(sig.length == 1);
  }
- if (args && args.length) {
-  return Module["dynCall_" + sig].apply(null, [ ptr ].concat(args));
- }
- return Module["dynCall_" + sig].call(null, ptr);
+ var f = Module["dynCall_" + sig];
+ return args && args.length ? f.apply(null, [ ptr ].concat(args)) : f.call(null, ptr);
 }
 
 function dynCall(sig, ptr, args) {
@@ -2795,6 +2805,10 @@ function jsStackTrace() {
   }
  }
  return error.stack.toString();
+}
+
+function keepRuntimeAlive() {
+ return noExitRuntime || runtimeKeepaliveCounter > 0;
 }
 
 function stackTrace() {
@@ -2898,7 +2912,7 @@ function ___cxa_throw(ptr, type, destructor) {
  info.init(type, destructor);
  exceptionLast = ptr;
  uncaughtExceptionCount++;
- throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s DISABLE_EXCEPTION_CATCHING=0 or DISABLE_EXCEPTION_CATCHING=2 to catch.";
+ throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s NO_DISABLE_EXCEPTION_CATCHING or -s EXCEPTION_CATCHING_ALLOWED=[..] to catch.";
 }
 
 function setErrNo(value) {
@@ -3126,7 +3140,7 @@ var TTY = {
      try {
       bytesRead = nodeFS.readSync(process.stdin.fd, buf, 0, BUFSIZE, null);
      } catch (e) {
-      if (e.toString().indexOf("EOF") != -1) bytesRead = 0; else throw e;
+      if (e.toString().includes("EOF")) bytesRead = 0; else throw e;
      }
      if (bytesRead > 0) {
       result = buf.slice(0, bytesRead).toString("utf-8");
@@ -3185,7 +3199,7 @@ var TTY = {
 };
 
 function mmapAlloc(size) {
- var alignedSize = alignMemory(size, 16384);
+ var alignedSize = alignMemory(size, 65536);
  var ptr = _malloc(alignedSize);
  while (size < alignedSize) SAFE_HEAP_STORE(ptr + size++, 0, 1);
  return ptr;
@@ -3273,14 +3287,6 @@ var MEMFS = {
   }
   return node;
  },
- getFileDataAsRegularArray: function(node) {
-  if (node.contents && node.contents.subarray) {
-   var arr = [];
-   for (var i = 0; i < node.usedBytes; ++i) arr.push(node.contents[i]);
-   return arr;
-  }
-  return node.contents;
- },
  getFileDataAsTypedArray: function(node) {
   if (!node.contents) return new Uint8Array(0);
   if (node.contents.subarray) return node.contents.subarray(0, node.usedBytes);
@@ -3295,27 +3301,20 @@ var MEMFS = {
   var oldContents = node.contents;
   node.contents = new Uint8Array(newCapacity);
   if (node.usedBytes > 0) node.contents.set(oldContents.subarray(0, node.usedBytes), 0);
-  return;
  },
  resizeFileStorage: function(node, newSize) {
   if (node.usedBytes == newSize) return;
   if (newSize == 0) {
    node.contents = null;
    node.usedBytes = 0;
-   return;
-  }
-  if (!node.contents || node.contents.subarray) {
+  } else {
    var oldContents = node.contents;
    node.contents = new Uint8Array(newSize);
    if (oldContents) {
     node.contents.set(oldContents.subarray(0, Math.min(newSize, node.usedBytes)));
    }
    node.usedBytes = newSize;
-   return;
   }
-  if (!node.contents) node.contents = [];
-  if (node.contents.length > newSize) node.contents.length = newSize; else while (node.contents.length < newSize) node.contents.push(0);
-  node.usedBytes = newSize;
  },
  node_ops: {
   getattr: function(node) {
@@ -3962,11 +3961,11 @@ var FS = {
   if (FS.ignorePermissions) {
    return 0;
   }
-  if (perms.indexOf("r") !== -1 && !(node.mode & 292)) {
+  if (perms.includes("r") && !(node.mode & 292)) {
    return 2;
-  } else if (perms.indexOf("w") !== -1 && !(node.mode & 146)) {
+  } else if (perms.includes("w") && !(node.mode & 146)) {
    return 2;
-  } else if (perms.indexOf("x") !== -1 && !(node.mode & 73)) {
+  } else if (perms.includes("x") && !(node.mode & 73)) {
    return 2;
   }
   return 0;
@@ -4207,7 +4206,7 @@ var FS = {
    var current = FS.nameTable[hash];
    while (current) {
     var next = current.name_next;
-    if (mounts.indexOf(current.mount) !== -1) {
+    if (mounts.includes(current.mount)) {
      FS.destroyNode(current);
     }
     current = next;
@@ -5441,19 +5440,25 @@ var SYSCALLS = {
  mappings: {},
  DEFAULT_POLLMASK: 5,
  umask: 511,
- calculateAt: function(dirfd, path) {
-  if (path[0] !== "/") {
-   var dir;
-   if (dirfd === -100) {
-    dir = FS.cwd();
-   } else {
-    var dirstream = FS.getStream(dirfd);
-    if (!dirstream) throw new FS.ErrnoError(8);
-    dir = dirstream.path;
-   }
-   path = PATH.join2(dir, path);
+ calculateAt: function(dirfd, path, allowEmpty) {
+  if (path[0] === "/") {
+   return path;
   }
-  return path;
+  var dir;
+  if (dirfd === -100) {
+   dir = FS.cwd();
+  } else {
+   var dirstream = FS.getStream(dirfd);
+   if (!dirstream) throw new FS.ErrnoError(8);
+   dir = dirstream.path;
+  }
+  if (path.length == 0) {
+   if (!allowEmpty) {
+    throw new FS.ErrnoError(44);
+   }
+   return dir;
+  }
+  return PATH.join2(dir, path);
  },
  doStat: function(func, path, buf) {
   try {
@@ -5901,19 +5906,16 @@ var GL = {
  framebuffers: [],
  renderbuffers: [],
  textures: [],
- uniforms: [],
  shaders: [],
  vaos: [],
  contexts: [],
  offscreenCanvases: {},
- timerQueriesEXT: [],
  queries: [],
  samplers: [],
  transformFeedbacks: [],
  syncs: [],
  byteSizeByTypeRoot: 5120,
  byteSizeByType: [ 1, 1, 2, 2, 4, 4, 4, 2, 3, 4, 8 ],
- programInfos: {},
  stringCache: {},
  stringiCache: {},
  unpackAlignment: 4,
@@ -5932,7 +5934,7 @@ var GL = {
  MAX_TEMP_BUFFER_SIZE: 2097152,
  numTempVertexBuffersPerSize: 64,
  log2ceilLookup: function(i) {
-  return 32 - Math.clz32(i - 1);
+  return 32 - Math.clz32(i === 0 ? 0 : i - 1);
  },
  generateTempBuffers: function(quads, context) {
   var largestIndex = GL.log2ceilLookup(GL.MAX_TEMP_BUFFER_SIZE);
@@ -6061,6 +6063,13 @@ var GL = {
   }
  },
  createContext: function(canvas, webGLContextAttributes) {
+  if (!canvas.getContextSafariWebGL2Fixed) {
+   canvas.getContextSafariWebGL2Fixed = canvas.getContext;
+   canvas.getContext = function(ver, attrs) {
+    var gl = canvas.getContextSafariWebGL2Fixed(ver, attrs);
+    return ver == "webgl" == gl instanceof WebGLRenderingContext ? gl : null;
+   };
+  }
   var ctx = webGLContextAttributes.majorVersion > 1 ? canvas.getContext("webgl2", webGLContextAttributes) : canvas.getContext("webgl", webGLContextAttributes);
   if (!ctx) return 0;
   var handle = GL.registerContext(ctx, webGLContextAttributes);
@@ -6120,45 +6129,19 @@ var GL = {
   __webgl_enable_WEBGL_draw_buffers(GLctx);
   __webgl_enable_WEBGL_draw_instanced_base_vertex_base_instance(GLctx);
   __webgl_enable_WEBGL_multi_draw_instanced_base_vertex_base_instance(GLctx);
-  GLctx.disjointTimerQueryExt = GLctx.getExtension("EXT_disjoint_timer_query");
+  if (context.version >= 2) {
+   GLctx.disjointTimerQueryExt = GLctx.getExtension("EXT_disjoint_timer_query_webgl2");
+  }
+  if (context.version < 2 || !GLctx.disjointTimerQueryExt) {
+   GLctx.disjointTimerQueryExt = GLctx.getExtension("EXT_disjoint_timer_query");
+  }
   __webgl_enable_WEBGL_multi_draw(GLctx);
   var exts = GLctx.getSupportedExtensions() || [];
   exts.forEach(function(ext) {
-   if (ext.indexOf("lose_context") < 0 && ext.indexOf("debug") < 0) {
+   if (!ext.includes("lose_context") && !ext.includes("debug")) {
     GLctx.getExtension(ext);
    }
   });
- },
- populateUniformTable: function(program) {
-  var p = GL.programs[program];
-  var ptable = GL.programInfos[program] = {
-   uniforms: {},
-   maxUniformLength: 0,
-   maxAttributeLength: -1,
-   maxUniformBlockNameLength: -1
-  };
-  var utable = ptable.uniforms;
-  var numUniforms = GLctx.getProgramParameter(p, 35718);
-  for (var i = 0; i < numUniforms; ++i) {
-   var u = GLctx.getActiveUniform(p, i);
-   var name = u.name;
-   ptable.maxUniformLength = Math.max(ptable.maxUniformLength, name.length + 1);
-   if (name.slice(-1) == "]") {
-    name = name.slice(0, name.lastIndexOf("["));
-   }
-   var loc = GLctx.getUniformLocation(p, name);
-   if (loc) {
-    var id = GL.getNewId(GL.uniforms);
-    utable[name] = [ u.size, id ];
-    GL.uniforms[id] = loc;
-    for (var j = 1; j < u.size; ++j) {
-     var n = name + "[" + j + "]";
-     loc = GLctx.getUniformLocation(p, n);
-     id = GL.getNewId(GL.uniforms);
-     GL.uniforms[id] = loc;
-    }
-   }
-  }
  }
 };
 
@@ -6397,10 +6380,6 @@ function _eglGetError() {
  return EGL.errorCode;
 }
 
-function _eglGetProcAddress(name_) {
- return _emscripten_GetProcAddress(name_);
-}
-
 function _eglInitialize(display, majorVersion, minorVersion) {
  if (display == 62e3) {
   if (majorVersion) {
@@ -6523,8 +6502,27 @@ function _eglWaitNative(nativeEngineId) {
  return 1;
 }
 
+var readAsmConstArgsArray = [];
+
+function readAsmConstArgs(sigPtr, buf) {
+ assert(Array.isArray(readAsmConstArgsArray));
+ assert(buf % 16 == 0);
+ readAsmConstArgsArray.length = 0;
+ var ch;
+ buf >>= 2;
+ while (ch = SAFE_HEAP_LOAD(sigPtr++, 1, 1)) {
+  assert(ch === 100 || ch === 102 || ch === 105);
+  var double = ch < 105;
+  if (double && buf & 1) buf++;
+  readAsmConstArgsArray.push(double ? SAFE_HEAP_LOAD_D((buf++ >> 1) * 8, 8, 0) : SAFE_HEAP_LOAD(buf * 4, 4, 0));
+  ++buf;
+ }
+ return readAsmConstArgsArray;
+}
+
 function mainThreadEM_ASM(code, sigPtr, argbuf, sync) {
  var args = readAsmConstArgs(sigPtr, argbuf);
+ if (!ASM_CONSTS.hasOwnProperty(code)) abort("No EM_ASM constant found at address " + code);
  return ASM_CONSTS[code].apply(null, args);
 }
 
@@ -6534,6 +6532,7 @@ function _emscripten_asm_const_async_on_main_thread(code, sigPtr, argbuf) {
 
 function _emscripten_asm_const_int(code, sigPtr, argbuf) {
  var args = readAsmConstArgs(sigPtr, argbuf);
+ if (!ASM_CONSTS.hasOwnProperty(code)) abort("No EM_ASM constant found at address " + code);
  return ASM_CONSTS[code].apply(null, args);
 }
 
@@ -6752,7 +6751,7 @@ function registerRestoreOldStyle(canvas) {
    if (canvas.GLctxObject) canvas.GLctxObject.GLctx.viewport(0, 0, oldWidth, oldHeight);
    if (currentFullscreenStrategy.canvasResizedCallback) {
     (function(a1, a2, a3) {
-     dynCall_iiii.apply(null, [ currentFullscreenStrategy.canvasResizedCallback, a1, a2, a3 ]);
+     return dynCall_iiii.apply(null, [ currentFullscreenStrategy.canvasResizedCallback, a1, a2, a3 ]);
     })(37, 0, currentFullscreenStrategy.canvasResizedCallbackUserData);
    }
   }
@@ -6836,7 +6835,7 @@ function _JSEvents_requestFullscreen(target, strategy) {
  currentFullscreenStrategy = strategy;
  if (strategy.canvasResizedCallback) {
   (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ strategy.canvasResizedCallback, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ strategy.canvasResizedCallback, a1, a2, a3 ]);
   })(37, 0, strategy.canvasResizedCallbackUserData);
  }
  return 0;
@@ -6974,7 +6973,7 @@ function _emscripten_glBeginQuery(target, id) {
 }
 
 function _emscripten_glBeginQueryEXT(target, id) {
- GLctx.disjointTimerQueryExt["beginQueryEXT"](target, GL.timerQueriesEXT[id]);
+ GLctx.disjointTimerQueryExt["beginQueryEXT"](target, GL.queries[id]);
 }
 
 function _emscripten_glBeginTransformFeedback(x0) {
@@ -7196,6 +7195,8 @@ function _emscripten_glCreateProgram() {
  var id = GL.getNewId(GL.programs);
  var program = GLctx.createProgram();
  program.name = id;
+ program.maxUniformLength = program.maxAttributeLength = program.maxUniformBlockNameLength = 0;
+ program.uniformIdCounter = 1;
  GL.programs[id] = program;
  return id;
 }
@@ -7246,7 +7247,6 @@ function _emscripten_glDeleteProgram(id) {
  GLctx.deleteProgram(program);
  program.name = 0;
  GL.programs[id] = null;
- GL.programInfos[id] = null;
 }
 
 function _emscripten_glDeleteQueries(n, ids) {
@@ -7262,10 +7262,10 @@ function _emscripten_glDeleteQueries(n, ids) {
 function _emscripten_glDeleteQueriesEXT(n, ids) {
  for (var i = 0; i < n; i++) {
   var id = SAFE_HEAP_LOAD(ids + i * 4 | 0, 4, 0) | 0;
-  var query = GL.timerQueriesEXT[id];
+  var query = GL.queries[id];
   if (!query) continue;
   GLctx.disjointTimerQueryExt["deleteQueryEXT"](query);
-  GL.timerQueriesEXT[id] = null;
+  GL.queries[id] = null;
  }
 }
 
@@ -7661,9 +7661,9 @@ function _emscripten_glGenQueriesEXT(n, ids) {
    while (i < n) SAFE_HEAP_STORE(ids + i++ * 4 | 0, 0 | 0, 4);
    return;
   }
-  var id = GL.getNewId(GL.timerQueriesEXT);
+  var id = GL.getNewId(GL.queries);
   query.name = id;
-  GL.timerQueriesEXT[id] = query;
+  GL.queries[id] = query;
   SAFE_HEAP_STORE(ids + i * 4 | 0, id | 0, 4);
  }
 }
@@ -7733,22 +7733,19 @@ function _emscripten_glGetActiveUniformBlockiv(program, uniformBlockIndex, pname
   return;
  }
  program = GL.programs[program];
- switch (pname) {
- case 35393:
+ if (pname == 35393) {
   var name = GLctx["getActiveUniformBlockName"](program, uniformBlockIndex);
   SAFE_HEAP_STORE(params | 0, name.length + 1 | 0, 4);
   return;
-
- default:
-  var result = GLctx["getActiveUniformBlockParameter"](program, uniformBlockIndex, pname);
-  if (!result) return;
-  if (typeof result == "number") {
-   SAFE_HEAP_STORE(params | 0, result | 0, 4);
-  } else {
-   for (var i = 0; i < result.length; i++) {
-    SAFE_HEAP_STORE(params + i * 4 | 0, result[i] | 0, 4);
-   }
+ }
+ var result = GLctx["getActiveUniformBlockParameter"](program, uniformBlockIndex, pname);
+ if (result === null) return;
+ if (pname == 35395) {
+  for (var i = 0; i < result.length; i++) {
+   SAFE_HEAP_STORE(params + i * 4 | 0, result[i] | 0, 4);
   }
+ } else {
+  SAFE_HEAP_STORE(params | 0, result | 0, 4);
  }
 }
 
@@ -8124,41 +8121,34 @@ function _emscripten_glGetProgramiv(program, pname, p) {
   GL.recordError(1281);
   return;
  }
- var ptable = GL.programInfos[program];
- if (!ptable) {
-  GL.recordError(1282);
-  return;
- }
+ program = GL.programs[program];
  if (pname == 35716) {
-  var log = GLctx.getProgramInfoLog(GL.programs[program]);
+  var log = GLctx.getProgramInfoLog(program);
   if (log === null) log = "(unknown error)";
   SAFE_HEAP_STORE(p | 0, log.length + 1 | 0, 4);
  } else if (pname == 35719) {
-  SAFE_HEAP_STORE(p | 0, ptable.maxUniformLength | 0, 4);
+  if (!program.maxUniformLength) {
+   for (var i = 0; i < GLctx.getProgramParameter(program, 35718); ++i) {
+    program.maxUniformLength = Math.max(program.maxUniformLength, GLctx.getActiveUniform(program, i).name.length + 1);
+   }
+  }
+  SAFE_HEAP_STORE(p | 0, program.maxUniformLength | 0, 4);
  } else if (pname == 35722) {
-  if (ptable.maxAttributeLength == -1) {
-   program = GL.programs[program];
-   var numAttribs = GLctx.getProgramParameter(program, 35721);
-   ptable.maxAttributeLength = 0;
-   for (var i = 0; i < numAttribs; ++i) {
-    var activeAttrib = GLctx.getActiveAttrib(program, i);
-    ptable.maxAttributeLength = Math.max(ptable.maxAttributeLength, activeAttrib.name.length + 1);
+  if (!program.maxAttributeLength) {
+   for (var i = 0; i < GLctx.getProgramParameter(program, 35721); ++i) {
+    program.maxAttributeLength = Math.max(program.maxAttributeLength, GLctx.getActiveAttrib(program, i).name.length + 1);
    }
   }
-  SAFE_HEAP_STORE(p | 0, ptable.maxAttributeLength | 0, 4);
+  SAFE_HEAP_STORE(p | 0, program.maxAttributeLength | 0, 4);
  } else if (pname == 35381) {
-  if (ptable.maxUniformBlockNameLength == -1) {
-   program = GL.programs[program];
-   var numBlocks = GLctx.getProgramParameter(program, 35382);
-   ptable.maxUniformBlockNameLength = 0;
-   for (var i = 0; i < numBlocks; ++i) {
-    var activeBlockName = GLctx.getActiveUniformBlockName(program, i);
-    ptable.maxUniformBlockNameLength = Math.max(ptable.maxUniformBlockNameLength, activeBlockName.length + 1);
+  if (!program.maxUniformBlockNameLength) {
+   for (var i = 0; i < GLctx.getProgramParameter(program, 35382); ++i) {
+    program.maxUniformBlockNameLength = Math.max(program.maxUniformBlockNameLength, GLctx.getActiveUniformBlockName(program, i).length + 1);
    }
   }
-  SAFE_HEAP_STORE(p | 0, ptable.maxUniformBlockNameLength | 0, 4);
+  SAFE_HEAP_STORE(p | 0, program.maxUniformBlockNameLength | 0, 4);
  } else {
-  SAFE_HEAP_STORE(p | 0, GLctx.getProgramParameter(GL.programs[program], pname) | 0, 4);
+  SAFE_HEAP_STORE(p | 0, GLctx.getProgramParameter(program, pname) | 0, 4);
  }
 }
 
@@ -8167,8 +8157,13 @@ function _emscripten_glGetQueryObjecti64vEXT(id, pname, params) {
   GL.recordError(1281);
   return;
  }
- var query = GL.timerQueriesEXT[id];
- var param = GLctx.disjointTimerQueryExt["getQueryObjectEXT"](query, pname);
+ var query = GL.queries[id];
+ var param;
+ if (GL.currentContext.version < 2) {
+  param = GLctx.disjointTimerQueryExt["getQueryObjectEXT"](query, pname);
+ } else {
+  param = GLctx["getQueryParameter"](query, pname);
+ }
  var ret;
  if (typeof param == "boolean") {
   ret = param ? 1 : 0;
@@ -8183,7 +8178,7 @@ function _emscripten_glGetQueryObjectivEXT(id, pname, params) {
   GL.recordError(1281);
   return;
  }
- var query = GL.timerQueriesEXT[id];
+ var query = GL.queries[id];
  var param = GLctx.disjointTimerQueryExt["getQueryObjectEXT"](query, pname);
  var ret;
  if (typeof param == "boolean") {
@@ -8199,8 +8194,13 @@ function _emscripten_glGetQueryObjectui64vEXT(id, pname, params) {
   GL.recordError(1281);
   return;
  }
- var query = GL.timerQueriesEXT[id];
- var param = GLctx.disjointTimerQueryExt["getQueryObjectEXT"](query, pname);
+ var query = GL.queries[id];
+ var param;
+ if (GL.currentContext.version < 2) {
+  param = GLctx.disjointTimerQueryExt["getQueryObjectEXT"](query, pname);
+ } else {
+  param = GLctx["getQueryParameter"](query, pname);
+ }
  var ret;
  if (typeof param == "boolean") {
   ret = param ? 1 : 0;
@@ -8231,7 +8231,7 @@ function _emscripten_glGetQueryObjectuivEXT(id, pname, params) {
   GL.recordError(1281);
   return;
  }
- var query = GL.timerQueriesEXT[id];
+ var query = GL.queries[id];
  var param = GLctx.disjointTimerQueryExt["getQueryObjectEXT"](query, pname);
  var ret;
  if (typeof param == "boolean") {
@@ -8271,8 +8271,7 @@ function _emscripten_glGetSamplerParameterfv(sampler, pname, params) {
   GL.recordError(1281);
   return;
  }
- sampler = GL.samplers[sampler];
- SAFE_HEAP_STORE_D(params | 0, Math.fround(GLctx["getSamplerParameter"](sampler, pname)), 4);
+ SAFE_HEAP_STORE_D(params | 0, Math.fround(GLctx["getSamplerParameter"](GL.samplers[sampler], pname)), 4);
 }
 
 function _emscripten_glGetSamplerParameteriv(sampler, pname, params) {
@@ -8280,8 +8279,7 @@ function _emscripten_glGetSamplerParameteriv(sampler, pname, params) {
   GL.recordError(1281);
   return;
  }
- sampler = GL.samplers[sampler];
- SAFE_HEAP_STORE(params | 0, GLctx["getSamplerParameter"](sampler, pname) | 0, 4);
+ SAFE_HEAP_STORE(params | 0, GLctx["getSamplerParameter"](GL.samplers[sampler], pname) | 0, 4);
 }
 
 function _emscripten_glGetShaderInfoLog(shader, maxLength, length, infoLog) {
@@ -8332,52 +8330,52 @@ function stringToNewUTF8(jsString) {
 }
 
 function _emscripten_glGetString(name_) {
- if (GL.stringCache[name_]) return GL.stringCache[name_];
- var ret;
- switch (name_) {
- case 7939:
-  var exts = GLctx.getSupportedExtensions() || [];
-  exts = exts.concat(exts.map(function(e) {
-   return "GL_" + e;
-  }));
-  ret = stringToNewUTF8(exts.join(" "));
-  break;
+ var ret = GL.stringCache[name_];
+ if (!ret) {
+  switch (name_) {
+  case 7939:
+   var exts = GLctx.getSupportedExtensions() || [];
+   exts = exts.concat(exts.map(function(e) {
+    return "GL_" + e;
+   }));
+   ret = stringToNewUTF8(exts.join(" "));
+   break;
 
- case 7936:
- case 7937:
- case 37445:
- case 37446:
-  var s = GLctx.getParameter(name_);
-  if (!s) {
+  case 7936:
+  case 7937:
+  case 37445:
+  case 37446:
+   var s = GLctx.getParameter(name_);
+   if (!s) {
+    GL.recordError(1280);
+   }
+   ret = s && stringToNewUTF8(s);
+   break;
+
+  case 7938:
+   var glVersion = GLctx.getParameter(7938);
+   if (GL.currentContext.version >= 2) glVersion = "OpenGL ES 3.0 (" + glVersion + ")"; else {
+    glVersion = "OpenGL ES 2.0 (" + glVersion + ")";
+   }
+   ret = stringToNewUTF8(glVersion);
+   break;
+
+  case 35724:
+   var glslVersion = GLctx.getParameter(35724);
+   var ver_re = /^WebGL GLSL ES ([0-9]\.[0-9][0-9]?)(?:$| .*)/;
+   var ver_num = glslVersion.match(ver_re);
+   if (ver_num !== null) {
+    if (ver_num[1].length == 3) ver_num[1] = ver_num[1] + "0";
+    glslVersion = "OpenGL ES GLSL ES " + ver_num[1] + " (" + glslVersion + ")";
+   }
+   ret = stringToNewUTF8(glslVersion);
+   break;
+
+  default:
    GL.recordError(1280);
   }
-  ret = stringToNewUTF8(s);
-  break;
-
- case 7938:
-  var glVersion = GLctx.getParameter(7938);
-  if (GL.currentContext.version >= 2) glVersion = "OpenGL ES 3.0 (" + glVersion + ")"; else {
-   glVersion = "OpenGL ES 2.0 (" + glVersion + ")";
-  }
-  ret = stringToNewUTF8(glVersion);
-  break;
-
- case 35724:
-  var glslVersion = GLctx.getParameter(35724);
-  var ver_re = /^WebGL GLSL ES ([0-9]\.[0-9][0-9]?)(?:$| .*)/;
-  var ver_num = glslVersion.match(ver_re);
-  if (ver_num !== null) {
-   if (ver_num[1].length == 3) ver_num[1] = ver_num[1] + "0";
-   glslVersion = "OpenGL ES GLSL ES " + ver_num[1] + " (" + glslVersion + ")";
-  }
-  ret = stringToNewUTF8(glslVersion);
-  break;
-
- default:
-  GL.recordError(1280);
-  return 0;
+  GL.stringCache[name_] = ret;
  }
- GL.stringCache[name_] = ret;
  return ret;
 }
 
@@ -8426,8 +8424,10 @@ function _emscripten_glGetSynciv(sync, pname, bufSize, length, values) {
   return;
  }
  var ret = GLctx.getSyncParameter(GL.syncs[sync], pname);
- SAFE_HEAP_STORE(length | 0, ret | 0, 4);
- if (ret !== null && length) SAFE_HEAP_STORE(length | 0, 1 | 0, 4);
+ if (ret !== null) {
+  SAFE_HEAP_STORE(values | 0, ret | 0, 4);
+  if (length) SAFE_HEAP_STORE(length | 0, 1 | 0, 4);
+ }
 }
 
 function _emscripten_glGetTexParameterfv(target, pname, params) {
@@ -8488,19 +8488,67 @@ function jstoi_q(str) {
  return parseInt(str);
 }
 
+function webglGetLeftBracePos(name) {
+ return name.slice(-1) == "]" && name.lastIndexOf("[");
+}
+
+function webglPrepareUniformLocationsBeforeFirstUse(program) {
+ var uniformLocsById = program.uniformLocsById, uniformSizeAndIdsByName = program.uniformSizeAndIdsByName, i, j;
+ if (!uniformLocsById) {
+  program.uniformLocsById = uniformLocsById = {};
+  program.uniformArrayNamesById = {};
+  for (i = 0; i < GLctx.getProgramParameter(program, 35718); ++i) {
+   var u = GLctx.getActiveUniform(program, i);
+   var nm = u.name;
+   var sz = u.size;
+   var lb = webglGetLeftBracePos(nm);
+   var arrayName = lb > 0 ? nm.slice(0, lb) : nm;
+   var id = program.uniformIdCounter;
+   program.uniformIdCounter += sz;
+   uniformSizeAndIdsByName[arrayName] = [ sz, id ];
+   for (j = 0; j < sz; ++j) {
+    uniformLocsById[id] = j;
+    program.uniformArrayNamesById[id++] = arrayName;
+   }
+  }
+ }
+}
+
 function _emscripten_glGetUniformLocation(program, name) {
  name = UTF8ToString(name);
- var arrayIndex = 0;
- if (name[name.length - 1] == "]") {
-  var leftBrace = name.lastIndexOf("[");
-  arrayIndex = name[leftBrace + 1] != "]" ? jstoi_q(name.slice(leftBrace + 1)) : 0;
-  name = name.slice(0, leftBrace);
- }
- var uniformInfo = GL.programInfos[program] && GL.programInfos[program].uniforms[name];
- if (uniformInfo && arrayIndex >= 0 && arrayIndex < uniformInfo[0]) {
-  return uniformInfo[1] + arrayIndex;
+ if (program = GL.programs[program]) {
+  webglPrepareUniformLocationsBeforeFirstUse(program);
+  var uniformLocsById = program.uniformLocsById;
+  var arrayIndex = 0;
+  var uniformBaseName = name;
+  var leftBrace = webglGetLeftBracePos(name);
+  if (leftBrace > 0) {
+   arrayIndex = jstoi_q(name.slice(leftBrace + 1)) >>> 0;
+   uniformBaseName = name.slice(0, leftBrace);
+  }
+  var sizeAndId = program.uniformSizeAndIdsByName[uniformBaseName];
+  if (sizeAndId && arrayIndex < sizeAndId[0]) {
+   arrayIndex += sizeAndId[1];
+   if (uniformLocsById[arrayIndex] = uniformLocsById[arrayIndex] || GLctx.getUniformLocation(program, name)) {
+    return arrayIndex;
+   }
+  }
  } else {
-  return -1;
+  GL.recordError(1281);
+ }
+ return -1;
+}
+
+function webglGetUniformLocation(location) {
+ var p = GLctx.currentProgram;
+ if (p) {
+  var webglLoc = p.uniformLocsById[location];
+  if (typeof webglLoc === "number") {
+   p.uniformLocsById[location] = webglLoc = GLctx.getUniformLocation(p, p.uniformArrayNamesById[location] + (webglLoc > 0 ? "[" + webglLoc + "]" : ""));
+  }
+  return webglLoc;
+ } else {
+  GL.recordError(1282);
  }
 }
 
@@ -8509,7 +8557,9 @@ function emscriptenWebGLGetUniform(program, location, params, type) {
   GL.recordError(1281);
   return;
  }
- var data = GLctx.getUniform(GL.programs[program], GL.uniforms[location]);
+ program = GL.programs[program];
+ webglPrepareUniformLocationsBeforeFirstUse(program);
+ var data = GLctx.getUniform(program, webglGetUniformLocation(location));
  if (typeof data == "number" || typeof data == "boolean") {
   switch (type) {
   case 0:
@@ -8667,7 +8717,7 @@ function _emscripten_glIsQuery(id) {
 }
 
 function _emscripten_glIsQueryEXT(id) {
- var query = GL.timerQueriesEXT[id];
+ var query = GL.queries[id];
  if (!query) return 0;
  return GLctx.disjointTimerQueryExt["isQueryEXT"](query);
 }
@@ -8721,8 +8771,10 @@ function _emscripten_glLineWidth(x0) {
 }
 
 function _emscripten_glLinkProgram(program) {
- GLctx.linkProgram(GL.programs[program]);
- GL.populateUniformTable(program);
+ program = GL.programs[program];
+ GLctx.linkProgram(program);
+ program.uniformLocsById = 0;
+ program.uniformSizeAndIdsByName = {};
 }
 
 function _emscripten_glMapBufferRange(target, offset, length, access) {
@@ -8770,7 +8822,7 @@ function _emscripten_glProgramParameteri(program, pname, value) {
 }
 
 function _emscripten_glQueryCounterEXT(id, target) {
- GLctx.disjointTimerQueryExt["queryCounterEXT"](GL.timerQueriesEXT[id], target);
+ GLctx.disjointTimerQueryExt["queryCounterEXT"](GL.queries[id], target);
 }
 
 function _emscripten_glReadBuffer(x0) {
@@ -9004,14 +9056,14 @@ function _emscripten_glTransformFeedbackVaryings(program, count, varyings, buffe
 }
 
 function _emscripten_glUniform1f(location, v0) {
- GLctx.uniform1f(GL.uniforms[location], v0);
+ GLctx.uniform1f(webglGetUniformLocation(location), v0);
 }
 
 var miniTempWebGLFloatBuffers = [];
 
 function _emscripten_glUniform1fv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform1fv(GL.uniforms[location], HEAPF32, value >> 2, count);
+  GLctx.uniform1fv(webglGetUniformLocation(location), HEAPF32, value >> 2, count);
   return;
  }
  if (count <= 288) {
@@ -9022,18 +9074,18 @@ function _emscripten_glUniform1fv(location, count, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 4 >> 2);
  }
- GLctx.uniform1fv(GL.uniforms[location], view);
+ GLctx.uniform1fv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform1i(location, v0) {
- GLctx.uniform1i(GL.uniforms[location], v0);
+ GLctx.uniform1i(webglGetUniformLocation(location), v0);
 }
 
 var __miniTempWebGLIntBuffers = [];
 
 function _emscripten_glUniform1iv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform1iv(GL.uniforms[location], HEAP32, value >> 2, count);
+  GLctx.uniform1iv(webglGetUniformLocation(location), HEAP32, value >> 2, count);
   return;
  }
  if (count <= 288) {
@@ -9044,24 +9096,24 @@ function _emscripten_glUniform1iv(location, count, value) {
  } else {
   var view = HEAP32.subarray(value >> 2, value + count * 4 >> 2);
  }
- GLctx.uniform1iv(GL.uniforms[location], view);
+ GLctx.uniform1iv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform1ui(location, v0) {
- GLctx.uniform1ui(GL.uniforms[location], v0);
+ GLctx.uniform1ui(webglGetUniformLocation(location), v0);
 }
 
 function _emscripten_glUniform1uiv(location, count, value) {
- GLctx.uniform1uiv(GL.uniforms[location], HEAPU32, value >> 2, count);
+ GLctx.uniform1uiv(webglGetUniformLocation(location), HEAPU32, value >> 2, count);
 }
 
 function _emscripten_glUniform2f(location, v0, v1) {
- GLctx.uniform2f(GL.uniforms[location], v0, v1);
+ GLctx.uniform2f(webglGetUniformLocation(location), v0, v1);
 }
 
 function _emscripten_glUniform2fv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform2fv(GL.uniforms[location], HEAPF32, value >> 2, count * 2);
+  GLctx.uniform2fv(webglGetUniformLocation(location), HEAPF32, value >> 2, count * 2);
   return;
  }
  if (count <= 144) {
@@ -9073,16 +9125,16 @@ function _emscripten_glUniform2fv(location, count, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 8 >> 2);
  }
- GLctx.uniform2fv(GL.uniforms[location], view);
+ GLctx.uniform2fv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform2i(location, v0, v1) {
- GLctx.uniform2i(GL.uniforms[location], v0, v1);
+ GLctx.uniform2i(webglGetUniformLocation(location), v0, v1);
 }
 
 function _emscripten_glUniform2iv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform2iv(GL.uniforms[location], HEAP32, value >> 2, count * 2);
+  GLctx.uniform2iv(webglGetUniformLocation(location), HEAP32, value >> 2, count * 2);
   return;
  }
  if (count <= 144) {
@@ -9094,24 +9146,24 @@ function _emscripten_glUniform2iv(location, count, value) {
  } else {
   var view = HEAP32.subarray(value >> 2, value + count * 8 >> 2);
  }
- GLctx.uniform2iv(GL.uniforms[location], view);
+ GLctx.uniform2iv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform2ui(location, v0, v1) {
- GLctx.uniform2ui(GL.uniforms[location], v0, v1);
+ GLctx.uniform2ui(webglGetUniformLocation(location), v0, v1);
 }
 
 function _emscripten_glUniform2uiv(location, count, value) {
- GLctx.uniform2uiv(GL.uniforms[location], HEAPU32, value >> 2, count * 2);
+ GLctx.uniform2uiv(webglGetUniformLocation(location), HEAPU32, value >> 2, count * 2);
 }
 
 function _emscripten_glUniform3f(location, v0, v1, v2) {
- GLctx.uniform3f(GL.uniforms[location], v0, v1, v2);
+ GLctx.uniform3f(webglGetUniformLocation(location), v0, v1, v2);
 }
 
 function _emscripten_glUniform3fv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform3fv(GL.uniforms[location], HEAPF32, value >> 2, count * 3);
+  GLctx.uniform3fv(webglGetUniformLocation(location), HEAPF32, value >> 2, count * 3);
   return;
  }
  if (count <= 96) {
@@ -9124,16 +9176,16 @@ function _emscripten_glUniform3fv(location, count, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 12 >> 2);
  }
- GLctx.uniform3fv(GL.uniforms[location], view);
+ GLctx.uniform3fv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform3i(location, v0, v1, v2) {
- GLctx.uniform3i(GL.uniforms[location], v0, v1, v2);
+ GLctx.uniform3i(webglGetUniformLocation(location), v0, v1, v2);
 }
 
 function _emscripten_glUniform3iv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform3iv(GL.uniforms[location], HEAP32, value >> 2, count * 3);
+  GLctx.uniform3iv(webglGetUniformLocation(location), HEAP32, value >> 2, count * 3);
   return;
  }
  if (count <= 96) {
@@ -9146,24 +9198,24 @@ function _emscripten_glUniform3iv(location, count, value) {
  } else {
   var view = HEAP32.subarray(value >> 2, value + count * 12 >> 2);
  }
- GLctx.uniform3iv(GL.uniforms[location], view);
+ GLctx.uniform3iv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform3ui(location, v0, v1, v2) {
- GLctx.uniform3ui(GL.uniforms[location], v0, v1, v2);
+ GLctx.uniform3ui(webglGetUniformLocation(location), v0, v1, v2);
 }
 
 function _emscripten_glUniform3uiv(location, count, value) {
- GLctx.uniform3uiv(GL.uniforms[location], HEAPU32, value >> 2, count * 3);
+ GLctx.uniform3uiv(webglGetUniformLocation(location), HEAPU32, value >> 2, count * 3);
 }
 
 function _emscripten_glUniform4f(location, v0, v1, v2, v3) {
- GLctx.uniform4f(GL.uniforms[location], v0, v1, v2, v3);
+ GLctx.uniform4f(webglGetUniformLocation(location), v0, v1, v2, v3);
 }
 
 function _emscripten_glUniform4fv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform4fv(GL.uniforms[location], HEAPF32, value >> 2, count * 4);
+  GLctx.uniform4fv(webglGetUniformLocation(location), HEAPF32, value >> 2, count * 4);
   return;
  }
  if (count <= 72) {
@@ -9180,16 +9232,16 @@ function _emscripten_glUniform4fv(location, count, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 16 >> 2);
  }
- GLctx.uniform4fv(GL.uniforms[location], view);
+ GLctx.uniform4fv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform4i(location, v0, v1, v2, v3) {
- GLctx.uniform4i(GL.uniforms[location], v0, v1, v2, v3);
+ GLctx.uniform4i(webglGetUniformLocation(location), v0, v1, v2, v3);
 }
 
 function _emscripten_glUniform4iv(location, count, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniform4iv(GL.uniforms[location], HEAP32, value >> 2, count * 4);
+  GLctx.uniform4iv(webglGetUniformLocation(location), HEAP32, value >> 2, count * 4);
   return;
  }
  if (count <= 72) {
@@ -9203,15 +9255,15 @@ function _emscripten_glUniform4iv(location, count, value) {
  } else {
   var view = HEAP32.subarray(value >> 2, value + count * 16 >> 2);
  }
- GLctx.uniform4iv(GL.uniforms[location], view);
+ GLctx.uniform4iv(webglGetUniformLocation(location), view);
 }
 
 function _emscripten_glUniform4ui(location, v0, v1, v2, v3) {
- GLctx.uniform4ui(GL.uniforms[location], v0, v1, v2, v3);
+ GLctx.uniform4ui(webglGetUniformLocation(location), v0, v1, v2, v3);
 }
 
 function _emscripten_glUniform4uiv(location, count, value) {
- GLctx.uniform4uiv(GL.uniforms[location], HEAPU32, value >> 2, count * 4);
+ GLctx.uniform4uiv(webglGetUniformLocation(location), HEAPU32, value >> 2, count * 4);
 }
 
 function _emscripten_glUniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding) {
@@ -9221,7 +9273,7 @@ function _emscripten_glUniformBlockBinding(program, uniformBlockIndex, uniformBl
 
 function _emscripten_glUniformMatrix2fv(location, count, transpose, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniformMatrix2fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 4);
+  GLctx.uniformMatrix2fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 4);
   return;
  }
  if (count <= 72) {
@@ -9235,20 +9287,20 @@ function _emscripten_glUniformMatrix2fv(location, count, transpose, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 16 >> 2);
  }
- GLctx.uniformMatrix2fv(GL.uniforms[location], !!transpose, view);
+ GLctx.uniformMatrix2fv(webglGetUniformLocation(location), !!transpose, view);
 }
 
 function _emscripten_glUniformMatrix2x3fv(location, count, transpose, value) {
- GLctx.uniformMatrix2x3fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 6);
+ GLctx.uniformMatrix2x3fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 6);
 }
 
 function _emscripten_glUniformMatrix2x4fv(location, count, transpose, value) {
- GLctx.uniformMatrix2x4fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 8);
+ GLctx.uniformMatrix2x4fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 8);
 }
 
 function _emscripten_glUniformMatrix3fv(location, count, transpose, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniformMatrix3fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 9);
+  GLctx.uniformMatrix3fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 9);
   return;
  }
  if (count <= 32) {
@@ -9267,20 +9319,20 @@ function _emscripten_glUniformMatrix3fv(location, count, transpose, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 36 >> 2);
  }
- GLctx.uniformMatrix3fv(GL.uniforms[location], !!transpose, view);
+ GLctx.uniformMatrix3fv(webglGetUniformLocation(location), !!transpose, view);
 }
 
 function _emscripten_glUniformMatrix3x2fv(location, count, transpose, value) {
- GLctx.uniformMatrix3x2fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 6);
+ GLctx.uniformMatrix3x2fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 6);
 }
 
 function _emscripten_glUniformMatrix3x4fv(location, count, transpose, value) {
- GLctx.uniformMatrix3x4fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 12);
+ GLctx.uniformMatrix3x4fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 12);
 }
 
 function _emscripten_glUniformMatrix4fv(location, count, transpose, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniformMatrix4fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 16);
+  GLctx.uniformMatrix4fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 16);
   return;
  }
  if (count <= 18) {
@@ -9309,15 +9361,15 @@ function _emscripten_glUniformMatrix4fv(location, count, transpose, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 64 >> 2);
  }
- GLctx.uniformMatrix4fv(GL.uniforms[location], !!transpose, view);
+ GLctx.uniformMatrix4fv(webglGetUniformLocation(location), !!transpose, view);
 }
 
 function _emscripten_glUniformMatrix4x2fv(location, count, transpose, value) {
- GLctx.uniformMatrix4x2fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 8);
+ GLctx.uniformMatrix4x2fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 8);
 }
 
 function _emscripten_glUniformMatrix4x3fv(location, count, transpose, value) {
- GLctx.uniformMatrix4x3fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 12);
+ GLctx.uniformMatrix4x3fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 12);
 }
 
 function _emscripten_glUnmapBuffer(target) {
@@ -9344,7 +9396,9 @@ function _emscripten_glUnmapBuffer(target) {
 }
 
 function _emscripten_glUseProgram(program) {
- GLctx.useProgram(GL.programs[program]);
+ program = GL.programs[program];
+ GLctx.useProgram(program);
+ GLctx.currentProgram = program;
 }
 
 function _emscripten_glValidateProgram(program) {
@@ -9526,10 +9580,6 @@ function _emscripten_request_pointerlock(target, deferUntilInEventHandler) {
  return requestPointerLock(target);
 }
 
-function _emscripten_get_heap_size() {
- return HEAPU8.length;
-}
-
 function emscripten_realloc_buffer(size) {
  try {
   wasmMemory.grow(size - buffer.byteLength + 65535 >>> 16);
@@ -9541,19 +9591,18 @@ function emscripten_realloc_buffer(size) {
 }
 
 function _emscripten_resize_heap(requestedSize) {
+ var oldSize = HEAPU8.length;
  requestedSize = requestedSize >>> 0;
- var oldSize = _emscripten_get_heap_size();
  assert(requestedSize > oldSize);
  var maxHeapSize = 2147483648;
  if (requestedSize > maxHeapSize) {
   err("Cannot enlarge memory, asked to go up to " + requestedSize + " bytes, but the limit is " + maxHeapSize + " bytes!");
   return false;
  }
- var minHeapSize = 16777216;
  for (var cutDown = 1; cutDown <= 4; cutDown *= 2) {
   var overGrownHeapSize = oldSize * (1 + .2 / cutDown);
   overGrownHeapSize = Math.min(overGrownHeapSize, requestedSize + 100663296);
-  var newSize = Math.min(maxHeapSize, alignUp(Math.max(minHeapSize, requestedSize, overGrownHeapSize), 65536));
+  var newSize = Math.min(maxHeapSize, alignUp(Math.max(requestedSize, overGrownHeapSize), 65536));
   var replacement = emscripten_realloc_buffer(newSize);
   if (replacement) {
    return true;
@@ -9571,7 +9620,7 @@ function registerBeforeUnloadEventCallback(target, userData, useCapture, callbac
  var beforeUnloadEventHandlerFunc = function(ev) {
   var e = ev || event;
   var confirmationMessage = function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, 0, userData);
   if (confirmationMessage) {
    confirmationMessage = UTF8ToString(confirmationMessage);
@@ -9609,7 +9658,7 @@ function registerFocusEventCallback(target, userData, useCapture, callbackfunc, 
   stringToUTF8(nodeName, focusEvent + 0, 128);
   stringToUTF8(id, focusEvent + 128, 128);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, focusEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9666,7 +9715,7 @@ function registerFullscreenChangeEventCallback(target, userData, useCapture, cal
   var fullscreenChangeEvent = JSEvents.fullscreenChangeEvent;
   fillFullscreenChangeEventData(fullscreenChangeEvent);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, fullscreenChangeEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9695,7 +9744,7 @@ function registerGamepadEventCallback(target, userData, useCapture, callbackfunc
   var gamepadEvent = JSEvents.gamepadEvent;
   fillGamepadEventData(gamepadEvent, e["gamepad"]);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, gamepadEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9741,7 +9790,7 @@ function registerKeyEventCallback(target, userData, useCapture, callbackfunc, ev
   stringToUTF8(e.char || "", keyEventData + 100, 32);
   stringToUTF8(e.locale || "", keyEventData + 132, 32);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, keyEventData, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9770,11 +9819,11 @@ function _emscripten_set_keyup_callback_on_thread(target, userData, useCapture, 
  return 0;
 }
 
-function _emscripten_set_main_loop(func, fps, simulateInfiniteLoop, arg, noSetTiming) {
+function _emscripten_set_main_loop(func, fps, simulateInfiniteLoop) {
  var browserIterationFunc = function() {
   dynCall_v.call(null, func);
  };
- setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSetTiming);
+ setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop);
 }
 
 function fillMouseEventData(eventStruct, e, target) {
@@ -9804,7 +9853,7 @@ function registerMouseEventCallback(target, userData, useCapture, callbackfunc, 
   var e = ev || event;
   fillMouseEventData(JSEvents.mouseEvent, e, target);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, JSEvents.mouseEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9860,7 +9909,7 @@ function registerPointerlockChangeEventCallback(target, userData, useCapture, ca
   var pointerlockChangeEvent = JSEvents.pointerlockChangeEvent;
   fillPointerlockChangeEventData(pointerlockChangeEvent);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, pointerlockChangeEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9909,7 +9958,7 @@ function registerUiEventCallback(target, userData, useCapture, callbackfunc, eve
   SAFE_HEAP_STORE(uiEvent + 28 | 0, pageXOffset | 0, 4);
   SAFE_HEAP_STORE(uiEvent + 32 | 0, pageYOffset | 0, 4);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, uiEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -9980,7 +10029,7 @@ function registerTouchEventCallback(target, userData, useCapture, callbackfunc, 
   }
   SAFE_HEAP_STORE(touchEvent | 0, numTouches | 0, 4);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, touchEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -10028,7 +10077,7 @@ function registerVisibilityChangeEventCallback(target, userData, useCapture, cal
   var visibilityChangeEvent = JSEvents.visibilityChangeEvent;
   fillVisibilityChangeEventData(visibilityChangeEvent);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, visibilityChangeEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -10060,7 +10109,7 @@ function registerWheelEventCallback(target, userData, useCapture, callbackfunc, 
   SAFE_HEAP_STORE_D(wheelEvent + 80 | 0, +e["deltaZ"], 8);
   SAFE_HEAP_STORE(wheelEvent + 88 | 0, e["deltaMode"] | 0, 4);
   if (function(a1, a2, a3) {
-   dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
+   return dynCall_iiii.apply(null, [ callbackfunc, a1, a2, a3 ]);
   }(eventTypeId, wheelEvent, userData)) e.preventDefault();
  };
  var eventHandler = {
@@ -10135,7 +10184,7 @@ var Fetch = {
  }
 };
 
-function __emscripten_fetch_xhr(fetch, onsuccess, onerror, onprogress, onreadystatechange) {
+function fetchXHR(fetch, onsuccess, onerror, onprogress, onreadystatechange) {
  var url = SAFE_HEAP_LOAD((fetch + 8 >> 2) * 4, 4, 1);
  if (!url) {
   onerror(fetch, 0, "no url specified!");
@@ -10266,7 +10315,7 @@ function __emscripten_fetch_xhr(fetch, onsuccess, onerror, onprogress, onreadyst
  }
 }
 
-function __emscripten_fetch_cache_data(db, fetch, data, onsuccess, onerror) {
+function fetchCacheData(db, fetch, data, onsuccess, onerror) {
  if (!db) {
   onerror(fetch, 0, "IndexedDB not available!");
   return;
@@ -10296,7 +10345,7 @@ function __emscripten_fetch_cache_data(db, fetch, data, onsuccess, onerror) {
  }
 }
 
-function __emscripten_fetch_load_cached_data(db, fetch, onsuccess, onerror) {
+function fetchLoadCachedData(db, fetch, onsuccess, onerror) {
  if (!db) {
   onerror(fetch, 0, "IndexedDB not available!");
   return;
@@ -10341,7 +10390,7 @@ function __emscripten_fetch_load_cached_data(db, fetch, onsuccess, onerror) {
  }
 }
 
-function __emscripten_fetch_delete_cached_data(db, fetch, onsuccess, onerror) {
+function fetchDeleteCachedData(db, fetch, onsuccess, onerror) {
  if (!db) {
   onerror(fetch, 0, "IndexedDB not available!");
   return;
@@ -10377,7 +10426,7 @@ function __emscripten_fetch_delete_cached_data(db, fetch, onsuccess, onerror) {
 }
 
 function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readystatechangecb) {
- if (typeof noExitRuntime !== "undefined") noExitRuntime = true;
+ runtimeKeepalivePush();
  var fetch_attr = fetch + 112;
  var requestMethod = UTF8ToString(fetch_attr);
  var onsuccess = SAFE_HEAP_LOAD((fetch_attr + 36 >> 2) * 4, 4, 1);
@@ -10391,54 +10440,71 @@ function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readysta
  var fetchAttrNoDownload = !!(fetchAttributes & 32);
  var fetchAttrAppend = !!(fetchAttributes & 8);
  var fetchAttrReplace = !!(fetchAttributes & 16);
+ var fetchAttrSynchronous = !!(fetchAttributes & 64);
  var reportSuccess = function(fetch, xhr, e) {
-  if (onsuccess) (function(a1) {
-   dynCall_vi.apply(null, [ onsuccess, a1 ]);
-  })(fetch); else if (successcb) successcb(fetch);
+  runtimeKeepalivePop();
+  callUserCallback(function() {
+   if (onsuccess) (function(a1) {
+    dynCall_vi.apply(null, [ onsuccess, a1 ]);
+   })(fetch); else if (successcb) successcb(fetch);
+  }, fetchAttrSynchronous);
  };
  var reportProgress = function(fetch, xhr, e) {
-  if (onprogress) (function(a1) {
-   dynCall_vi.apply(null, [ onprogress, a1 ]);
-  })(fetch); else if (progresscb) progresscb(fetch);
+  callUserCallback(function() {
+   if (onprogress) (function(a1) {
+    dynCall_vi.apply(null, [ onprogress, a1 ]);
+   })(fetch); else if (progresscb) progresscb(fetch);
+  }, fetchAttrSynchronous);
  };
  var reportError = function(fetch, xhr, e) {
-  if (onerror) (function(a1) {
-   dynCall_vi.apply(null, [ onerror, a1 ]);
-  })(fetch); else if (errorcb) errorcb(fetch);
+  runtimeKeepalivePop();
+  callUserCallback(function() {
+   if (onerror) (function(a1) {
+    dynCall_vi.apply(null, [ onerror, a1 ]);
+   })(fetch); else if (errorcb) errorcb(fetch);
+  }, fetchAttrSynchronous);
  };
  var reportReadyStateChange = function(fetch, xhr, e) {
-  if (onreadystatechange) (function(a1) {
-   dynCall_vi.apply(null, [ onreadystatechange, a1 ]);
-  })(fetch); else if (readystatechangecb) readystatechangecb(fetch);
+  callUserCallback(function() {
+   if (onreadystatechange) (function(a1) {
+    dynCall_vi.apply(null, [ onreadystatechange, a1 ]);
+   })(fetch); else if (readystatechangecb) readystatechangecb(fetch);
+  }, fetchAttrSynchronous);
  };
  var performUncachedXhr = function(fetch, xhr, e) {
-  __emscripten_fetch_xhr(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
+  fetchXHR(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
  };
  var cacheResultAndReportSuccess = function(fetch, xhr, e) {
   var storeSuccess = function(fetch, xhr, e) {
-   if (onsuccess) (function(a1) {
-    dynCall_vi.apply(null, [ onsuccess, a1 ]);
-   })(fetch); else if (successcb) successcb(fetch);
+   runtimeKeepalivePop();
+   callUserCallback(function() {
+    if (onsuccess) (function(a1) {
+     dynCall_vi.apply(null, [ onsuccess, a1 ]);
+    })(fetch); else if (successcb) successcb(fetch);
+   }, fetchAttrSynchronous);
   };
   var storeError = function(fetch, xhr, e) {
-   if (onsuccess) (function(a1) {
-    dynCall_vi.apply(null, [ onsuccess, a1 ]);
-   })(fetch); else if (successcb) successcb(fetch);
+   runtimeKeepalivePop();
+   callUserCallback(function() {
+    if (onsuccess) (function(a1) {
+     dynCall_vi.apply(null, [ onsuccess, a1 ]);
+    })(fetch); else if (successcb) successcb(fetch);
+   }, fetchAttrSynchronous);
   };
-  __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
+  fetchCacheData(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
  };
  var performCachedXhr = function(fetch, xhr, e) {
-  __emscripten_fetch_xhr(fetch, cacheResultAndReportSuccess, reportError, reportProgress, reportReadyStateChange);
+  fetchXHR(fetch, cacheResultAndReportSuccess, reportError, reportProgress, reportReadyStateChange);
  };
  if (requestMethod === "EM_IDB_STORE") {
   var ptr = SAFE_HEAP_LOAD((fetch_attr + 84 >> 2) * 4, 4, 1);
-  __emscripten_fetch_cache_data(Fetch.dbInstance, fetch, HEAPU8.slice(ptr, ptr + SAFE_HEAP_LOAD((fetch_attr + 88 >> 2) * 4, 4, 1)), reportSuccess, reportError);
+  fetchCacheData(Fetch.dbInstance, fetch, HEAPU8.slice(ptr, ptr + SAFE_HEAP_LOAD((fetch_attr + 88 >> 2) * 4, 4, 1)), reportSuccess, reportError);
  } else if (requestMethod === "EM_IDB_DELETE") {
-  __emscripten_fetch_delete_cached_data(Fetch.dbInstance, fetch, reportSuccess, reportError);
+  fetchDeleteCachedData(Fetch.dbInstance, fetch, reportSuccess, reportError);
  } else if (!fetchAttrReplace) {
-  __emscripten_fetch_load_cached_data(Fetch.dbInstance, fetch, reportSuccess, fetchAttrNoDownload ? reportError : fetchAttrPersistFile ? performCachedXhr : performUncachedXhr);
+  fetchLoadCachedData(Fetch.dbInstance, fetch, reportSuccess, fetchAttrNoDownload ? reportError : fetchAttrPersistFile ? performCachedXhr : performUncachedXhr);
  } else if (!fetchAttrNoDownload) {
-  __emscripten_fetch_xhr(fetch, fetchAttrPersistFile ? cacheResultAndReportSuccess : reportSuccess, reportError, reportProgress, reportReadyStateChange);
+  fetchXHR(fetch, fetchAttrPersistFile ? cacheResultAndReportSuccess : reportSuccess, reportError, reportProgress, reportReadyStateChange);
  } else {
   return 0;
  }
@@ -10640,6 +10706,8 @@ function _glCreateProgram() {
  var id = GL.getNewId(GL.programs);
  var program = GLctx.createProgram();
  program.name = id;
+ program.maxUniformLength = program.maxAttributeLength = program.maxUniformBlockNameLength = 0;
+ program.uniformIdCounter = 1;
  GL.programs[id] = program;
  return id;
 }
@@ -10675,7 +10743,6 @@ function _glDeleteProgram(id) {
  GLctx.deleteProgram(program);
  program.name = 0;
  GL.programs[id] = null;
- GL.programInfos[id] = null;
 }
 
 function _glDeleteShader(id) {
@@ -10750,41 +10817,34 @@ function _glGetProgramiv(program, pname, p) {
   GL.recordError(1281);
   return;
  }
- var ptable = GL.programInfos[program];
- if (!ptable) {
-  GL.recordError(1282);
-  return;
- }
+ program = GL.programs[program];
  if (pname == 35716) {
-  var log = GLctx.getProgramInfoLog(GL.programs[program]);
+  var log = GLctx.getProgramInfoLog(program);
   if (log === null) log = "(unknown error)";
   SAFE_HEAP_STORE(p | 0, log.length + 1 | 0, 4);
  } else if (pname == 35719) {
-  SAFE_HEAP_STORE(p | 0, ptable.maxUniformLength | 0, 4);
+  if (!program.maxUniformLength) {
+   for (var i = 0; i < GLctx.getProgramParameter(program, 35718); ++i) {
+    program.maxUniformLength = Math.max(program.maxUniformLength, GLctx.getActiveUniform(program, i).name.length + 1);
+   }
+  }
+  SAFE_HEAP_STORE(p | 0, program.maxUniformLength | 0, 4);
  } else if (pname == 35722) {
-  if (ptable.maxAttributeLength == -1) {
-   program = GL.programs[program];
-   var numAttribs = GLctx.getProgramParameter(program, 35721);
-   ptable.maxAttributeLength = 0;
-   for (var i = 0; i < numAttribs; ++i) {
-    var activeAttrib = GLctx.getActiveAttrib(program, i);
-    ptable.maxAttributeLength = Math.max(ptable.maxAttributeLength, activeAttrib.name.length + 1);
+  if (!program.maxAttributeLength) {
+   for (var i = 0; i < GLctx.getProgramParameter(program, 35721); ++i) {
+    program.maxAttributeLength = Math.max(program.maxAttributeLength, GLctx.getActiveAttrib(program, i).name.length + 1);
    }
   }
-  SAFE_HEAP_STORE(p | 0, ptable.maxAttributeLength | 0, 4);
+  SAFE_HEAP_STORE(p | 0, program.maxAttributeLength | 0, 4);
  } else if (pname == 35381) {
-  if (ptable.maxUniformBlockNameLength == -1) {
-   program = GL.programs[program];
-   var numBlocks = GLctx.getProgramParameter(program, 35382);
-   ptable.maxUniformBlockNameLength = 0;
-   for (var i = 0; i < numBlocks; ++i) {
-    var activeBlockName = GLctx.getActiveUniformBlockName(program, i);
-    ptable.maxUniformBlockNameLength = Math.max(ptable.maxUniformBlockNameLength, activeBlockName.length + 1);
+  if (!program.maxUniformBlockNameLength) {
+   for (var i = 0; i < GLctx.getProgramParameter(program, 35382); ++i) {
+    program.maxUniformBlockNameLength = Math.max(program.maxUniformBlockNameLength, GLctx.getActiveUniformBlockName(program, i).length + 1);
    }
   }
-  SAFE_HEAP_STORE(p | 0, ptable.maxUniformBlockNameLength | 0, 4);
+  SAFE_HEAP_STORE(p | 0, program.maxUniformBlockNameLength | 0, 4);
  } else {
-  SAFE_HEAP_STORE(p | 0, GLctx.getProgramParameter(GL.programs[program], pname) | 0, 4);
+  SAFE_HEAP_STORE(p | 0, GLctx.getProgramParameter(program, pname) | 0, 4);
  }
 }
 
@@ -10816,18 +10876,27 @@ function _glGetShaderiv(shader, pname, p) {
 
 function _glGetUniformLocation(program, name) {
  name = UTF8ToString(name);
- var arrayIndex = 0;
- if (name[name.length - 1] == "]") {
-  var leftBrace = name.lastIndexOf("[");
-  arrayIndex = name[leftBrace + 1] != "]" ? jstoi_q(name.slice(leftBrace + 1)) : 0;
-  name = name.slice(0, leftBrace);
- }
- var uniformInfo = GL.programInfos[program] && GL.programInfos[program].uniforms[name];
- if (uniformInfo && arrayIndex >= 0 && arrayIndex < uniformInfo[0]) {
-  return uniformInfo[1] + arrayIndex;
+ if (program = GL.programs[program]) {
+  webglPrepareUniformLocationsBeforeFirstUse(program);
+  var uniformLocsById = program.uniformLocsById;
+  var arrayIndex = 0;
+  var uniformBaseName = name;
+  var leftBrace = webglGetLeftBracePos(name);
+  if (leftBrace > 0) {
+   arrayIndex = jstoi_q(name.slice(leftBrace + 1)) >>> 0;
+   uniformBaseName = name.slice(0, leftBrace);
+  }
+  var sizeAndId = program.uniformSizeAndIdsByName[uniformBaseName];
+  if (sizeAndId && arrayIndex < sizeAndId[0]) {
+   arrayIndex += sizeAndId[1];
+   if (uniformLocsById[arrayIndex] = uniformLocsById[arrayIndex] || GLctx.getUniformLocation(program, name)) {
+    return arrayIndex;
+   }
+  }
  } else {
-  return -1;
+  GL.recordError(1281);
  }
+ return -1;
 }
 
 function _glIsEnabled(x0) {
@@ -10835,8 +10904,10 @@ function _glIsEnabled(x0) {
 }
 
 function _glLinkProgram(program) {
- GLctx.linkProgram(GL.programs[program]);
- GL.populateUniformTable(program);
+ program = GL.programs[program];
+ GLctx.linkProgram(program);
+ program.uniformLocsById = 0;
+ program.uniformSizeAndIdsByName = {};
 }
 
 function _glScissor(x0, x1, x2, x3) {
@@ -10868,12 +10939,12 @@ function _glTexParameteri(x0, x1, x2) {
 }
 
 function _glUniform1i(location, v0) {
- GLctx.uniform1i(GL.uniforms[location], v0);
+ GLctx.uniform1i(webglGetUniformLocation(location), v0);
 }
 
 function _glUniformMatrix4fv(location, count, transpose, value) {
  if (GL.currentContext.version >= 2) {
-  GLctx.uniformMatrix4fv(GL.uniforms[location], !!transpose, HEAPF32, value >> 2, count * 16);
+  GLctx.uniformMatrix4fv(webglGetUniformLocation(location), !!transpose, HEAPF32, value >> 2, count * 16);
   return;
  }
  if (count <= 18) {
@@ -10902,11 +10973,13 @@ function _glUniformMatrix4fv(location, count, transpose, value) {
  } else {
   var view = HEAPF32.subarray(value >> 2, value + count * 64 >> 2);
  }
- GLctx.uniformMatrix4fv(GL.uniforms[location], !!transpose, view);
+ GLctx.uniformMatrix4fv(webglGetUniformLocation(location), !!transpose, view);
 }
 
 function _glUseProgram(program) {
- GLctx.useProgram(GL.programs[program]);
+ program = GL.programs[program];
+ GLctx.useProgram(program);
+ GLctx.currentProgram = program;
 }
 
 function _glVertexAttribPointer(index, size, type, normalized, stride, ptr) {
@@ -10931,8 +11004,8 @@ function _glViewport(x0, x1, x2, x3) {
  GLctx["viewport"](x0, x1, x2, x3);
 }
 
-function _setTempRet0($i) {
- setTempRet0($i | 0);
+function _setTempRet0(val) {
+ setTempRet0(val);
 }
 
 function _sigaction(signum, act, oldact) {
@@ -10949,24 +11022,6 @@ function _signal(sig, func) {
   err("Calling stub instead of signal()");
  }
  return 0;
-}
-
-var readAsmConstArgsArray = [];
-
-function readAsmConstArgs(sigPtr, buf) {
- assert(Array.isArray(readAsmConstArgsArray));
- assert(buf % 16 == 0);
- readAsmConstArgsArray.length = 0;
- var ch;
- buf >>= 2;
- while (ch = SAFE_HEAP_LOAD(sigPtr++, 1, 1)) {
-  assert(ch === 100 || ch === 102 || ch === 105);
-  var double = ch < 105;
-  if (double && buf & 1) buf++;
-  readAsmConstArgsArray.push(double ? SAFE_HEAP_LOAD_D((buf++ >> 1) * 8, 8, 0) : SAFE_HEAP_LOAD(buf * 4, 4, 0));
-  ++buf;
- }
- return readAsmConstArgsArray;
 }
 
 function runAndAbortIfError(func) {
@@ -11024,6 +11079,9 @@ var Asyncify = {
     }
    })(x);
   }
+ },
+ checkStateAfterExitRuntime: function() {
+  assert(Asyncify.state === Asyncify.State.None, "Asyncify cannot be done during or after the runtime exits");
  },
  instrumentWasmExports: function(exports) {
   var ret = {};
@@ -11090,7 +11148,7 @@ var Asyncify = {
    var reachedCallback = false;
    var reachedAfterCallback = false;
    startAsync(function(handleSleepReturnValue) {
-    assert(!handleSleepReturnValue || typeof handleSleepReturnValue === "number");
+    assert(!handleSleepReturnValue || typeof handleSleepReturnValue === "number" || typeof handleSleepReturnValue === "boolean");
     if (ABORT) return;
     Asyncify.handleSleepReturnValue = handleSleepReturnValue || 0;
     reachedCallback = true;
@@ -11307,7 +11365,6 @@ var asmLibraryArg = {
  "eglGetConfigAttrib": _eglGetConfigAttrib,
  "eglGetDisplay": _eglGetDisplay,
  "eglGetError": _eglGetError,
- "eglGetProcAddress": _eglGetProcAddress,
  "eglInitialize": _eglInitialize,
  "eglMakeCurrent": _eglMakeCurrent,
  "eglQueryString": _eglQueryString,
@@ -11708,13 +11765,9 @@ var _free = Module["_free"] = createExportWrapper("free");
 
 var _fflush = Module["_fflush"] = createExportWrapper("fflush");
 
-var _strstr = Module["_strstr"] = createExportWrapper("strstr");
-
 var _malloc = Module["_malloc"] = createExportWrapper("malloc");
 
 var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
-
-var _emscripten_GetProcAddress = Module["_emscripten_GetProcAddress"] = createExportWrapper("emscripten_GetProcAddress");
 
 var _fileno = Module["_fileno"] = createExportWrapper("fileno");
 
@@ -11743,8 +11796,6 @@ var _emscripten_stack_get_base = Module["_emscripten_stack_get_base"] = function
 var _emscripten_stack_get_end = Module["_emscripten_stack_get_end"] = function() {
  return (_emscripten_stack_get_end = Module["_emscripten_stack_get_end"] = Module["asm"]["emscripten_stack_get_end"]).apply(null, arguments);
 };
-
-var _setThrew = Module["_setThrew"] = createExportWrapper("setThrew");
 
 var _sbrk = Module["_sbrk"] = createExportWrapper("sbrk");
 
@@ -11790,10 +11841,6 @@ var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = createExportWrapper("dynCall
 
 var dynCall_i = Module["dynCall_i"] = createExportWrapper("dynCall_i");
 
-var dynCall_iidiiii = Module["dynCall_iidiiii"] = createExportWrapper("dynCall_iidiiii");
-
-var dynCall_viiiiii = Module["dynCall_viiiiii"] = createExportWrapper("dynCall_viiiiii");
-
 var dynCall_viiiii = Module["dynCall_viiiii"] = createExportWrapper("dynCall_viiiii");
 
 var dynCall_vffff = Module["dynCall_vffff"] = createExportWrapper("dynCall_vffff");
@@ -11818,9 +11865,13 @@ var dynCall_vifff = Module["dynCall_vifff"] = createExportWrapper("dynCall_vifff
 
 var dynCall_viffff = Module["dynCall_viffff"] = createExportWrapper("dynCall_viffff");
 
+var dynCall_viiiiii = Module["dynCall_viiiiii"] = createExportWrapper("dynCall_viiiiii");
+
 var dynCall_viiiiiiiiii = Module["dynCall_viiiiiiiiii"] = createExportWrapper("dynCall_viiiiiiiiii");
 
 var dynCall_viifi = Module["dynCall_viifi"] = createExportWrapper("dynCall_viifi");
+
+var dynCall_iidiiii = Module["dynCall_iidiiii"] = createExportWrapper("dynCall_iidiiii");
 
 var _asyncify_start_unwind = Module["_asyncify_start_unwind"] = createExportWrapper("asyncify_start_unwind");
 
@@ -11831,11 +11882,11 @@ var _asyncify_start_rewind = Module["_asyncify_start_rewind"] = createExportWrap
 var _asyncify_stop_rewind = Module["_asyncify_stop_rewind"] = createExportWrapper("asyncify_stop_rewind");
 
 if (!Object.getOwnPropertyDescriptor(Module, "intArrayFromString")) Module["intArrayFromString"] = function() {
- abort("'intArrayFromString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'intArrayFromString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "intArrayToString")) Module["intArrayToString"] = function() {
- abort("'intArrayToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'intArrayToString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 Module["ccall"] = ccall;
@@ -11843,71 +11894,71 @@ Module["ccall"] = ccall;
 Module["cwrap"] = cwrap;
 
 if (!Object.getOwnPropertyDescriptor(Module, "setValue")) Module["setValue"] = function() {
- abort("'setValue' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setValue' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getValue")) Module["getValue"] = function() {
- abort("'getValue' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getValue' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "allocate")) Module["allocate"] = function() {
- abort("'allocate' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'allocate' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "UTF8ArrayToString")) Module["UTF8ArrayToString"] = function() {
- abort("'UTF8ArrayToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'UTF8ArrayToString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "UTF8ToString")) Module["UTF8ToString"] = function() {
- abort("'UTF8ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'UTF8ToString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF8Array")) Module["stringToUTF8Array"] = function() {
- abort("'stringToUTF8Array' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stringToUTF8Array' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF8")) Module["stringToUTF8"] = function() {
- abort("'stringToUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stringToUTF8' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF8")) Module["lengthBytesUTF8"] = function() {
- abort("'lengthBytesUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'lengthBytesUTF8' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stackTrace")) Module["stackTrace"] = function() {
- abort("'stackTrace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stackTrace' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "addOnPreRun")) Module["addOnPreRun"] = function() {
- abort("'addOnPreRun' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'addOnPreRun' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "addOnInit")) Module["addOnInit"] = function() {
- abort("'addOnInit' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'addOnInit' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "addOnPreMain")) Module["addOnPreMain"] = function() {
- abort("'addOnPreMain' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'addOnPreMain' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "addOnExit")) Module["addOnExit"] = function() {
- abort("'addOnExit' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'addOnExit' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "addOnPostRun")) Module["addOnPostRun"] = function() {
- abort("'addOnPostRun' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'addOnPostRun' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeStringToMemory")) Module["writeStringToMemory"] = function() {
- abort("'writeStringToMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeStringToMemory' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeArrayToMemory")) Module["writeArrayToMemory"] = function() {
- abort("'writeArrayToMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeArrayToMemory' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeAsciiToMemory")) Module["writeAsciiToMemory"] = function() {
- abort("'writeAsciiToMemory' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeAsciiToMemory' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 Module["addRunDependency"] = addRunDependency;
@@ -11915,7 +11966,7 @@ Module["addRunDependency"] = addRunDependency;
 Module["removeRunDependency"] = removeRunDependency;
 
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createFolder")) Module["FS_createFolder"] = function() {
- abort("'FS_createFolder' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'FS_createFolder' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 Module["FS_createPath"] = FS.createPath;
@@ -11927,7 +11978,7 @@ Module["FS_createPreloadedFile"] = FS.createPreloadedFile;
 Module["FS_createLazyFile"] = FS.createLazyFile;
 
 if (!Object.getOwnPropertyDescriptor(Module, "FS_createLink")) Module["FS_createLink"] = function() {
- abort("'FS_createLink' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'FS_createLink' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 Module["FS_createDevice"] = FS.createDevice;
@@ -11935,727 +11986,795 @@ Module["FS_createDevice"] = FS.createDevice;
 Module["FS_unlink"] = FS.unlink;
 
 if (!Object.getOwnPropertyDescriptor(Module, "getLEB")) Module["getLEB"] = function() {
- abort("'getLEB' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getLEB' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getFunctionTables")) Module["getFunctionTables"] = function() {
- abort("'getFunctionTables' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getFunctionTables' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "alignFunctionTables")) Module["alignFunctionTables"] = function() {
- abort("'alignFunctionTables' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'alignFunctionTables' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerFunctions")) Module["registerFunctions"] = function() {
- abort("'registerFunctions' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerFunctions' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "addFunction")) Module["addFunction"] = function() {
- abort("'addFunction' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'addFunction' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "removeFunction")) Module["removeFunction"] = function() {
- abort("'removeFunction' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'removeFunction' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getFuncWrapper")) Module["getFuncWrapper"] = function() {
- abort("'getFuncWrapper' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getFuncWrapper' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "prettyPrint")) Module["prettyPrint"] = function() {
- abort("'prettyPrint' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
-};
-
-if (!Object.getOwnPropertyDescriptor(Module, "makeBigInt")) Module["makeBigInt"] = function() {
- abort("'makeBigInt' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'prettyPrint' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "dynCall")) Module["dynCall"] = function() {
- abort("'dynCall' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'dynCall' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getCompilerSetting")) Module["getCompilerSetting"] = function() {
- abort("'getCompilerSetting' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getCompilerSetting' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "print")) Module["print"] = function() {
- abort("'print' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'print' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "printErr")) Module["printErr"] = function() {
- abort("'printErr' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'printErr' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getTempRet0")) Module["getTempRet0"] = function() {
- abort("'getTempRet0' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getTempRet0' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "setTempRet0")) Module["setTempRet0"] = function() {
- abort("'setTempRet0' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setTempRet0' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "callMain")) Module["callMain"] = function() {
- abort("'callMain' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'callMain' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "abort")) Module["abort"] = function() {
- abort("'abort' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'abort' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stringToNewUTF8")) Module["stringToNewUTF8"] = function() {
- abort("'stringToNewUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stringToNewUTF8' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "setFileTime")) Module["setFileTime"] = function() {
- abort("'setFileTime' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setFileTime' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscripten_realloc_buffer")) Module["emscripten_realloc_buffer"] = function() {
- abort("'emscripten_realloc_buffer' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscripten_realloc_buffer' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "ENV")) Module["ENV"] = function() {
- abort("'ENV' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'ENV' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "ERRNO_CODES")) Module["ERRNO_CODES"] = function() {
- abort("'ERRNO_CODES' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'ERRNO_CODES' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "ERRNO_MESSAGES")) Module["ERRNO_MESSAGES"] = function() {
- abort("'ERRNO_MESSAGES' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'ERRNO_MESSAGES' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "setErrNo")) Module["setErrNo"] = function() {
- abort("'setErrNo' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setErrNo' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "inetPton4")) Module["inetPton4"] = function() {
+ abort("'inetPton4' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "inetNtop4")) Module["inetNtop4"] = function() {
+ abort("'inetNtop4' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "inetPton6")) Module["inetPton6"] = function() {
+ abort("'inetPton6' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "inetNtop6")) Module["inetNtop6"] = function() {
+ abort("'inetNtop6' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "readSockaddr")) Module["readSockaddr"] = function() {
+ abort("'readSockaddr' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "writeSockaddr")) Module["writeSockaddr"] = function() {
+ abort("'writeSockaddr' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "DNS")) Module["DNS"] = function() {
- abort("'DNS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'DNS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getHostByName")) Module["getHostByName"] = function() {
- abort("'getHostByName' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getHostByName' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "GAI_ERRNO_MESSAGES")) Module["GAI_ERRNO_MESSAGES"] = function() {
- abort("'GAI_ERRNO_MESSAGES' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'GAI_ERRNO_MESSAGES' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "Protocols")) Module["Protocols"] = function() {
- abort("'Protocols' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'Protocols' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "Sockets")) Module["Sockets"] = function() {
- abort("'Sockets' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'Sockets' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getRandomDevice")) Module["getRandomDevice"] = function() {
- abort("'getRandomDevice' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getRandomDevice' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "traverseStack")) Module["traverseStack"] = function() {
- abort("'traverseStack' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'traverseStack' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "UNWIND_CACHE")) Module["UNWIND_CACHE"] = function() {
- abort("'UNWIND_CACHE' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'UNWIND_CACHE' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "withBuiltinMalloc")) Module["withBuiltinMalloc"] = function() {
- abort("'withBuiltinMalloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'withBuiltinMalloc' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "readAsmConstArgsArray")) Module["readAsmConstArgsArray"] = function() {
- abort("'readAsmConstArgsArray' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'readAsmConstArgsArray' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "readAsmConstArgs")) Module["readAsmConstArgs"] = function() {
- abort("'readAsmConstArgs' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'readAsmConstArgs' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "mainThreadEM_ASM")) Module["mainThreadEM_ASM"] = function() {
- abort("'mainThreadEM_ASM' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'mainThreadEM_ASM' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "jstoi_q")) Module["jstoi_q"] = function() {
- abort("'jstoi_q' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'jstoi_q' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "jstoi_s")) Module["jstoi_s"] = function() {
- abort("'jstoi_s' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'jstoi_s' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getExecutableName")) Module["getExecutableName"] = function() {
- abort("'getExecutableName' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getExecutableName' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "listenOnce")) Module["listenOnce"] = function() {
- abort("'listenOnce' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'listenOnce' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "autoResumeAudioContext")) Module["autoResumeAudioContext"] = function() {
- abort("'autoResumeAudioContext' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'autoResumeAudioContext' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "dynCallLegacy")) Module["dynCallLegacy"] = function() {
- abort("'dynCallLegacy' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'dynCallLegacy' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getDynCaller")) Module["getDynCaller"] = function() {
- abort("'getDynCaller' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getDynCaller' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "dynCall")) Module["dynCall"] = function() {
- abort("'dynCall' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'dynCall' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "callRuntimeCallbacks")) Module["callRuntimeCallbacks"] = function() {
- abort("'callRuntimeCallbacks' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'callRuntimeCallbacks' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
-if (!Object.getOwnPropertyDescriptor(Module, "abortStackOverflow")) Module["abortStackOverflow"] = function() {
- abort("'abortStackOverflow' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+if (!Object.getOwnPropertyDescriptor(Module, "runtimeKeepaliveCounter")) Module["runtimeKeepaliveCounter"] = function() {
+ abort("'runtimeKeepaliveCounter' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "keepRuntimeAlive")) Module["keepRuntimeAlive"] = function() {
+ abort("'keepRuntimeAlive' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "runtimeKeepalivePush")) Module["runtimeKeepalivePush"] = function() {
+ abort("'runtimeKeepalivePush' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "runtimeKeepalivePop")) Module["runtimeKeepalivePop"] = function() {
+ abort("'runtimeKeepalivePop' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "callUserCallback")) Module["callUserCallback"] = function() {
+ abort("'callUserCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "maybeExit")) Module["maybeExit"] = function() {
+ abort("'maybeExit' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "asmjsMangle")) Module["asmjsMangle"] = function() {
+ abort("'asmjsMangle' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "reallyNegative")) Module["reallyNegative"] = function() {
- abort("'reallyNegative' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'reallyNegative' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "unSign")) Module["unSign"] = function() {
- abort("'unSign' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'unSign' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "reSign")) Module["reSign"] = function() {
- abort("'reSign' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'reSign' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "formatString")) Module["formatString"] = function() {
- abort("'formatString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'formatString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "PATH")) Module["PATH"] = function() {
- abort("'PATH' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'PATH' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "PATH_FS")) Module["PATH_FS"] = function() {
- abort("'PATH_FS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'PATH_FS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SYSCALLS")) Module["SYSCALLS"] = function() {
- abort("'SYSCALLS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SYSCALLS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "syscallMmap2")) Module["syscallMmap2"] = function() {
- abort("'syscallMmap2' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'syscallMmap2' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "syscallMunmap")) Module["syscallMunmap"] = function() {
- abort("'syscallMunmap' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'syscallMunmap' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "getSocketFromFD")) Module["getSocketFromFD"] = function() {
+ abort("'getSocketFromFD' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "getSocketAddress")) Module["getSocketAddress"] = function() {
+ abort("'getSocketAddress' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "JSEvents")) Module["JSEvents"] = function() {
- abort("'JSEvents' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'JSEvents' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerKeyEventCallback")) Module["registerKeyEventCallback"] = function() {
- abort("'registerKeyEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerKeyEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "specialHTMLTargets")) Module["specialHTMLTargets"] = function() {
- abort("'specialHTMLTargets' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'specialHTMLTargets' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "maybeCStringToJsString")) Module["maybeCStringToJsString"] = function() {
- abort("'maybeCStringToJsString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'maybeCStringToJsString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "findEventTarget")) Module["findEventTarget"] = function() {
- abort("'findEventTarget' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'findEventTarget' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "findCanvasEventTarget")) Module["findCanvasEventTarget"] = function() {
- abort("'findCanvasEventTarget' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'findCanvasEventTarget' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getBoundingClientRect")) Module["getBoundingClientRect"] = function() {
- abort("'getBoundingClientRect' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getBoundingClientRect' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillMouseEventData")) Module["fillMouseEventData"] = function() {
- abort("'fillMouseEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillMouseEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerMouseEventCallback")) Module["registerMouseEventCallback"] = function() {
- abort("'registerMouseEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerMouseEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerWheelEventCallback")) Module["registerWheelEventCallback"] = function() {
- abort("'registerWheelEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerWheelEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerUiEventCallback")) Module["registerUiEventCallback"] = function() {
- abort("'registerUiEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerUiEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerFocusEventCallback")) Module["registerFocusEventCallback"] = function() {
- abort("'registerFocusEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerFocusEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillDeviceOrientationEventData")) Module["fillDeviceOrientationEventData"] = function() {
- abort("'fillDeviceOrientationEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillDeviceOrientationEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerDeviceOrientationEventCallback")) Module["registerDeviceOrientationEventCallback"] = function() {
- abort("'registerDeviceOrientationEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerDeviceOrientationEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillDeviceMotionEventData")) Module["fillDeviceMotionEventData"] = function() {
- abort("'fillDeviceMotionEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillDeviceMotionEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerDeviceMotionEventCallback")) Module["registerDeviceMotionEventCallback"] = function() {
- abort("'registerDeviceMotionEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerDeviceMotionEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "screenOrientation")) Module["screenOrientation"] = function() {
- abort("'screenOrientation' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'screenOrientation' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillOrientationChangeEventData")) Module["fillOrientationChangeEventData"] = function() {
- abort("'fillOrientationChangeEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillOrientationChangeEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerOrientationChangeEventCallback")) Module["registerOrientationChangeEventCallback"] = function() {
- abort("'registerOrientationChangeEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerOrientationChangeEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillFullscreenChangeEventData")) Module["fillFullscreenChangeEventData"] = function() {
- abort("'fillFullscreenChangeEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillFullscreenChangeEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerFullscreenChangeEventCallback")) Module["registerFullscreenChangeEventCallback"] = function() {
- abort("'registerFullscreenChangeEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerFullscreenChangeEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerRestoreOldStyle")) Module["registerRestoreOldStyle"] = function() {
- abort("'registerRestoreOldStyle' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerRestoreOldStyle' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "hideEverythingExceptGivenElement")) Module["hideEverythingExceptGivenElement"] = function() {
- abort("'hideEverythingExceptGivenElement' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'hideEverythingExceptGivenElement' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "restoreHiddenElements")) Module["restoreHiddenElements"] = function() {
- abort("'restoreHiddenElements' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'restoreHiddenElements' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "setLetterbox")) Module["setLetterbox"] = function() {
- abort("'setLetterbox' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setLetterbox' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "currentFullscreenStrategy")) Module["currentFullscreenStrategy"] = function() {
- abort("'currentFullscreenStrategy' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'currentFullscreenStrategy' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "restoreOldWindowedStyle")) Module["restoreOldWindowedStyle"] = function() {
- abort("'restoreOldWindowedStyle' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'restoreOldWindowedStyle' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "softFullscreenResizeWebGLRenderTarget")) Module["softFullscreenResizeWebGLRenderTarget"] = function() {
- abort("'softFullscreenResizeWebGLRenderTarget' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'softFullscreenResizeWebGLRenderTarget' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "doRequestFullscreen")) Module["doRequestFullscreen"] = function() {
- abort("'doRequestFullscreen' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'doRequestFullscreen' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillPointerlockChangeEventData")) Module["fillPointerlockChangeEventData"] = function() {
- abort("'fillPointerlockChangeEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillPointerlockChangeEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerPointerlockChangeEventCallback")) Module["registerPointerlockChangeEventCallback"] = function() {
- abort("'registerPointerlockChangeEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerPointerlockChangeEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerPointerlockErrorEventCallback")) Module["registerPointerlockErrorEventCallback"] = function() {
- abort("'registerPointerlockErrorEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerPointerlockErrorEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "requestPointerLock")) Module["requestPointerLock"] = function() {
- abort("'requestPointerLock' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'requestPointerLock' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillVisibilityChangeEventData")) Module["fillVisibilityChangeEventData"] = function() {
- abort("'fillVisibilityChangeEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillVisibilityChangeEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerVisibilityChangeEventCallback")) Module["registerVisibilityChangeEventCallback"] = function() {
- abort("'registerVisibilityChangeEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerVisibilityChangeEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerTouchEventCallback")) Module["registerTouchEventCallback"] = function() {
- abort("'registerTouchEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerTouchEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillGamepadEventData")) Module["fillGamepadEventData"] = function() {
- abort("'fillGamepadEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillGamepadEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerGamepadEventCallback")) Module["registerGamepadEventCallback"] = function() {
- abort("'registerGamepadEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerGamepadEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerBeforeUnloadEventCallback")) Module["registerBeforeUnloadEventCallback"] = function() {
- abort("'registerBeforeUnloadEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerBeforeUnloadEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "fillBatteryEventData")) Module["fillBatteryEventData"] = function() {
- abort("'fillBatteryEventData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'fillBatteryEventData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "battery")) Module["battery"] = function() {
- abort("'battery' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'battery' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "registerBatteryEventCallback")) Module["registerBatteryEventCallback"] = function() {
- abort("'registerBatteryEventCallback' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'registerBatteryEventCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "setCanvasElementSize")) Module["setCanvasElementSize"] = function() {
- abort("'setCanvasElementSize' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setCanvasElementSize' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getCanvasElementSize")) Module["getCanvasElementSize"] = function() {
- abort("'getCanvasElementSize' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getCanvasElementSize' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "polyfillSetImmediate")) Module["polyfillSetImmediate"] = function() {
- abort("'polyfillSetImmediate' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'polyfillSetImmediate' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "demangle")) Module["demangle"] = function() {
- abort("'demangle' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'demangle' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "demangleAll")) Module["demangleAll"] = function() {
- abort("'demangleAll' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'demangleAll' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "jsStackTrace")) Module["jsStackTrace"] = function() {
- abort("'jsStackTrace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'jsStackTrace' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stackTrace")) Module["stackTrace"] = function() {
- abort("'stackTrace' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stackTrace' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getEnvStrings")) Module["getEnvStrings"] = function() {
- abort("'getEnvStrings' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getEnvStrings' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "checkWasiClock")) Module["checkWasiClock"] = function() {
- abort("'checkWasiClock' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'checkWasiClock' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToI64")) Module["writeI53ToI64"] = function() {
- abort("'writeI53ToI64' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeI53ToI64' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToI64Clamped")) Module["writeI53ToI64Clamped"] = function() {
- abort("'writeI53ToI64Clamped' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeI53ToI64Clamped' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToI64Signaling")) Module["writeI53ToI64Signaling"] = function() {
- abort("'writeI53ToI64Signaling' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeI53ToI64Signaling' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToU64Clamped")) Module["writeI53ToU64Clamped"] = function() {
- abort("'writeI53ToU64Clamped' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeI53ToU64Clamped' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeI53ToU64Signaling")) Module["writeI53ToU64Signaling"] = function() {
- abort("'writeI53ToU64Signaling' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeI53ToU64Signaling' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "readI53FromI64")) Module["readI53FromI64"] = function() {
- abort("'readI53FromI64' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'readI53FromI64' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "readI53FromU64")) Module["readI53FromU64"] = function() {
- abort("'readI53FromU64' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'readI53FromU64' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "convertI32PairToI53")) Module["convertI32PairToI53"] = function() {
- abort("'convertI32PairToI53' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'convertI32PairToI53' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "convertU32PairToI53")) Module["convertU32PairToI53"] = function() {
- abort("'convertU32PairToI53' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'convertU32PairToI53' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "uncaughtExceptionCount")) Module["uncaughtExceptionCount"] = function() {
- abort("'uncaughtExceptionCount' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'uncaughtExceptionCount' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "exceptionLast")) Module["exceptionLast"] = function() {
- abort("'exceptionLast' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'exceptionLast' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "exceptionCaught")) Module["exceptionCaught"] = function() {
- abort("'exceptionCaught' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'exceptionCaught' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "ExceptionInfoAttrs")) Module["ExceptionInfoAttrs"] = function() {
- abort("'ExceptionInfoAttrs' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'ExceptionInfoAttrs' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "ExceptionInfo")) Module["ExceptionInfo"] = function() {
- abort("'ExceptionInfo' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'ExceptionInfo' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "CatchInfo")) Module["CatchInfo"] = function() {
- abort("'CatchInfo' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'CatchInfo' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "exception_addRef")) Module["exception_addRef"] = function() {
- abort("'exception_addRef' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'exception_addRef' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "exception_decRef")) Module["exception_decRef"] = function() {
- abort("'exception_decRef' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'exception_decRef' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "Browser")) Module["Browser"] = function() {
- abort("'Browser' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'Browser' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "funcWrappers")) Module["funcWrappers"] = function() {
- abort("'funcWrappers' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'funcWrappers' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "getFuncWrapper")) Module["getFuncWrapper"] = function() {
- abort("'getFuncWrapper' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'getFuncWrapper' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "setMainLoop")) Module["setMainLoop"] = function() {
- abort("'setMainLoop' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'setMainLoop' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "FS")) Module["FS"] = function() {
- abort("'FS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'FS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "mmapAlloc")) Module["mmapAlloc"] = function() {
- abort("'mmapAlloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'mmapAlloc' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "MEMFS")) Module["MEMFS"] = function() {
- abort("'MEMFS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'MEMFS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "TTY")) Module["TTY"] = function() {
- abort("'TTY' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'TTY' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "PIPEFS")) Module["PIPEFS"] = function() {
- abort("'PIPEFS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'PIPEFS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SOCKFS")) Module["SOCKFS"] = function() {
- abort("'SOCKFS' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SOCKFS' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "_setNetworkCallback")) Module["_setNetworkCallback"] = function() {
+ abort("'_setNetworkCallback' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "tempFixedLengthArray")) Module["tempFixedLengthArray"] = function() {
- abort("'tempFixedLengthArray' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'tempFixedLengthArray' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "miniTempWebGLFloatBuffers")) Module["miniTempWebGLFloatBuffers"] = function() {
- abort("'miniTempWebGLFloatBuffers' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'miniTempWebGLFloatBuffers' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "heapObjectForWebGLType")) Module["heapObjectForWebGLType"] = function() {
- abort("'heapObjectForWebGLType' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'heapObjectForWebGLType' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "heapAccessShiftForWebGLHeap")) Module["heapAccessShiftForWebGLHeap"] = function() {
- abort("'heapAccessShiftForWebGLHeap' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'heapAccessShiftForWebGLHeap' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "GL")) Module["GL"] = function() {
- abort("'GL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'GL' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGet")) Module["emscriptenWebGLGet"] = function() {
- abort("'emscriptenWebGLGet' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLGet' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "computeUnpackAlignedImageSize")) Module["computeUnpackAlignedImageSize"] = function() {
- abort("'computeUnpackAlignedImageSize' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'computeUnpackAlignedImageSize' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetTexPixelData")) Module["emscriptenWebGLGetTexPixelData"] = function() {
- abort("'emscriptenWebGLGetTexPixelData' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLGetTexPixelData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetUniform")) Module["emscriptenWebGLGetUniform"] = function() {
- abort("'emscriptenWebGLGetUniform' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLGetUniform' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "webglGetUniformLocation")) Module["webglGetUniformLocation"] = function() {
+ abort("'webglGetUniformLocation' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "webglPrepareUniformLocationsBeforeFirstUse")) Module["webglPrepareUniformLocationsBeforeFirstUse"] = function() {
+ abort("'webglPrepareUniformLocationsBeforeFirstUse' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
+};
+
+if (!Object.getOwnPropertyDescriptor(Module, "webglGetLeftBracePos")) Module["webglGetLeftBracePos"] = function() {
+ abort("'webglGetLeftBracePos' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetVertexAttrib")) Module["emscriptenWebGLGetVertexAttrib"] = function() {
- abort("'emscriptenWebGLGetVertexAttrib' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLGetVertexAttrib' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetBufferBinding")) Module["emscriptenWebGLGetBufferBinding"] = function() {
- abort("'emscriptenWebGLGetBufferBinding' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLGetBufferBinding' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLValidateMapBufferTarget")) Module["emscriptenWebGLValidateMapBufferTarget"] = function() {
- abort("'emscriptenWebGLValidateMapBufferTarget' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLValidateMapBufferTarget' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "writeGLArray")) Module["writeGLArray"] = function() {
- abort("'writeGLArray' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'writeGLArray' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "AL")) Module["AL"] = function() {
- abort("'AL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'AL' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SDL_unicode")) Module["SDL_unicode"] = function() {
- abort("'SDL_unicode' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SDL_unicode' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SDL_ttfContext")) Module["SDL_ttfContext"] = function() {
- abort("'SDL_ttfContext' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SDL_ttfContext' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SDL_audio")) Module["SDL_audio"] = function() {
- abort("'SDL_audio' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SDL_audio' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SDL")) Module["SDL"] = function() {
- abort("'SDL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SDL' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "SDL_gfx")) Module["SDL_gfx"] = function() {
- abort("'SDL_gfx' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'SDL_gfx' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "GLUT")) Module["GLUT"] = function() {
- abort("'GLUT' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'GLUT' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "EGL")) Module["EGL"] = function() {
- abort("'EGL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'EGL' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "GLFW_Window")) Module["GLFW_Window"] = function() {
- abort("'GLFW_Window' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'GLFW_Window' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "GLFW")) Module["GLFW"] = function() {
- abort("'GLFW' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'GLFW' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "GLEW")) Module["GLEW"] = function() {
- abort("'GLEW' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'GLEW' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "IDBStore")) Module["IDBStore"] = function() {
- abort("'IDBStore' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'IDBStore' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "runAndAbortIfError")) Module["runAndAbortIfError"] = function() {
- abort("'runAndAbortIfError' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'runAndAbortIfError' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "Asyncify")) Module["Asyncify"] = function() {
- abort("'Asyncify' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'Asyncify' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "Fibers")) Module["Fibers"] = function() {
- abort("'Fibers' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'Fibers' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "Fetch")) Module["Fetch"] = function() {
- abort("'Fetch' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'Fetch' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
-if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_delete_cached_data")) Module["__emscripten_fetch_delete_cached_data"] = function() {
- abort("'__emscripten_fetch_delete_cached_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+if (!Object.getOwnPropertyDescriptor(Module, "fetchDeleteCachedData")) Module["fetchDeleteCachedData"] = function() {
+ abort("'fetchDeleteCachedData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
-if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_load_cached_data")) Module["__emscripten_fetch_load_cached_data"] = function() {
- abort("'__emscripten_fetch_load_cached_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+if (!Object.getOwnPropertyDescriptor(Module, "fetchLoadCachedData")) Module["fetchLoadCachedData"] = function() {
+ abort("'fetchLoadCachedData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
-if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_cache_data")) Module["__emscripten_fetch_cache_data"] = function() {
- abort("'__emscripten_fetch_cache_data' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+if (!Object.getOwnPropertyDescriptor(Module, "fetchCacheData")) Module["fetchCacheData"] = function() {
+ abort("'fetchCacheData' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
-if (!Object.getOwnPropertyDescriptor(Module, "__emscripten_fetch_xhr")) Module["__emscripten_fetch_xhr"] = function() {
- abort("'__emscripten_fetch_xhr' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+if (!Object.getOwnPropertyDescriptor(Module, "fetchXHR")) Module["fetchXHR"] = function() {
+ abort("'fetchXHR' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "emscriptenWebGLGetIndexed")) Module["emscriptenWebGLGetIndexed"] = function() {
- abort("'emscriptenWebGLGetIndexed' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'emscriptenWebGLGetIndexed' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "warnOnce")) Module["warnOnce"] = function() {
- abort("'warnOnce' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'warnOnce' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stackSave")) Module["stackSave"] = function() {
- abort("'stackSave' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stackSave' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stackRestore")) Module["stackRestore"] = function() {
- abort("'stackRestore' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stackRestore' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stackAlloc")) Module["stackAlloc"] = function() {
- abort("'stackAlloc' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stackAlloc' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "AsciiToString")) Module["AsciiToString"] = function() {
- abort("'AsciiToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'AsciiToString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stringToAscii")) Module["stringToAscii"] = function() {
- abort("'stringToAscii' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stringToAscii' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "UTF16ToString")) Module["UTF16ToString"] = function() {
- abort("'UTF16ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'UTF16ToString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF16")) Module["stringToUTF16"] = function() {
- abort("'stringToUTF16' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stringToUTF16' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF16")) Module["lengthBytesUTF16"] = function() {
- abort("'lengthBytesUTF16' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'lengthBytesUTF16' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "UTF32ToString")) Module["UTF32ToString"] = function() {
- abort("'UTF32ToString' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'UTF32ToString' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "stringToUTF32")) Module["stringToUTF32"] = function() {
- abort("'stringToUTF32' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'stringToUTF32' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "lengthBytesUTF32")) Module["lengthBytesUTF32"] = function() {
- abort("'lengthBytesUTF32' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'lengthBytesUTF32' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "allocateUTF8")) Module["allocateUTF8"] = function() {
- abort("'allocateUTF8' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'allocateUTF8' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 if (!Object.getOwnPropertyDescriptor(Module, "allocateUTF8OnStack")) Module["allocateUTF8OnStack"] = function() {
- abort("'allocateUTF8OnStack' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+ abort("'allocateUTF8OnStack' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
 Module["writeStackCookie"] = writeStackCookie;
@@ -12665,14 +12784,14 @@ Module["checkStackCookie"] = checkStackCookie;
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_NORMAL")) Object.defineProperty(Module, "ALLOC_NORMAL", {
  configurable: true,
  get: function() {
-  abort("'ALLOC_NORMAL' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+  abort("'ALLOC_NORMAL' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
  }
 });
 
 if (!Object.getOwnPropertyDescriptor(Module, "ALLOC_STACK")) Object.defineProperty(Module, "ALLOC_STACK", {
  configurable: true,
  get: function() {
-  abort("'ALLOC_STACK' was not exported. add it to EXTRA_EXPORTED_RUNTIME_METHODS (see the FAQ)");
+  abort("'ALLOC_STACK' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
  }
 });
 
@@ -12705,14 +12824,13 @@ function callMain(args) {
  SAFE_HEAP_STORE(((argv >> 2) + argc) * 4, 0, 4);
  try {
   var ret = entryFunction(argc, argv);
-  if (!noExitRuntime) {
+  if (!keepRuntimeAlive()) {
    exit(ret, true);
   }
  } catch (e) {
   if (e instanceof ExitStatus) {
    return;
   } else if (e == "unwind") {
-   noExitRuntime = true;
    return;
   } else {
    var toLog = e;
@@ -12727,15 +12845,21 @@ function callMain(args) {
  }
 }
 
+function stackCheckInit() {
+ _emscripten_stack_init();
+ writeStackCookie();
+}
+
 function run(args) {
  args = args || arguments_;
  if (runDependencies > 0) {
   return;
  }
- _emscripten_stack_init();
- writeStackCookie();
+ stackCheckInit();
  preRun();
- if (runDependencies > 0) return;
+ if (runDependencies > 0) {
+  return;
+ }
  function doRun() {
   if (calledRun) return;
   calledRun = true;
@@ -12764,16 +12888,16 @@ function run(args) {
 Module["run"] = run;
 
 function exit(status, implicit) {
- if (implicit && noExitRuntime && status === 0) {
+ EXITSTATUS = status;
+ if (implicit && keepRuntimeAlive() && status === 0) {
   return;
  }
- if (noExitRuntime) {
+ if (keepRuntimeAlive()) {
   if (!implicit) {
-   var msg = "program exited (with status: " + status + "), but noExitRuntime is set due to an async operation, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)";
+   var msg = "program exited (with status: " + status + "), but keepRuntimeAlive() is set (counter=" + runtimeKeepaliveCounter + ") due to an async operation, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)";
    err(msg);
   }
  } else {
-  EXITSTATUS = status;
   exitRuntime();
   if (Module["onExit"]) Module["onExit"](status);
   ABORT = true;
