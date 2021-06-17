@@ -5,6 +5,7 @@ sudo apt-get install build-essential (additionally, install python3 manually if 
 2. Download Libraries
 curl -o util-macros-1.19.3.tar.bz2 https://www.x.org/pub/individual/util/util-macros-1.19.3.tar.bz2
 
+//x11 libraries
 curl -o xcb-proto-1.14.1.tar.xz https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.14.1.tar.xz
 curl -o xorgproto-2021.4.tar.bz2 https://www.linuxfromscratch.org/blfs/view/svn/x/xorgproto.html
 curl -o libXau-1.0.9.tar.bz2 https://www.x.org/pub/individual/lib/libXau-1.0.9.tar.bz2
@@ -18,9 +19,22 @@ curl -o libdrm-2.4.106.tar.xz https://dri.freedesktop.org/libdrm/libdrm-2.4.106.
 curl -o MarkupSafe-2.0.1.tar.gz https://files.pythonhosted.org/packages/source/M/MarkupSafe/MarkupSafe-2.0.1.tar.gz
 curl -o Mako-1.1.4.tar.gz https://files.pythonhosted.org/packages/source/M/Mako/Mako-1.1.4.tar.gz
 
-curl -o SDL2-2.0.14.tar.gz https://www.libsdl.org/release/SDL2-2.0.14.tar.gz
-(http) glew-2.2.0.tgz https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.tgz/download
+//mesa
+curl -o mesa-21.1.2.tar.xz https://mesa.freedesktop.org/archive/mesa-21.1.2.tar.xz
 
+//video libraries
+curl -o SDL2-2.0.14.tar.gz https://www.libsdl.org/release/SDL2-2.0.14.tar.gz
+curl -o SDL2_image-2.0.5.tar.gz https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz
+(http) glew-2.2.0.tgz https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.tgz/download
+curl -o glu-9.0.1.tar.xz ftp://ftp.freedesktop.org/pub/mesa/glu/glu-9.0.1.tar.xz
+curl -o glfw-3.3.4.zip https://github.com/glfw/glfw/releases/download/3.3.4/glfw-3.3.4.zip
+//Additional dependencies
+cmake
+Libtool
+libpng-dev
+Emscripten
+Curl
+Docker
 
 3. Build Xorg
 export XORG_PREFIX="<YOUR PATH>" eg. export XORG_PREFIX="/home/jeremi/Coding/Libs/Xorg"
@@ -309,10 +323,113 @@ Add /home/jeremi/Coding/Libs/Xorg/lib/x86_64-linux-gnu/pkgconfig to your PKG_CON
 	sudo apt install flex
 	meson --prefix=$XORG_PREFIX -Ddri-drivers=i965 -Dllvm=disabled -Dvalgrind=false -Dplatforms=x11 -Dgallium-drivers=i915 -Dvulkan-drivers=intel
 	ninja
-	ninja install (might need sudo)
+	ninja install (might need to provide sudo password)
 
-TO DO:
-Install and compile mesa - https://www.linuxfromscratch.org/blfs/view/svn/x/glew.html
-install and compile glew
+13. Install GLEW
+https://www.linuxfromscratch.org/blfs/view/svn/x/glew.html
+
+Add the following into your ~/.bashrc
+
+	export CPATH="/home/jeremi/Coding/Libs/Xorg/include"
+
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/jeremi/Coding/Libs/Xorg/lib:/home/jeremi/Coding/Libs/Xorg/lib/x86_64-linux-gnu"
+
+	export LIBRARY_PATH="$LIBRARY_PATH:/home/jeremi/Coding/Libs/Xorg/lib:/home/jeremi/Coding/Libs/Xorg/lib/x86_64-linux-gnu"
+
+Then, you can install make if you don't have it, and compile GLEW like this
+
+	make
+	sudo make install
+	make clean
+
+Now add the installation directory to the LD_LIBRARY_PATH
+
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/jeremi/Coding/Libs/Xorg/lib:/home/jeremi/Coding/Libs/Xorg/lib/x86_64-linux-gnu"
+
+14. Install SDL2
+https://www.linuxfromscratch.org/blfs/view/svn/multimedia/sdl2.html
+
+Extract the library, enter the directory, and execute the following commands
+
+	./configure
+	make
+	sudo make install
+
+If you did all above steps correctly, this should just compile out of the box. Now add the include dir into the CPATH environment variable (substitute these paths with your SDL2 installation path set with --prefix if you set it)
+
+	export CPATH="$CPATH:/usr/local/include/SDL2"
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+	export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/lib"
+
+15. Install libpng-dev
+http://www.libpng.org/pub/png/libpng.html
+
+	sudo apt-get install libpng-dev
+
+OR
+
+	download source from http://prdownloads.sourceforge.net/libpng/libpng-1.6.37.tar.xz?download
+	./confiure
+	make
+	sudo make install
+
+16. Install SDL2_Image
+https://www.libsdl.org/projects/SDL_image/
+
+	./configure
+	make
+	sudo make install
+
+17. Install GLU
+https://www.linuxfromscratch.org/blfs/view/svn/x/glu.html
+
+	./configure
+	make
+	sudo make install
+
+18. Install GL3W
+
+	git clone https://github.com/skaslev/gl3w.git
+	cd gl3w && python3 gl3w_gen.py
+
+Set the proper environment variables to the sources and include directories you set
+
+	export GL3W_INCLUDE="/home/jeremi/Coding/Libs/gl3w/include/GL/"
+	export GL3W_SRC="/home/jeremi/Coding/Libs/gl3w/src/"
+
+19. Install cmake
+
+	sudo apt install cmake
+
+20. Install GLFW
+https://www.glfw.org/
+
+	cmake .
+	make
+	sudo make install
+		
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Hurray! Now you are ready to compile WebOS for Linux!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+21. Compile WebOS
+
+Go to the the root directory of the WebOS project, for instance /home/jeremi/Coding/Apps/WebOS
+
+	make LINUX=1
+
+Now run the application and you're done!
+
+	./out/Linux/WebOS
+
+Three different elements are needed to compile:
+    1. OpenGL
+    2. the GL Utilities (GLU) which are not part of OpenGL
+    3. and the GL Extension Wrangler (GLEW) 
+    4. A library for OpenGL (GLFW)
+    5. A wrapper, or lightweight version of a OpenGL loader (GL3W)
+
 
 

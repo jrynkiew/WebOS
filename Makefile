@@ -22,8 +22,8 @@ EXE = $(OUTPUTFOLDER)WebOS
 SOURCES = src/main.cpp
 SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
 SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
-SOURCES += src/WebOS/webos.cpp src/WebOS/webos_window.cpp src/WebOS/webos_image.cpp src/WebOS/webos_icon.cpp src/WebOS/webos_console.cpp
-SOURCES += /home/jeremi-solus/Coding/libraries/gl3w/src/gl3w.c
+SOURCES += src/WebOS/webos.cpp src/WebOS/webos_window.cpp src/WebOS/webos_image.cpp src/WebOS/webos_icon.cpp src/WebOS/webos_console.cpp src/WebOS/webos_wallet.cpp
+SOURCES += $(GL3W_SRC)
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
@@ -32,29 +32,29 @@ UNAME_S := $(shell uname -s)
 
 # for the std::functional hack
 CXXFLAGS = -std=c++11
-LIBDIR = -L/home/jeremi-solus/Coding/libraries/SDL2/out/lib
-LIBDIR += -L/home/jeremi-solus/Coding/libraries/SDL2_image-2.0.5/out/lib
-LIBDIR += -L/home/jeremi-solus/Coding/libraries/Xorg/lib
-LIBDIR += -L/home/jeremi-solus/Coding/libraries/glfw/out/lib64
-LIBDIR += -L/usr/lib64
+#LIBDIR = -L/home/jeremi-solus/Coding/libraries/SDL2/out/lib
+#LIBDIR += -L/home/jeremi-solus/Coding/libraries/SDL2_image-2.0.5/out/lib
+#LIBDIR += -L/home/jeremi-solus/Coding/libraries/Xorg/lib
+#LIBDIR += -L/home/jeremi-solus/Coding/libraries/glfw/out/lib64
+#LIBDIR += -L/usr/lib64
 
 # include ImGui required folders
-CPPFLAGS += -I/home/jeremi-solus/Coding/libraries/gl3w/include 
+CPPFLAGS += -I$(GL3W_INCLUDE)
 
 # include WebOS folders
 CPPFLAGS += -Isrc/WebOS -Isrc/WebOS/include
 
 # include 3rd party libraires
-CPPFLAGS += -Iusr/include/curl
+CPPFLAGS += -Iusr/local/include
 
 CPPFLAGS += -g -Wall -Wformat -O3
 
-LIBS = -lSDL2 -lX11 -lSDL2_image -ldl -lm -lGL -lGLU -lpthread -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -pthread -lcurl
+LIBS = -lSDL2 -lX11 -lSDL2_image -ldl -lm -lGL -lGLEW -lGLU -lpthread -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -pthread -lcurl
 
 ##---------------------------------------------------------------------
 ## BUILD RULES
 ##---------------------------------------------------------------------
-%.o:/home/jeremi-solus/Coding/libraries/gl3w/src/%.c
+%.o:$(GL3W_SRC)%.c
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $(OUTPUTFOLDER)$@ $<
 
 %.o:src/%.cpp
@@ -68,7 +68,7 @@ all: $(EXE)
 
 $(EXE): $(OBJS)
 	@echo $(OUTPUTOBJS)
-	$(CXX) -o $@ $(OUTPUTOBJS) $(LIBDIR) $(LIBS) $(LDFLAGS)
+	$(CXX) -o $@ $(OUTPUTOBJS) -L$(LD_LIBRARY_PATH) $(LIBDIR) $(LIBS) $(LDFLAGS)
 
 clean:
 	rm -f $(EXE) $(OUTPUTOBJS) 
