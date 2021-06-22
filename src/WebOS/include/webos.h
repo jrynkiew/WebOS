@@ -10,6 +10,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "library_texteditor.h"
+
 // Standard headers
 #include <string>
 #include <iostream>

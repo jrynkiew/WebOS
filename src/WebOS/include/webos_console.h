@@ -14,6 +14,9 @@
 // Vector headers
 #include <vector>
 
+// Hashing headers
+#include "library_keccak.h"
+
 // Curl related headers
 #include "/usr/local/include/curl/curl.h"
 #if defined(__EMSCRIPTEN__)
@@ -43,6 +46,8 @@ private:
     bool                  ScrollToBottom;
     char                  InputBuf[256];
     char                  _return;
+
+    Keccak                keccak;
 
     ImVector<char*>       Items;
     ImVector<const char*> Commands;

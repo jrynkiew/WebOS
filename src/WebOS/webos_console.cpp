@@ -178,6 +178,23 @@ void webos_console::ExecCommand(const char* command_line)
             consoleBuffer.append(Commands[i]);
         }
     }
+    else if (Stricmprlx(command_line, "KECCAK") == 0)
+    {
+        std::string myHash = keccak("Hello World", 32); 
+        int increment = 0;
+        while(!(myHash.at(0) == '0'))
+        {
+            increment++;
+            myHash = keccak("Hello World" + std::to_string(increment));
+            AddLog(myHash.c_str());
+            while(!(myHash.at(1) == '0'))
+            {
+                increment++;
+                myHash = keccak("Hello World" + std::to_string(increment));
+                AddLog(myHash.c_str());
+            }
+        }
+    }
     else if (Stricmprlx(command_line, "IOCTL") == 0)
     {
         AddLog(command_line);

@@ -24,6 +24,7 @@ SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
 SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
 SOURCES += src/WebOS/webos.cpp src/WebOS/webos_window.cpp src/WebOS/webos_image.cpp src/WebOS/webos_icon.cpp src/WebOS/webos_console.cpp src/WebOS/webos_wallet.cpp
 SOURCES += $(GL3W_SRC)
+SOURCES += src/WebOS/library_keccak.cpp src/WebOS/library_texteditor.cpp
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
@@ -106,6 +107,7 @@ SOURCES = src/main.cpp
 SOURCES += src/WebOS/imgui_impl_sdl.cpp src/WebOS/imgui_impl_opengl3.cpp
 SOURCES += src/WebOS/imgui.cpp src/WebOS/imgui_draw.cpp src/WebOS/imgui_widgets.cpp src/WebOS/imgui_tables.cpp
 SOURCES += src/WebOS/webos.cpp src/WebOS/webos_window.cpp src/WebOS/webos_image.cpp src/WebOS/webos_icon.cpp src/WebOS/webos_console.cpp src/WebOS/webos_wallet.cpp
+SOURCES += src/WebOS/keccak.cpp
 
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 OUTPUTOBJS = $(addprefix $(OUTPUTFOLDER), $(OBJS))
