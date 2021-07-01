@@ -1,0 +1,58 @@
+mkdir -p ~/iotex-testnet
+cd ~/iotex-testnet
+
+export IOTEX_HOME=$PWD
+
+mkdir -p $IOTEX_HOME/data
+mkdir -p $IOTEX_HOME/log
+mkdir -p $IOTEX_HOME/etc
+
+curl -o etc/standalone-genesis.yaml https://raw.githubusercontent.com/iotexproject/iotex-core/master/config/standalone-genesis.yaml
+curl -o etc/standalone-config.yaml https://raw.githubusercontent.com/iotexproject/iotex-core/master/config/standalone-config.yaml
+
+//substitute io1gwl3duvuzrv4kdwlnhy7c0r5ssz8939hvrhr42 in the following command with your test account you will use for development. You can create an account locally with ioctl like so: '''ioctl account createadd dev-acc''' and then use that account in the sed command. You can use any account, but you need to have the private key for it
+
+sed -i 's/io1mflp9m6hcgm2qcghchsdqj3z3eccrnekx9p0ms/io1gwl3duvuzrv4kdwlnhy7c0r5ssz8939hvrhr42/g' etc/standalone-genesis.yaml
+
+docker network create -d bridge iotex-testnet-network
+
+docker pull iotex/iotex-core:v1.2.0
+
+docker run -d --restart always --name iotex-testnet \
+        -p 4689:4689 \
+        -p 8080:8080 \
+	-p 14014:14014 \
+	--network=iotex-testnet-network \
+        -v=$IOTEX_HOME/data:/var/data:rw \
+        -v=$IOTEX_HOME/log:/var/log:rw \
+        -v=$IOTEX_HOME/etc/standalone-config.yaml:/etc/iotex/config_override.yaml:ro \
+        -v=$IOTEX_HOME/etc/standalone-genesis.yaml:/etc/iotex/genesis.yaml:ro \
+        iotex/iotex-core:v1.2.0 \
+        iotex-server \
+        -config-path=/etc/iotex/config_override.yaml \
+        -genesis-path=/etc/iotex/genesis.yaml \
+	-plugin=gateway
+
+docker run -p 6379:6379 --network=iotex-testnet-network --name iotex-testnet-redis -d redis
+
+git clone https://github.com/iotexproject/babel-api
+
+cd babel-api/
+touch .env
+
+
+//Find out the IP addresses of the containers of redis and iotex-testnet. 
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iotex-testnet
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iotex-testnet-redis
+
+//Use the IP address from the iotex-testnet container and iotex-testnet-redis in the below config
+echo -en 'PORT=8545\nCHAIN_ID=4689\nEND_POINT=http://172.20.0.2:14014\nREDIS_HOST=172.20.0.3\n' >> .env
+
+touch Dockerfile
+
+echo -en 'FROM node:14\nWORKDIR /usr/src/babel-api\nCOPY package*.json ./\nRUN npm install github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb\nRUN npm install\nCOPY . .\nRUN npm run build\nEXPOSE 8545\nCMD [ "node", "dist/api.js" ]\n' >> Dockerfile
+
+docker build . -t iotex-babel-api
+docker run -p 8545:8545 --network=iotex-testnet-network --name iotex-babel-api -d iotex-babel-api
+
+//After all these steps you have all iotex infra online and ready to deploy contracts locally!
