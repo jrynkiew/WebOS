@@ -50,7 +50,7 @@ echo -en 'PORT=8545\nCHAIN_ID=4689\nEND_POINT=http://172.20.0.2:14014\nREDIS_HOS
 
 touch Dockerfile
 
-echo -en 'FROM node:14\nWORKDIR /usr/src/babel-api\nCOPY package*.json ./\nRUN npm install github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb\nRUN npm install\nCOPY . .\nRUN npm run build\nEXPOSE 8545\nCMD [ "node", "dist/api.js" ]\n' >> Dockerfile
+echo -en 'FROM node:14.18.1\nWORKDIR /usr/src/babel-api\nCOPY package*.json ./\nRUN npm install github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb\nRUN npm i\nCOPY . .\nRUN npm run build\nEXPOSE 8545\nCMD [ "node", "dist/api.js" ]\n' >> Dockerfile
 
 docker build . -t iotex-babel-api
 docker run -p 8545:8545 --network=iotex-testnet-network --name iotex-babel-api -d iotex-babel-api
